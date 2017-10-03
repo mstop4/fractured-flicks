@@ -1,7 +1,4 @@
-function component() {
-    let element = document.createElement('div')
-    element.innerHTML =['Hello', 'Webpack', "Goodbye", 'Webpack'].join(' ')
-    return element
-}
+import * as vp from './libs/videoPuzzle/app.js'
 
-document.body.appendChild(component())
+vp.initApp()
+vp.gameLoop(function () {} )
