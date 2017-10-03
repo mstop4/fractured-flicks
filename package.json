@@ -1,0 +1,22 @@
+{
+  "name": "Video-Puzzle",
+  "version": "1.0.0",
+  "description": "Virtual jigsaw puzzles using videos.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/index.js",
+    "build": "./node_modules/.bin/webpack"
+  },
+  "keywords": [
+    "video",
+    "puzzle",
+    "animated"
+  ],
+  "author": "Jonathan Lam",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^3.6.0"
+  },
+  "dependencies": {}
+}
