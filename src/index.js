@@ -1,4 +1,3 @@
-import * as vp from './libs/videoPuzzle/app.js'
+import * as vp from './libs/videoPuzzle/puzzle.js'
 
-vp.initApp()
-vp.gameLoop(function () {} )
+vp.initGame()

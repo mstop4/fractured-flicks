@@ -1,6 +1,7 @@
 import pixi from 'pixi.js'
-let pixiApp = undefined
-let sprites = []
+
+export let pixiApp = undefined
+export let sprites = []
 let then = window.performance.now()
 
 let fpsText = undefined
@@ -17,7 +18,7 @@ export const initApp = () => {
 
     PIXI.utils.sayHello(type)
 
-    pixiApp = new PIXI.Application(window.innerWidth, window.innerHeight, {
+    pixiApp = new PIXI.Application(960, 540, {
         backgroundColor: 0x808080
     }) 
 
@@ -25,14 +26,13 @@ export const initApp = () => {
     pixiApp.renderer.view.style.position = "absolute"
     pixiApp.renderer.view.style.display = "block"
     pixiApp.renderer.autoResize = true
-    pixiApp.minFPS = 30
 
     //Add the canvas to the HTML document
-    document.body.appendChild(pixiApp.view)
+    document.getElementById("videoPuzzle").appendChild(pixiApp.view)
 
-    window.addEventListener("resize", function () {
+    /*window.addEventListener("resize", function () {
         pixiApp.renderer.resize(window.innerWidth, window.innerHeight)
-    })
+    })*/
 
     fpsText = new PIXI.Text("0")
     fpsText.x = 300
