@@ -20472,12 +20472,8 @@ __WEBPACK_IMPORTED_MODULE_0__libs_videoPuzzle_app_js__["a" /* gameLoop */](funct
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = initApp;
-/* unused harmony export loadTextures */
-/* harmony export (immutable) */ __webpack_exports__["a"] = gameLoop;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_pixi_js__ = __webpack_require__(89);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_pixi_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_pixi_js__);
-
 
 let pixiApp = undefined
 let sprites = []
@@ -20488,7 +20484,7 @@ let fpsHistory = []
 let frameSkip = 1
 let fsIndex = 0
 
-function initApp() {
+const initApp = () => {
 
     let type = "WebGL"
     if(!PIXI.utils.isWebGLSupported()){
@@ -20520,9 +20516,11 @@ function initApp() {
 
     pixiApp.stage.addChild(fpsText)
 }
+/* harmony export (immutable) */ __webpack_exports__["b"] = initApp;
+
 
 // Load sprites to cache
-function loadTextures(texArray, setup) {
+const loadTextures = (texArray, setup) => {
 
     PIXI.loader
     .add(texArray)
@@ -20534,8 +20532,10 @@ function loadTextures(texArray, setup) {
         console.log(`Loading "${resource.url}" ... ${loader.progress}%`)
     }
 }
+/* unused harmony export loadTextures */
 
-function gameLoop(updateFunc) {
+
+const gameLoop = (updateFunc) => {
     requestAnimationFrame(function () { gameLoop(updateFunc) } );
 
     updateFunc()
@@ -20560,6 +20560,8 @@ function gameLoop(updateFunc) {
     let sum = fpsHistory.reduce( function (a, b) { return a+b })
     fpsText.text = `FPS: ${(sum / fpsHistory.length).toFixed(2)}`
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = gameLoop;
+
 
 /***/ }),
 /* 89 */

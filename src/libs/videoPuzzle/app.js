@@ -1,5 +1,4 @@
 import pixi from 'pixi.js'
-
 let pixiApp = undefined
 let sprites = []
 let then = window.performance.now()
@@ -9,7 +8,7 @@ let fpsHistory = []
 let frameSkip = 1
 let fsIndex = 0
 
-export function initApp() {
+export const initApp = () => {
 
     let type = "WebGL"
     if(!PIXI.utils.isWebGLSupported()){
@@ -43,7 +42,7 @@ export function initApp() {
 }
 
 // Load sprites to cache
-export function loadTextures(texArray, setup) {
+export const loadTextures = (texArray, setup) => {
 
     PIXI.loader
     .add(texArray)
@@ -56,7 +55,7 @@ export function loadTextures(texArray, setup) {
     }
 }
 
-export function gameLoop(updateFunc) {
+export const gameLoop = (updateFunc) => {
     requestAnimationFrame(function () { gameLoop(updateFunc) } );
 
     updateFunc()
