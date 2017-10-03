@@ -1,6 +1,6 @@
 function component() {
     let element = document.createElement('div')
-    element.innerHTML =['Hello', 'Webpack'].join(' ')
+    element.innerHTML =['Hello', 'Webpack', "Goodbye", 'Webpack'].join(' ')
     return element
 }
 
