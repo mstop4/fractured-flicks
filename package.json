@@ -1,5 +1,5 @@
 {
-  "name": "Video-Puzzle",
+  "name": "video-puzzle",
   "version": "1.0.0",
   "description": "Virtual jigsaw puzzles using videos.",
   "main": "index.js",
