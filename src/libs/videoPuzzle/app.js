@@ -1,7 +1,6 @@
-import pixi from 'pixi.js'
+import 'pixi.js'
 
 export let pixiApp = undefined
-export let sprites = []
 let then = window.performance.now()
 
 let fpsText = undefined
@@ -18,7 +17,7 @@ export const initApp = () => {
 
     PIXI.utils.sayHello(type)
 
-    pixiApp = new PIXI.Application(960, 540, {
+    pixiApp = new PIXI.Application(1280, 720, {
         backgroundColor: 0x808080
     }) 
 
