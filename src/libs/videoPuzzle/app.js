@@ -4,6 +4,7 @@ export let pixiApp = undefined
 let then = window.performance.now()
 
 let fpsText = undefined
+export let titleText = undefined
 let fpsHistory = []
 let frameSkip = 1
 let fsIndex = 0
@@ -38,6 +39,12 @@ export const initApp = () => {
     fpsText.y = 0
 
     pixiApp.stage.addChild(fpsText)
+
+    titleText = new PIXI.Text("Title")
+    titleText.x = 0
+    titleText.y = 0
+
+    pixiApp.stage.addChild(titleText)
 }
 
 // Load sprites to cache

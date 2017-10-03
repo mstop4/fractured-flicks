@@ -4,8 +4,8 @@ import 'pixi-filters'
 let sprites = []
 let textureURIs = ["./videos/squirrel.mp4"]
 let videoScale = 1
-let numRows = 4
-let numColumns = 5
+let numRows = 2
+let numColumns = 2
 let xOffset = 100
 let yOffset = 100
 
@@ -22,6 +22,8 @@ export const initGame = () => {
 
 export const setup = () => {
     console.log("Setting up video...")
+    app.titleText.text = textureURIs[0]
+
     let bw = new PIXI.filters.ColorMatrixFilter()
 
     let guideTexture = PIXI.Texture.fromVideo(PIXI.loader.resources[textureURIs[0]].data)
@@ -49,20 +51,20 @@ export const setup = () => {
 
             switch (side) {
                 case 0:
-                    newSprite.x = Math.random() * (guideTexture.width + cellWidth)
-                    newSprite.y = yOffset - cellHeight / 2
+                    newSprite.x = Math.random() * (guideTexture.width + xOffset)
+                    newSprite.y = yOffset - yOffset / 2
                     break;
                 case 1:
-                    newSprite.x = Math.random() * (guideTexture.width + cellWidth)
-                    newSprite.y = yOffset + guideTexture.height + cellHeight / 2
+                    newSprite.x = Math.random() * (guideTexture.width + xOffset)
+                    newSprite.y = yOffset + guideTexture.height + yOffset / 2
                     break;
                 case 2:
-                    newSprite.x = xOffset - cellWidth / 2
-                    newSprite.y = Math.random() * (guideTexture.height + cellHeight)
+                    newSprite.x = xOffset - xOffset / 2
+                    newSprite.y = Math.random() * (guideTexture.height + yOffset)
                     break;
                 case 3:
-                    newSprite.x = xOffset + guideTexture.width + cellHeight / 2
-                    newSprite.y = Math.random() * (guideTexture.height + cellHeight)
+                    newSprite.x = xOffset + guideTexture.width + xOffset / 2
+                    newSprite.y = Math.random() * (guideTexture.height + yOffset)
                     break;
             }
 
@@ -77,6 +79,7 @@ export const setup = () => {
             newSprite.filters = [outlineIdle]
 
             newSprite.dragging = false
+            newSprite.done = false
 
             newSprite.interactive = true
             newSprite.buttonMode = true
@@ -92,7 +95,6 @@ export const setup = () => {
     }
 
     window.addEventListener("keydown", onSpacePress, false)
-
     app.gameLoop(processPieces)
 }
 
@@ -108,12 +110,14 @@ let onDragEnd = function() {
     //this.alpha = 1
     this.dragging = false
 
-    if (Math.abs(this.x - this.xStart) < 16 && Math.abs(this.y - this.yStart) < 16 && this.rotation === this.angle) {
+    if (Math.abs(this.x - this.xStart) < 32 && Math.abs(this.y - this.yStart) < 32 && this.rotation === this.angle) {
         this.x = this.xStart
         this.y = this.yStart
         this.filters = [outlineCorrect]
+        this.done = true
     } else {
         this.filters = [outlineIdle]
+        this.done = false
     }
 }
 
@@ -135,8 +139,10 @@ let onSpacePress = () => {
 }
 
 export const processPieces = () => {
-    sprites.forEach(function(spr) {
 
+    let done = true
+
+    sprites.forEach(function(spr) {
         if (spr.angle > spr.rotation) {
             if (Math.abs(spr.angle - spr.rotation) < spr.angleDelta) {
                 spr.rotation = spr.angle
@@ -151,5 +157,15 @@ export const processPieces = () => {
             }
         }
 
+        if (!spr.done) {
+            done = false
+        }
     })
+
+    if (done && app.titleText.text != "Complete!") {
+        app.titleText.text = "Complete!"
+        sprites.forEach(function(spr) {
+            spr.filters = []
+        })
+    }
 }
