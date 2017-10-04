@@ -5,6 +5,7 @@ import {puzzles} from '../../puzzles.config.js'
 import {Piece} from './Piece.js'
 
 let pieces = []
+let guide = undefined
 let textureURIs = puzzles[0].file
 let videoScale = 1
 let numRows = puzzles[0].numRows
@@ -27,7 +28,7 @@ const setup = () => {
 
     let guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[textureURIs[0]].data)
     guideTex.baseTexture.source.loop = true
-    let guide = new PIXI.Sprite(guideTex)
+    guide = new PIXI.Sprite(guideTex)
 
     xOffset = (app.pixiApp.view.width - guide.width) / 2
     yOffset = (app.pixiApp.view.height - guide.height) / 2
@@ -85,13 +86,14 @@ export const processPieces = () => {
 
     pieces.forEach( (piece) => {
         piece.process()
-        done = piece.done
+        done = piece.done && done
     })
 
     if (done && app.titleText.text != "Complete!") {
         app.titleText.text = "Complete!"
-        piece.forEach(function(piece) {
-            piece.filters = []
+        guide.filters = []
+        pieces.forEach(function(piece) {
+            piece.visible = false
         })
     }
 }

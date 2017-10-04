@@ -86,8 +86,11 @@ export class Piece extends PIXI.Sprite {
     this.data = event.data
     this.dragging = true
     this.filters = [outlineDrag]
-    this.stage.removeChild(this)
-    this.stage.addChild(this)
+
+    // Bring this piece to the front
+    let tempParent = this.parent
+    tempParent.removeChild(this)
+    tempParent.addChild(this)
   }
 
   onDragEnd() {
@@ -98,7 +101,7 @@ export class Piece extends PIXI.Sprite {
     if (Math.abs(this.x - this.xStart) < this.snapStrength && 
         Math.abs(this.y - this.yStart) < this.snapStrength && 
         this.angle % (2 * Math.PI) === 0) {
-          
+
       this.x = this.xStart
       this.y = this.yStart
       this.filters = [outlineCorrect]

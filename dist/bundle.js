@@ -20668,8 +20668,11 @@ class Piece extends PIXI.Sprite {
     this.data = event.data
     this.dragging = true
     this.filters = [outlineDrag]
-    this.stage.removeChild(this)
-    this.stage.addChild(this)
+
+    // Bring this piece to the front
+    let tempParent = this.parent
+    tempParent.removeChild(this)
+    tempParent.addChild(this)
   }
 
   onDragEnd() {
@@ -20680,7 +20683,7 @@ class Piece extends PIXI.Sprite {
     if (Math.abs(this.x - this.xStart) < this.snapStrength && 
         Math.abs(this.y - this.yStart) < this.snapStrength && 
         this.angle % (2 * Math.PI) === 0) {
-          
+
       this.x = this.xStart
       this.y = this.yStart
       this.filters = [outlineCorrect]
@@ -20731,6 +20734,7 @@ __WEBPACK_IMPORTED_MODULE_0__libs_videoPuzzle_puzzle_js__["a" /* initGame */]()
 
 
 let pieces = []
+let guide = undefined
 let textureURIs = __WEBPACK_IMPORTED_MODULE_3__puzzles_config_js__["a" /* puzzles */][0].file
 let videoScale = 1
 let numRows = __WEBPACK_IMPORTED_MODULE_3__puzzles_config_js__["a" /* puzzles */][0].numRows
@@ -20755,7 +20759,7 @@ const setup = () => {
 
     let guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[textureURIs[0]].data)
     guideTex.baseTexture.source.loop = true
-    let guide = new PIXI.Sprite(guideTex)
+    guide = new PIXI.Sprite(guideTex)
 
     xOffset = (__WEBPACK_IMPORTED_MODULE_2__app_js__["d" /* pixiApp */].view.width - guide.width) / 2
     yOffset = (__WEBPACK_IMPORTED_MODULE_2__app_js__["d" /* pixiApp */].view.height - guide.height) / 2
@@ -20813,13 +20817,14 @@ const processPieces = () => {
 
     pieces.forEach( (piece) => {
         piece.process()
-        done = piece.done
+        done = piece.done && done
     })
 
     if (done && __WEBPACK_IMPORTED_MODULE_2__app_js__["e" /* titleText */].text != "Complete!") {
         __WEBPACK_IMPORTED_MODULE_2__app_js__["e" /* titleText */].text = "Complete!"
-        piece.forEach(function(piece) {
-            piece.filters = []
+        guide.filters = []
+        pieces.forEach(function(piece) {
+            piece.visible = false
         })
     }
 }
