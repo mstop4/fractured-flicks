@@ -1,13 +1,11 @@
 import 'pixi.js'
+import {fpsCounter} from './fpsCounter.js'
 
 export let pixiApp = undefined
-let then = window.performance.now()
-
-let fpsText = undefined
 export let titleText = undefined
-let fpsHistory = []
 let frameSkip = 1
 let fsIndex = 0
+let fpsCount = undefined
 
 export const initApp = () => {
 
@@ -34,11 +32,9 @@ export const initApp = () => {
         pixiApp.renderer.resize(window.innerWidth, window.innerHeight)
     })*/
 
-    fpsText = new PIXI.Text("0")
-    fpsText.x = 300
-    fpsText.y = 0
-
-    pixiApp.stage.addChild(fpsText)
+    // fps counter
+    fpsCount = new fpsCounter()
+    fpsCount.addToStage(pixiApp.stage)
 
     titleText = new PIXI.Text("Title")
     titleText.x = 0
@@ -66,23 +62,16 @@ export const gameLoop = (updateFunc) => {
 
     updateFunc()
 
+    let hasRendered = false
+
     //Tell the `renderer` to `render` the `stage`
     if (fsIndex === frameSkip) {
         pixiApp.renderer.render(pixiApp.stage)
         fsIndex = 0
+        hasRendered = true
     } else {
         fsIndex++
     }
 
-    let now = window.performance.now()
-    let deltaTime = now - then
-    then = now
-
-    fpsHistory.push(1000 / deltaTime)
-    if (fpsHistory.length > 20) {
-        fpsHistory = fpsHistory.slice(1, 21)
-    }
-
-    let sum = fpsHistory.reduce( function (a, b) { return a+b })
-    fpsText.text = `FPS: ${(sum / fpsHistory.length).toFixed(2)}`
+    fpsCount.update(hasRendered)
 }
