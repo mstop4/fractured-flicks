@@ -1,5 +1,4 @@
 node_modules/*
 dist/bundle.js
-dist/videos/*
 npm-debug.log
 .DS_Store
