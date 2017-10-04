@@ -37,9 +37,6 @@ export const initApp = () => {
     titleText.x = 0
     titleText.y = 0
     pixiApp.stage.addChild(titleText)
-
-    let piece = new Piece()
-    console.dir(piece)
 }
 
 // Load sprites to cache

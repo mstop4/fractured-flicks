@@ -1,3 +1,4 @@
+import 'pixi.js'
 import 'pixi-filters'
 import * as app from './app.js'
 import {puzzles} from '../../puzzles.config.js'
@@ -54,14 +55,14 @@ const setup = () => {
             let pieceX = xOffset + (j+0.5)*(cellWidth * videoScale)
             let pieceY = yOffset + (i+0.5)*(cellHeight * videoScale)
 
-            let newPiece = new PIXI.Piece(pieceX, pieceY, pieceTex)
+            let newPiece = new Piece(pieceX, pieceY, pieceWidth, pieceHeight, pieceTex)
             newPiece.randomizePosition(xOffset - 50, 
                                        yOffset - 50, 
                                        xOffset + guide.width + 50,
                                        yOffset + guide.height + 50)
 
-            pieces.push(piece)
-            app.pixiApp.stage.addChild(piece)    
+            pieces.push(newPiece)
+            app.pixiApp.stage.addChild(newPiece)
         }
     }
     window.addEventListener("keydown", onSpacePress, false)
@@ -70,9 +71,9 @@ const setup = () => {
 
 let onSpacePress = (event) => {
     if (event.keyCode === 32) {
-        sprites.forEach(function(spr) {
-            if (spr.dragging) {
-                spr.angle += 90 * Math.PI / 180
+        pieces.forEach(function(piece) {
+            if (piece.dragging) {
+                piece.angle += 90 * Math.PI / 180
             }
         })
     }
@@ -82,30 +83,15 @@ export const processPieces = () => {
 
     let done = true
 
-    sprites.forEach(function(spr) {
-        if (spr.angle > spr.rotation) {
-            if (Math.abs(spr.angle - spr.rotation) < spr.angleDelta) {
-                spr.rotation = spr.angle
-            } else {
-                spr.rotation += spr.angleDelta
-            }
-        } else if (spr.angle < spr.rotation) {
-            if (Math.abs(spr.angle - spr.rotation) < spr.angleDelta) {
-                spr.rotation = spr.angle
-            } else {
-                spr.rotation -= spr.angleDelta
-            }
-        }
-
-        if (!spr.done) {
-            done = false
-        }
+    pieces.forEach( (piece) => {
+        piece.process()
+        done = piece.done
     })
 
     if (done && app.titleText.text != "Complete!") {
         app.titleText.text = "Complete!"
-        sprites.forEach(function(spr) {
-            spr.filters = []
+        piece.forEach(function(piece) {
+            piece.filters = []
         })
     }
 }

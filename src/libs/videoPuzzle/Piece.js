@@ -1,5 +1,3 @@
-import 'pixi.js'
-
 let outlineIdle = new PIXI.filters.OutlineFilter(2, 0xFF0000)
 let outlineDrag = new PIXI.filters.OutlineFilter(2, 0xFFFF00)
 let outlineCorrect = new PIXI.filters.OutlineFilter(2, 0x00FF00)
@@ -26,10 +24,10 @@ export class Piece extends PIXI.Sprite {
     this.interactive = true
     this.buttonMode = true
 
-    this.on('pointerdown', onDragStart)
-    this.on('pointerup', onDragEnd)
-    this.on('pointerupoutside', onDragEnd)
-    this.on('pointermove', onDragMove)
+    this.on('pointerdown', this.onDragStart)
+    this.on('pointerup', this.onDragEnd)
+    this.on('pointerupoutside', this.onDragEnd)
+    this.on('pointermove', this.onDragMove)
   }
 
   randomizePosition(left, top, right, bottom) {
@@ -37,23 +35,39 @@ export class Piece extends PIXI.Sprite {
     
     switch (side) {
       case 0:
-        newPiece.x = Math.random() * (right - left) + left
-        newPiece.y = top
+        this.x = Math.random() * (right - left) + left
+        this.y = top
         break;
       case 1:
-        newPiece.x = Math.random() * (right - left) + left
-        newPiece.y = bottom
+        this.x = Math.random() * (right - left) + left
+        this.y = bottom
         break;
       case 2:
-        newPiece.x = left
-        newPiece.y = Math.random() * (bottom - top) + top
+        this.x = left
+        this.y = Math.random() * (bottom - top) + top
         break;
       case 3:
-        newPiece.x = right
-        newPiece.y = Math.random() * (bottom - top) + top
+        this.x = right
+        this.y = Math.random() * (bottom - top) + top
         break;
     }
   }
+
+process() {
+  if (this.angle > this.rotation) {
+    if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
+      this.rotation = this.angle
+    } else {
+      this.rotation += this.angleDelta
+    }
+  } else if (this.angle < this.rotation) {
+    if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
+      this.rotation = this.angle
+    } else {
+      this.rotation -= this.angleDelta
+    }
+  }
+}
 
   onDragStart(event) {
     this.data = event.data
