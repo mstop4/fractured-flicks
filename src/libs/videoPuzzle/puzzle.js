@@ -98,7 +98,6 @@ export const setup = () => {
         }
     }
 
-    console.dir(app.pixiApp.stage)
     window.addEventListener("keydown", onSpacePress, false)
     app.gameLoop(processPieces)
 }
@@ -115,7 +114,7 @@ let onDragEnd = function() {
     this.data = null
     this.dragging = false
 
-    if (Math.abs(this.x - this.xStart) < 32 && Math.abs(this.y - this.yStart) < 32 && this.rotation === this.angle) {
+    if (Math.abs(this.x - this.xStart) < 32 && Math.abs(this.y - this.yStart) < 32 && this.angle % (2 * Math.PI) === 0) {
         this.x = this.xStart
         this.y = this.yStart
         this.filters = [outlineCorrect]
@@ -136,7 +135,6 @@ let onDragMove = function() {
 
 let onSpacePress = (event) => {
     if (event.keyCode === 32) {
-        console.log("Space")
         sprites.forEach(function(spr) {
             if (spr.dragging) {
                 spr.angle += 90 * Math.PI / 180
