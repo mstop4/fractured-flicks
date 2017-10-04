@@ -20472,15 +20472,18 @@ __WEBPACK_IMPORTED_MODULE_0__libs_videoPuzzle_puzzle_js__["a" /* initGame */]()
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(89);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_pixi_filters__ = __webpack_require__(193);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__puzzles_config_js__ = __webpack_require__(193);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__puzzles_config_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__puzzles_config_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_pixi_filters__ = __webpack_require__(194);
+
 
 
 
 let sprites = []
-let textureURIs = ["./videos/squirrel.mp4"]
+let textureURIs = puzzles[0].file
 let videoScale = 1
-let numRows = 4
-let numColumns = 5
+let numRows = puzzles[0].numRows
+let numColumns = puzzles[0].numColumns
 let xOffset = 0
 let yOffset = 0
 
@@ -20498,8 +20501,8 @@ const initGame = () => {
 
 
 const setup = () => {
-    console.log("Setting up video...")
-    __WEBPACK_IMPORTED_MODULE_0__app_js__["e" /* titleText */].text = textureURIs[0]
+    console.log("Setting up puzzle...")
+    __WEBPACK_IMPORTED_MODULE_0__app_js__["e" /* titleText */].text = puzzles[0].name
 
     let bw = new PIXI.filters.ColorMatrixFilter()
 
@@ -41728,6 +41731,21 @@ exports.default = TimeLimiter;
 
 /***/ }),
 /* 193 */
+/***/ (function(module, exports) {
+
+{
+  puzzles: [
+    {
+      name: "Squirrel",
+      file: ["./videos/squirrel.mp4"],
+      numRows: 4,
+      numColumns: 5
+    }
+  ]
+}
+
+/***/ }),
+/* 194 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

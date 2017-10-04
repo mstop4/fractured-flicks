@@ -1,11 +1,12 @@
 import * as app from './app.js'
+import {puzzles} from '../../puzzles.config.js'
 import 'pixi-filters'
 
 let sprites = []
-let textureURIs = ["./videos/squirrel.mp4"]
+let textureURIs = puzzles[0].file
 let videoScale = 1
-let numRows = 4
-let numColumns = 5
+let numRows = puzzles[0].numRows
+let numColumns = puzzles[0].numColumns
 let xOffset = 0
 let yOffset = 0
 
@@ -21,8 +22,8 @@ export const initGame = () => {
 }
 
 export const setup = () => {
-    console.log("Setting up video...")
-    app.titleText.text = textureURIs[0]
+    console.log("Setting up puzzle...")
+    app.titleText.text = puzzles[0].name
 
     let bw = new PIXI.filters.ColorMatrixFilter()
 

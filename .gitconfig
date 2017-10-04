@@ -1,6 +1,0 @@
-[alias]
-    a = add .
-    s = status
-    co = checkout
-    poh = push origin HEAD
-    pom = push origin master
