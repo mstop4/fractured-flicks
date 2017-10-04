@@ -20479,10 +20479,10 @@ __WEBPACK_IMPORTED_MODULE_0__libs_videoPuzzle_puzzle_js__["a" /* initGame */]()
 let sprites = []
 let textureURIs = ["./videos/squirrel.mp4"]
 let videoScale = 1
-let numRows = 2
-let numColumns = 2
-let xOffset = 100
-let yOffset = 100
+let numRows = 4
+let numColumns = 8
+let xOffset = 0
+let yOffset = 0
 
 let startLocations = []
 
@@ -20506,6 +20506,10 @@ const setup = () => {
     let guideTexture = PIXI.Texture.fromVideo(PIXI.loader.resources[textureURIs[0]].data)
     guideTexture.baseTexture.source.loop = true
     let guideSprite = new PIXI.Sprite(guideTexture)
+
+    xOffset = (__WEBPACK_IMPORTED_MODULE_0__app_js__["d" /* pixiApp */].view.width - guideSprite.width) / 2
+    yOffset = (__WEBPACK_IMPORTED_MODULE_0__app_js__["d" /* pixiApp */].view.height - guideSprite.height) / 2
+
     guideSprite.x = xOffset
     guideSprite.y = yOffset
     guideSprite.filters = [bw]
@@ -20579,17 +20583,17 @@ const setup = () => {
 
 let onDragStart = function(event) {
     this.data = event.data
-    //this.alpha = 0.5
     this.dragging = true
     this.filters = [outlineDrag]
+    __WEBPACK_IMPORTED_MODULE_0__app_js__["d" /* pixiApp */].stage.removeChild(this)
+    __WEBPACK_IMPORTED_MODULE_0__app_js__["d" /* pixiApp */].stage.addChild(this)
 }
 
 let onDragEnd = function() {
     this.data = null
-    //this.alpha = 1
     this.dragging = false
 
-    if (Math.abs(this.x - this.xStart) < 32 && Math.abs(this.y - this.yStart) < 32 && this.rotation === this.angle) {
+    if (Math.abs(this.x - this.xStart) < 32 && Math.abs(this.y - this.yStart) < 32 && this.angle % (2 * Math.PI) === 0) {
         this.x = this.xStart
         this.y = this.yStart
         this.filters = [outlineCorrect]
@@ -20608,13 +20612,14 @@ let onDragMove = function() {
     }
 }
 
-let onSpacePress = () => {
-    console.log("Space")
-    sprites.forEach(function(spr) {
-        if (spr.dragging) {
-            spr.angle += 90 * Math.PI / 180
-        }
-    })
+let onSpacePress = (event) => {
+    if (event.keyCode === 32) {
+        sprites.forEach(function(spr) {
+            if (spr.dragging) {
+                spr.angle += 90 * Math.PI / 180
+            }
+        })
+    }
 }
 
 const processPieces = () => {
@@ -20680,13 +20685,13 @@ const initApp = () => {
 
     PIXI.utils.sayHello(type)
 
-    pixiApp = new PIXI.Application(1280, 720, {
-        backgroundColor: 0x808080
+    pixiApp = new PIXI.Application({
+        width: 1280,
+        height: 720,
+        backgroundColor: 0x808080,
     }) 
 
     // Full window canvas
-    pixiApp.renderer.view.style.position = "absolute"
-    pixiApp.renderer.view.style.display = "block"
     pixiApp.renderer.autoResize = true
 
     //Add the canvas to the HTML document

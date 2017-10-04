@@ -4,8 +4,8 @@ import 'pixi-filters'
 let sprites = []
 let textureURIs = ["./videos/squirrel.mp4"]
 let videoScale = 1
-let numRows = 2
-let numColumns = 2
+let numRows = 4
+let numColumns = 8
 let xOffset = 0
 let yOffset = 0
 
