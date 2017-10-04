@@ -1,5 +1,6 @@
 import 'pixi.js'
-import {fpsCounter} from './fpsCounter.js'
+import {FpsCounter} from './FpsCounter.js'
+import {Piece} from './Piece.js'
 
 export let pixiApp = undefined
 export let titleText = undefined
@@ -28,19 +29,17 @@ export const initApp = () => {
     //Add the canvas to the HTML document
     document.getElementById("videoPuzzle").appendChild(pixiApp.view)
 
-    /*window.addEventListener("resize", function () {
-        pixiApp.renderer.resize(window.innerWidth, window.innerHeight)
-    })*/
-
-    // fps counter
-    fpsCount = new fpsCounter()
+    // Fps counter
+    fpsCount = new FpsCounter()
     fpsCount.addToStage(pixiApp.stage)
 
     titleText = new PIXI.Text("Title")
     titleText.x = 0
     titleText.y = 0
-
     pixiApp.stage.addChild(titleText)
+
+    let piece = new Piece()
+    console.dir(piece)
 }
 
 // Load sprites to cache

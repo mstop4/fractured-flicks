@@ -20703,7 +20703,7 @@ const initApp = () => {
     })*/
 
     // fps counter
-    fpsCount = new __WEBPACK_IMPORTED_MODULE_1__fpsCounter_js__["a" /* fpsCounter */]()
+    fpsCount = new __WEBPACK_IMPORTED_MODULE_1__fpsCounter_js__["a" /* FpsCounter */]()
     fpsCount.addToStage(pixiApp.stage)
 
     titleText = new PIXI.Text("Title")
@@ -41723,7 +41723,7 @@ exports.default = TimeLimiter;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-class fpsCounter {
+class FpsCounter {
   
   constructor() {
     this.realFpsText = new PIXI.Text("0")
@@ -41780,7 +41780,7 @@ class fpsCounter {
     }
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = fpsCounter;
+/* harmony export (immutable) */ __webpack_exports__["a"] = FpsCounter;
 
 
 /***/ }),

@@ -1,4 +1,4 @@
-export class fpsCounter {
+export class FpsCounter {
   
   constructor() {
     this.realFpsText = new PIXI.Text("0")
