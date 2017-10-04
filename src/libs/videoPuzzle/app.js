@@ -18,13 +18,13 @@ export const initApp = () => {
 
     PIXI.utils.sayHello(type)
 
-    pixiApp = new PIXI.Application(1280, 720, {
-        backgroundColor: 0x808080
+    pixiApp = new PIXI.Application({
+        width: 1280,
+        height: 720,
+        backgroundColor: 0x808080,
     }) 
 
     // Full window canvas
-    pixiApp.renderer.view.style.position = "absolute"
-    pixiApp.renderer.view.style.display = "block"
     pixiApp.renderer.autoResize = true
 
     //Add the canvas to the HTML document

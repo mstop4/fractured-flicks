@@ -6,8 +6,8 @@ let textureURIs = ["./videos/squirrel.mp4"]
 let videoScale = 1
 let numRows = 2
 let numColumns = 2
-let xOffset = 100
-let yOffset = 100
+let xOffset = 0
+let yOffset = 0
 
 let startLocations = []
 
@@ -29,6 +29,10 @@ export const setup = () => {
     let guideTexture = PIXI.Texture.fromVideo(PIXI.loader.resources[textureURIs[0]].data)
     guideTexture.baseTexture.source.loop = true
     let guideSprite = new PIXI.Sprite(guideTexture)
+
+    xOffset = (app.pixiApp.view.width - guideSprite.width) / 2
+    yOffset = (app.pixiApp.view.height - guideSprite.height) / 2
+
     guideSprite.x = xOffset
     guideSprite.y = yOffset
     guideSprite.filters = [bw]
@@ -94,20 +98,21 @@ export const setup = () => {
         }
     }
 
+    console.dir(app.pixiApp.stage)
     window.addEventListener("keydown", onSpacePress, false)
     app.gameLoop(processPieces)
 }
 
 let onDragStart = function(event) {
     this.data = event.data
-    //this.alpha = 0.5
     this.dragging = true
     this.filters = [outlineDrag]
+    app.pixiApp.stage.removeChild(this)
+    app.pixiApp.stage.addChild(this)
 }
 
 let onDragEnd = function() {
     this.data = null
-    //this.alpha = 1
     this.dragging = false
 
     if (Math.abs(this.x - this.xStart) < 32 && Math.abs(this.y - this.yStart) < 32 && this.rotation === this.angle) {
@@ -129,13 +134,15 @@ let onDragMove = function() {
     }
 }
 
-let onSpacePress = () => {
-    console.log("Space")
-    sprites.forEach(function(spr) {
-        if (spr.dragging) {
-            spr.angle += 90 * Math.PI / 180
-        }
-    })
+let onSpacePress = (event) => {
+    if (event.keyCode === 32) {
+        console.log("Space")
+        sprites.forEach(function(spr) {
+            if (spr.dragging) {
+                spr.angle += 90 * Math.PI / 180
+            }
+        })
+    }
 }
 
 export const processPieces = () => {
