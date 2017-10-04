@@ -5,11 +5,18 @@
 }
 
 body {
-    background-color: white;
+    background-color: #366134;
 }
 
 canvas {
     padding: 0;
-    margin: 0 auto;
+    margin: auto;
     display: block;
+    width: 1280px;
+    height: 720px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }

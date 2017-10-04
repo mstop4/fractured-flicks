@@ -37,7 +37,7 @@ export class fpsCounter {
     }
 
     let sum = this.realFpsHistory.reduce( function (a, b) { return a+b })
-    this.realFpsText.text = `Real FPS: ${(sum / this.realFpsHistory.length).toFixed(2)}`
+    this.realFpsText.text = `Game Loop FPS: ${(sum / this.realFpsHistory.length).toFixed(2)}`
 
     // update render FPS if game has rendered
     if (hasRendered) {
