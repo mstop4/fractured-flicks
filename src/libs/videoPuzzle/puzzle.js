@@ -5,7 +5,7 @@ let sprites = []
 let textureURIs = ["./videos/squirrel.mp4"]
 let videoScale = 1
 let numRows = 4
-let numColumns = 8
+let numColumns = 5
 let xOffset = 0
 let yOffset = 0
 
