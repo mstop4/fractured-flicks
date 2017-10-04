@@ -1,8 +1,11 @@
+import 'pixi.js'
+
 let outlineIdle = new PIXI.filters.OutlineFilter(2, 0xFF0000)
 let outlineDrag = new PIXI.filters.OutlineFilter(2, 0xFFFF00)
 let outlineCorrect = new PIXI.filters.OutlineFilter(2, 0x00FF00)
 
 export class Piece extends PIXI.Sprite {
+
   constructor(x, y, width, height, texture) {
     super(texture)
 
@@ -12,13 +15,20 @@ export class Piece extends PIXI.Sprite {
     this.yStart = y
     this.width = width
     this.height = height
+
+    // rotation = current rotation being rendered
+    // angle = actual rotation value internal to the instance
+    // angleDelta = transition speed between rotation and angle
+
     this.angle = Math.floor(Math.random() * 4) * 90 * Math.PI / 180
     this.angleDelta = 10 * Math.PI / 180
     this.rotation = 0
+    this.snapStrength = 32
     this.anchor.set(0.5, 0.5)
     this.filters = [outlineIdle]
-
     this.dragging = false
+
+    // state of whether the piece is in the correct position and orientation
     this.done = false
 
     this.interactive = true
@@ -30,6 +40,7 @@ export class Piece extends PIXI.Sprite {
     this.on('pointermove', this.onDragMove)
   }
 
+  // Places piece in a random location on the edge of a rectangle
   randomizePosition(left, top, right, bottom) {
     let side = Math.floor(Math.random() * 4)
     
@@ -53,21 +64,23 @@ export class Piece extends PIXI.Sprite {
     }
   }
 
-process() {
-  if (this.angle > this.rotation) {
-    if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
-      this.rotation = this.angle
-    } else {
-      this.rotation += this.angleDelta
-    }
-  } else if (this.angle < this.rotation) {
-    if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
-      this.rotation = this.angle
-    } else {
-      this.rotation -= this.angleDelta
+  process() {
+
+    // Handle transition between rotation and angle
+    if (this.angle > this.rotation) {
+      if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
+        this.rotation = this.angle
+      } else {
+        this.rotation += this.angleDelta
+      }
+    } else if (this.angle < this.rotation) {
+      if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
+        this.rotation = this.angle
+      } else {
+        this.rotation -= this.angleDelta
+      }
     }
   }
-}
 
   onDragStart(event) {
     this.data = event.data
@@ -81,7 +94,11 @@ process() {
     this.data = null
     this.dragging = false
 
-    if (Math.abs(this.x - this.xStart) < 32 && Math.abs(this.y - this.yStart) < 32 && this.angle % (2 * Math.PI) === 0) {
+    // Snap to correct position if close enough and in the correct orientation
+    if (Math.abs(this.x - this.xStart) < this.snapStrength && 
+        Math.abs(this.y - this.yStart) < this.snapStrength && 
+        this.angle % (2 * Math.PI) === 0) {
+          
       this.x = this.xStart
       this.y = this.yStart
       this.filters = [outlineCorrect]
