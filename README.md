@@ -16,4 +16,5 @@ https://mstop4.github.io/video-puzzle/
 ## Stack
 
 * PixiJS
+* Babel
 * Webpack
