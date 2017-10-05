@@ -20582,21 +20582,23 @@ exports.default = CountLimiter;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_pixi_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_pixi_js__);
 
 
-let outlineIdle = new PIXI.filters.OutlineFilter(2, 0xFF0000)
-let outlineDrag = new PIXI.filters.OutlineFilter(2, 0xFFFF00)
-let outlineCorrect = new PIXI.filters.OutlineFilter(2, 0x00FF00)
+class Piece extends PIXI.Container {
 
-class Piece extends PIXI.Sprite {
-
-  constructor(x, y, width, height, texture) {
-    super(texture)
+  constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, texture) {
+    super()
+    this.sprite = new PIXI.Sprite(texture)
+    this.sprite.width = pieceWidth
+    this.sprite.height = pieceHeight
 
     this.x = x
     this.y = y
+    this.pivot = new PIXI.Point(cellWidth/2, cellHeight/2)
     this.xStart = x
     this.yStart = y
-    this.width = width
-    this.height = height
+    this.width = pieceWidth
+    this.height = pieceHeight
+    this.outlineWidth = cellWidth
+    this.outlineHeight = cellHeight
 
     // rotation = current rotation being rendered
     // angle = actual rotation value internal to the instance
@@ -20606,8 +20608,6 @@ class Piece extends PIXI.Sprite {
     this.angleDelta = 10 * Math.PI / 180
     this.rotation = 0
     this.snapStrength = 32
-    this.anchor.set(0.5, 0.5)
-    this.filters = [outlineIdle]
     this.dragging = false
 
     // state of whether the piece is in the correct position and orientation
@@ -20620,6 +20620,12 @@ class Piece extends PIXI.Sprite {
     this.on('pointerup', this.onDragEnd)
     this.on('pointerupoutside', this.onDragEnd)
     this.on('pointermove', this.onDragMove)
+
+    this.outline = new PIXI.Graphics()
+    this.recolourOutline(0xFF0000)
+
+    this.addChild(this.sprite)
+    this.addChild(this.outline)
   }
 
   // Places piece in a random location on the edge of a rectangle
@@ -20646,8 +20652,13 @@ class Piece extends PIXI.Sprite {
     }
   }
 
-  process() {
+  recolourOutline(colour) {
+    this.outline.clear()
+    this.outline.lineStyle(2,colour,1)
+    this.outline.drawRect(0,0,this.outlineWidth,this.outlineHeight)
+  }
 
+  process() {
     // Handle transition between rotation and angle
     if (this.angle > this.rotation) {
       if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
@@ -20667,7 +20678,7 @@ class Piece extends PIXI.Sprite {
   onDragStart(event) {
     this.data = event.data
     this.dragging = true
-    this.filters = [outlineDrag]
+    this.recolourOutline(0xFFFF00)
 
     // Bring this piece to the front
     let tempParent = this.parent
@@ -20686,10 +20697,10 @@ class Piece extends PIXI.Sprite {
 
       this.x = this.xStart
       this.y = this.yStart
-      this.filters = [outlineCorrect]
+      this.recolourOutline(0x00FF00)
       this.done = true
     } else {
-      this.filters = [outlineIdle]
+      this.recolourOutline(0xFF0000)
       this.done = false
     }
   }
@@ -20767,7 +20778,7 @@ const setup = () => {
     guide.x = xOffset
     guide.y = yOffset
     guide.filters = [bw]
-    bw.desaturate()
+    bw.blackAndWhite()
 
     __WEBPACK_IMPORTED_MODULE_2__app_js__["f" /* pixiApp */].stage.addChild(guide)
 
@@ -20787,7 +20798,7 @@ const setup = () => {
             let pieceX = xOffset + (j+0.5)*(cellWidth * videoScale)
             let pieceY = yOffset + (i+0.5)*(cellHeight * videoScale)
 
-            let newPiece = new __WEBPACK_IMPORTED_MODULE_4__Piece_js__["a" /* Piece */](pieceX, pieceY, pieceWidth, pieceHeight, pieceTex)
+            let newPiece = new __WEBPACK_IMPORTED_MODULE_4__Piece_js__["a" /* Piece */](pieceX, pieceY, pieceWidth, pieceHeight, cellWidth, cellHeight, pieceTex)
             newPiece.randomizePosition(xOffset - 50, 
                                        yOffset - 50, 
                                        xOffset + guide.width + 50,
@@ -41928,7 +41939,7 @@ var TwistFilter=function(o){function n(n,r,t){void 0===n&&(n=200),void 0===r&&(r
 
 let pixiApp = undefined
 let titleText = undefined
-let frameSkip = 1
+let frameSkip = 0
 let fsIndex = 0
 let fpsCount = undefined
 let maxWidth = 1280
