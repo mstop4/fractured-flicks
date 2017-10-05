@@ -6,3 +6,8 @@ Virtual jigsaw puzzles using videos.
 
 ## Demo
 https://mstop4.github.io/video-puzzle/
+
+### Controls
+
+*Left Mouse Drag* - Move piece  
+*Space Bar* - Rotate piece
