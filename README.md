@@ -17,5 +17,6 @@ For a list of updates, please check the [Changelog](changelog.md)
 ## Stack
 
 * PixiJS
+* Babel
 * Webpack
 
