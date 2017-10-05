@@ -41944,13 +41944,10 @@ const initApp = () => {
     PIXI.utils.sayHello(type)
 
     pixiApp = new PIXI.Application({
-        width: window.innerWidth/2,
-        height: window.innerHeight/2,
+        width: maxWidth,
+        height: maxHeight,
         backgroundColor: 0x808080,
     }) 
-
-    // Full window canvas
-    //pixiApp.renderer.autoResize = true
 
     //Add the canvas to the HTML document
     document.getElementById("videoPuzzle").appendChild(pixiApp.view)
