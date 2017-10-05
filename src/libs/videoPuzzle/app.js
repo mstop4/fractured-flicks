@@ -7,6 +7,8 @@ export let titleText = undefined
 let frameSkip = 1
 let fsIndex = 0
 let fpsCount = undefined
+export let maxWidth = 1280
+export let maxHeight = 720
 
 export const initApp = () => {
 
@@ -18,16 +20,19 @@ export const initApp = () => {
     PIXI.utils.sayHello(type)
 
     pixiApp = new PIXI.Application({
-        width: 1280,
-        height: 720,
+        width: window.innerWidth/2,
+        height: window.innerHeight/2,
         backgroundColor: 0x808080,
     }) 
 
     // Full window canvas
-    pixiApp.renderer.autoResize = true
+    //pixiApp.renderer.autoResize = true
 
     //Add the canvas to the HTML document
     document.getElementById("videoPuzzle").appendChild(pixiApp.view)
+
+    // Stage
+    scaleStageToWindow()
 
     // Fps counter
     fpsCount = new FpsCounter()
@@ -51,6 +56,16 @@ export const loadTextures = (texArray, setup) => {
     function loadProgressHandler(loader, resource) {
         console.log(`Loading "${resource.url}" ... ${loader.progress}%`)
     }
+}
+
+export const scaleStageToWindow = () => {
+
+    let hRatio = (window.innerHeight) / maxHeight
+    let wRatio = (window.innerWidth) / maxWidth
+    let leastRatio = Math.min(hRatio, wRatio)
+    
+    pixiApp.renderer.resize(Math.min(maxWidth * leastRatio, maxWidth), Math.min(maxHeight * leastRatio, maxHeight))
+    pixiApp.stage.scale = new PIXI.Point(Math.min(1, leastRatio), Math.min(1, leastRatio))
 }
 
 export const gameLoop = (updateFunc) => {

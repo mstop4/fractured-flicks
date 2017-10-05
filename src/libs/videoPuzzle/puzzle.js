@@ -30,8 +30,8 @@ const setup = () => {
     guideTex.baseTexture.source.loop = true
     guide = new PIXI.Sprite(guideTex)
 
-    xOffset = (app.pixiApp.view.width - guide.width) / 2
-    yOffset = (app.pixiApp.view.height - guide.height) / 2
+    xOffset = (app.maxWidth- guide.width) / 2
+    yOffset = (app.maxHeight - guide.height) / 2
 
     guide.x = xOffset
     guide.y = yOffset
@@ -67,6 +67,8 @@ const setup = () => {
         }
     }
     window.addEventListener("keydown", onSpacePress, false)
+    window.addEventListener("resize", app.scaleStageToWindow, false)
+
     app.gameLoop(processPieces)
 }
 
