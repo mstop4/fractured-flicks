@@ -36,7 +36,7 @@ const setup = () => {
     guide.x = xOffset
     guide.y = yOffset
     guide.filters = [bw]
-    bw.desaturate()
+    bw.blackAndWhite()
 
     app.pixiApp.stage.addChild(guide)
 
@@ -56,7 +56,7 @@ const setup = () => {
             let pieceX = xOffset + (j+0.5)*(cellWidth * videoScale)
             let pieceY = yOffset + (i+0.5)*(cellHeight * videoScale)
 
-            let newPiece = new Piece(pieceX, pieceY, pieceWidth, pieceHeight, pieceTex)
+            let newPiece = new Piece(pieceX, pieceY, pieceWidth, pieceHeight, cellWidth, cellHeight, pieceTex)
             newPiece.randomizePosition(xOffset - 50, 
                                        yOffset - 50, 
                                        xOffset + guide.width + 50,

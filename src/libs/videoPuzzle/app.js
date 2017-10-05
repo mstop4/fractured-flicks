@@ -4,7 +4,7 @@ import {Piece} from './Piece.js'
 
 export let pixiApp = undefined
 export let titleText = undefined
-let frameSkip = 1
+let frameSkip = 0
 let fsIndex = 0
 let fpsCount = undefined
 export let maxWidth = 1280

@@ -1,20 +1,22 @@
 import 'pixi.js'
 
-let outlineIdle = new PIXI.filters.OutlineFilter(2, 0xFF0000)
-let outlineDrag = new PIXI.filters.OutlineFilter(2, 0xFFFF00)
-let outlineCorrect = new PIXI.filters.OutlineFilter(2, 0x00FF00)
+export class Piece extends PIXI.Container {
 
-export class Piece extends PIXI.Sprite {
-
-  constructor(x, y, width, height, texture) {
-    super(texture)
+  constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, texture) {
+    super()
+    this.sprite = new PIXI.Sprite(texture)
+    this.sprite.width = pieceWidth
+    this.sprite.height = pieceHeight
 
     this.x = x
     this.y = y
+    this.pivot = new PIXI.Point(cellWidth/2, cellHeight/2)
     this.xStart = x
     this.yStart = y
-    this.width = width
-    this.height = height
+    this.width = pieceWidth
+    this.height = pieceHeight
+    this.outlineWidth = cellWidth
+    this.outlineHeight = cellHeight
 
     // rotation = current rotation being rendered
     // angle = actual rotation value internal to the instance
@@ -24,8 +26,6 @@ export class Piece extends PIXI.Sprite {
     this.angleDelta = 10 * Math.PI / 180
     this.rotation = 0
     this.snapStrength = 32
-    this.anchor.set(0.5, 0.5)
-    this.filters = [outlineIdle]
     this.dragging = false
 
     // state of whether the piece is in the correct position and orientation
@@ -38,6 +38,12 @@ export class Piece extends PIXI.Sprite {
     this.on('pointerup', this.onDragEnd)
     this.on('pointerupoutside', this.onDragEnd)
     this.on('pointermove', this.onDragMove)
+
+    this.outline = new PIXI.Graphics()
+    this.recolourOutline(0xFF0000)
+
+    this.addChild(this.sprite)
+    this.addChild(this.outline)
   }
 
   // Places piece in a random location on the edge of a rectangle
@@ -64,8 +70,13 @@ export class Piece extends PIXI.Sprite {
     }
   }
 
-  process() {
+  recolourOutline(colour) {
+    this.outline.clear()
+    this.outline.lineStyle(2,colour,1)
+    this.outline.drawRect(0,0,this.outlineWidth,this.outlineHeight)
+  }
 
+  process() {
     // Handle transition between rotation and angle
     if (this.angle > this.rotation) {
       if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
@@ -85,7 +96,7 @@ export class Piece extends PIXI.Sprite {
   onDragStart(event) {
     this.data = event.data
     this.dragging = true
-    this.filters = [outlineDrag]
+    this.recolourOutline(0xFFFF00)
 
     // Bring this piece to the front
     let tempParent = this.parent
@@ -104,10 +115,10 @@ export class Piece extends PIXI.Sprite {
 
       this.x = this.xStart
       this.y = this.yStart
-      this.filters = [outlineCorrect]
+      this.recolourOutline(0x00FF00)
       this.done = true
     } else {
-      this.filters = [outlineIdle]
+      this.recolourOutline(0xFF0000)
       this.done = false
     }
   }
