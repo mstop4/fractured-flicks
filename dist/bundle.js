@@ -20753,7 +20753,7 @@ const initGame = () => {
 
 const setup = () => {
     console.log("Setting up puzzle...")
-    __WEBPACK_IMPORTED_MODULE_2__app_js__["e" /* titleText */].text = __WEBPACK_IMPORTED_MODULE_3__puzzles_config_js__["a" /* puzzles */][0].name
+    __WEBPACK_IMPORTED_MODULE_2__app_js__["h" /* titleText */].text = __WEBPACK_IMPORTED_MODULE_3__puzzles_config_js__["a" /* puzzles */][0].name
 
     let bw = new PIXI.filters.ColorMatrixFilter()
 
@@ -20761,15 +20761,15 @@ const setup = () => {
     guideTex.baseTexture.source.loop = true
     guide = new PIXI.Sprite(guideTex)
 
-    xOffset = (__WEBPACK_IMPORTED_MODULE_2__app_js__["d" /* pixiApp */].view.width - guide.width) / 2
-    yOffset = (__WEBPACK_IMPORTED_MODULE_2__app_js__["d" /* pixiApp */].view.height - guide.height) / 2
+    xOffset = (__WEBPACK_IMPORTED_MODULE_2__app_js__["e" /* maxWidth */]- guide.width) / 2
+    yOffset = (__WEBPACK_IMPORTED_MODULE_2__app_js__["d" /* maxHeight */] - guide.height) / 2
 
     guide.x = xOffset
     guide.y = yOffset
     guide.filters = [bw]
     bw.desaturate()
 
-    __WEBPACK_IMPORTED_MODULE_2__app_js__["d" /* pixiApp */].stage.addChild(guide)
+    __WEBPACK_IMPORTED_MODULE_2__app_js__["f" /* pixiApp */].stage.addChild(guide)
 
     let cellWidth = guide.width / numColumns
     let cellHeight = guide.height / numRows
@@ -20794,10 +20794,12 @@ const setup = () => {
                                        yOffset + guide.height + 50)
 
             pieces.push(newPiece)
-            __WEBPACK_IMPORTED_MODULE_2__app_js__["d" /* pixiApp */].stage.addChild(newPiece)
+            __WEBPACK_IMPORTED_MODULE_2__app_js__["f" /* pixiApp */].stage.addChild(newPiece)
         }
     }
     window.addEventListener("keydown", onSpacePress, false)
+    window.addEventListener("resize", __WEBPACK_IMPORTED_MODULE_2__app_js__["g" /* scaleStageToWindow */], false)
+
     __WEBPACK_IMPORTED_MODULE_2__app_js__["a" /* gameLoop */](processPieces)
 }
 
@@ -20820,8 +20822,8 @@ const processPieces = () => {
         done = piece.done && done
     })
 
-    if (done && __WEBPACK_IMPORTED_MODULE_2__app_js__["e" /* titleText */].text != "Complete!") {
-        __WEBPACK_IMPORTED_MODULE_2__app_js__["e" /* titleText */].text = "Complete!"
+    if (done && __WEBPACK_IMPORTED_MODULE_2__app_js__["h" /* titleText */].text != "Complete!") {
+        __WEBPACK_IMPORTED_MODULE_2__app_js__["h" /* titleText */].text = "Complete!"
         guide.filters = []
         pieces.forEach(function(piece) {
             piece.visible = false
@@ -41912,8 +41914,10 @@ var TwistFilter=function(o){function n(n,r,t){void 0===n&&(n=200),void 0===r&&(r
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return pixiApp; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return titleText; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return pixiApp; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return titleText; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return maxWidth; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return maxHeight; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_pixi_js__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_pixi_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_pixi_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__FpsCounter_js__ = __webpack_require__(195);
@@ -41927,6 +41931,8 @@ let titleText = undefined
 let frameSkip = 1
 let fsIndex = 0
 let fpsCount = undefined
+let maxWidth = 1280
+let maxHeight = 720
 
 const initApp = () => {
 
@@ -41938,16 +41944,19 @@ const initApp = () => {
     PIXI.utils.sayHello(type)
 
     pixiApp = new PIXI.Application({
-        width: 1280,
-        height: 720,
+        width: window.innerWidth/2,
+        height: window.innerHeight/2,
         backgroundColor: 0x808080,
     }) 
 
     // Full window canvas
-    pixiApp.renderer.autoResize = true
+    //pixiApp.renderer.autoResize = true
 
     //Add the canvas to the HTML document
     document.getElementById("videoPuzzle").appendChild(pixiApp.view)
+
+    // Stage
+    scaleStageToWindow()
 
     // Fps counter
     fpsCount = new __WEBPACK_IMPORTED_MODULE_1__FpsCounter_js__["a" /* FpsCounter */]()
@@ -41975,6 +41984,18 @@ const loadTextures = (texArray, setup) => {
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["c"] = loadTextures;
+
+
+const scaleStageToWindow = () => {
+
+    let hRatio = (window.innerHeight) / maxHeight
+    let wRatio = (window.innerWidth) / maxWidth
+    let leastRatio = Math.min(hRatio, wRatio)
+    
+    pixiApp.renderer.resize(Math.min(maxWidth * leastRatio, maxWidth), Math.min(maxHeight * leastRatio, maxHeight))
+    pixiApp.stage.scale = new PIXI.Point(Math.min(1, leastRatio), Math.min(1, leastRatio))
+}
+/* harmony export (immutable) */ __webpack_exports__["g"] = scaleStageToWindow;
 
 
 const gameLoop = (updateFunc) => {
