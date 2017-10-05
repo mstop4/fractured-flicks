@@ -12,8 +12,10 @@ https://mstop4.github.io/video-puzzle/
 *Left Mouse Drag* - Move piece  
 *Space Bar* - Rotate piece
 
+For a list of updates, please check the [Changelog](changelog.md)
 
 ## Stack
 
 * PixiJS
 * Webpack
+
