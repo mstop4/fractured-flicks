@@ -1,12 +1,15 @@
 import 'pixi.js'
 import 'pixi-filters'
+import 'pixi-sound'
 import * as app from './app.js'
 import {puzzles} from '../../puzzles.config.js'
+import {sounds} from '../../audio.config.js'
 import {Piece} from './Piece.js'
 
 let pieces = []
 let guide = undefined
 let textureURIs = puzzles[0].file
+let soundURIs = sounds
 let videoScale = 1
 let numRows = puzzles[0].numRows
 let numColumns = puzzles[0].numColumns
@@ -17,15 +20,17 @@ let startLocations = []
 
 export const initGame = () => {
     app.initApp()
-    app.loadTextures(textureURIs, setup)
+    app.loadTextures(textureURIs, () => {
+        app.loadAudio(soundURIs, setup)
+    })
 }
 
 const setup = () => {
     console.log("Setting up puzzle...")
+
     app.titleText.text = puzzles[0].name
 
     let bw = new PIXI.filters.ColorMatrixFilter()
-
     let guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[textureURIs[0]].data)
     guideTex.baseTexture.source.loop = true
     guide = new PIXI.Sprite(guideTex)
@@ -73,17 +78,12 @@ const setup = () => {
 }
 
 let onSpacePress = (event) => {
-    if (event.keyCode === 32) {
-        pieces.forEach(function(piece) {
-            if (piece.dragging) {
-                piece.angle += 90 * Math.PI / 180
-            }
-        })
-    }
+    pieces.forEach( (piece) => {
+        piece.onSpacePress(event)
+    })
 }
 
 export const processPieces = () => {
-
     let done = true
 
     pieces.forEach( (piece) => {

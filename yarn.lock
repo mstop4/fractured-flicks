@@ -2569,6 +2569,12 @@ pixi-gl-core@^1.0.3:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pixi-gl-core/-/pixi-gl-core-1.1.0.tgz#a52cb4dd3254f9c7857a0e9c2356b00e6ec0c761"
 
+pixi-sound@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/pixi-sound/-/pixi-sound-1.4.2.tgz#cef5b32e33d0dc6a31b54399dc287db632e92c98"
+  dependencies:
+    uuid "^3.0.1"
+
 pixi.js@^4.5.6:
   version "4.5.6"
   resolved "https://registry.yarnpkg.com/pixi.js/-/pixi.js-4.5.6.tgz#54914e7935f9a9e346923b9f424e52fa417593cd"
@@ -3326,7 +3332,7 @@ uuid@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.3.tgz#67e2e863797215530dff318e5bf9dcebfd47b21a"
 
-uuid@^3.0.0:
+uuid@^3.0.0, uuid@^3.0.1:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
 

@@ -1,21 +1,22 @@
-const path = require('path');
-
 module.exports = {
     entry: './src/index.js',
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js' 
+      filename: './dist/bundle.js' 
+    },
+
+    node: {
+      fs: "empty"
     },
 
     module: {
-        loaders: [
-          {
-            test: /\.js$/,
-            loader: 'babel-loader',
-            query: {
-              presets: ['es2015']
-            }
+      loaders: [
+        {
+          test: /\.js$/,
+          loader: 'babel-loader',
+          query: {
+            presets: ['es2015']
           }
-        ]
-      }
+        }
+      ]
+    }
 }

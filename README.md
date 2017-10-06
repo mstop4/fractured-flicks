@@ -19,6 +19,8 @@ For a list of updates, please check the [Changelog](changelog.md)
 ## Stack
 
 * PixiJS
+    * pixi-filters
+    * pixi-sound
 * Babel
 * Webpack
 
