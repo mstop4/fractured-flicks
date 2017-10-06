@@ -75,6 +75,9 @@ const setup = () => {
     window.addEventListener("resize", app.scaleStageToWindow, false)
 
     app.gameLoop(processPieces)
+
+    app.soundResources['./sounds/music1.mp3'].loop = true
+    app.soundResources['./sounds/music1.mp3'].play()
 }
 
 let onSpacePress = (event) => {
