@@ -11,8 +11,9 @@ https://mstop4.github.io/video-puzzle/
 
 ### Controls
 
-*Left Mouse Click / Tap* - Rotate Piece  
-*Left Mouse Click+Hold+Drag / Tap+Hold+Drag* - Move Piece 
+* *Left Mouse Click / Tap* - Rotate Piece  
+* *Left Mouse Click+Hold+Drag / Tap+Hold+Drag* - Move Piece 
+* *1 or 2 Key* - Switch Puzzle (*testing only*) 
 
 For a list of updates, please check the [Changelog](changelog.md)
 
