@@ -31,6 +31,7 @@ export const initGame = () => {
 
 const loadLevel = (level) => {
 
+    console.log("Changing Levels")
     loadingNewLevel = true
 
     app.pixiApp.stage.removeChild(guide)

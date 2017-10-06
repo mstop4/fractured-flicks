@@ -22218,32 +22218,72 @@ var _Piece = __webpack_require__(97);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+var currentLevel = 1;
+
 var pieces = [];
 var guide = undefined;
-var textureURIs = _puzzlesConfig.puzzles[0].file;
+var videoURI = _puzzlesConfig.puzzles[currentLevel].file;
 var soundURIs = _audioConfig.sounds;
 var videoScale = 1;
-var numRows = _puzzlesConfig.puzzles[0].numRows;
-var numColumns = _puzzlesConfig.puzzles[0].numColumns;
+var numRows = _puzzlesConfig.puzzles[currentLevel].numRows;
+var numColumns = _puzzlesConfig.puzzles[currentLevel].numColumns;
 var xOffset = 0;
 var yOffset = 0;
+var loadingNewLevel = false;
+var firstTimeSetup = true;
 
 var startLocations = [];
 
 var initGame = exports.initGame = function initGame() {
     app.initApp();
-    app.loadTextures(textureURIs, function () {
+    app.loadTextures(videoURI, function () {
         app.loadAudio(soundURIs, setup);
     });
+};
+
+var loadLevel = function loadLevel(level) {
+
+    console.log("Changing Levels");
+    loadingNewLevel = true;
+
+    app.pixiApp.stage.removeChild(guide);
+    guide.destroy({
+        children: true,
+        texture: true,
+        baseTexture: true
+    });
+    guide = null;
+
+    pieces.forEach(function (piece) {
+        app.pixiApp.stage.removeChild(piece);
+        piece.destroy({
+            children: true,
+            texture: true,
+            baseTexture: true
+        });
+        piece = null;
+    });
+
+    pieces = [];
+
+    currentLevel = level;
+    videoURI = _puzzlesConfig.puzzles[currentLevel].file;
+    app.titleText.text = "Loading";
+
+    if (!PIXI.loader.resources.hasOwnProperty(videoURI)) {
+        app.loadTextures(videoURI, setup);
+    } else {
+        setup();
+    }
 };
 
 var setup = function setup() {
     console.log("Setting up puzzle...");
 
-    app.titleText.text = _puzzlesConfig.puzzles[0].name;
+    app.titleText.text = _puzzlesConfig.puzzles[currentLevel].name;
 
     var bw = new PIXI.filters.ColorMatrixFilter();
-    var guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[textureURIs[0]].data);
+    var guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[videoURI].data);
     guideTex.baseTexture.source.loop = true;
     guide = new PIXI.Sprite(guideTex);
 
@@ -22267,7 +22307,7 @@ var setup = function setup() {
         for (var j = 0; j < numColumns; j++) {
 
             var rect = new PIXI.Rectangle(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
-            var pieceTex = PIXI.Texture.fromVideo(PIXI.loader.resources[textureURIs[0]].data);
+            var pieceTex = PIXI.Texture.fromVideo(PIXI.loader.resources[videoURI].data);
             pieceTex.frame = rect;
 
             var pieceX = xOffset + (j + 0.5) * (cellWidth * videoScale);
@@ -22280,20 +22320,29 @@ var setup = function setup() {
             app.pixiApp.stage.addChild(newPiece);
         }
     }
-    //window.addEventListener("keydown", onSpacePress, false)
+
     window.addEventListener("resize", app.scaleStageToWindow, false);
+    window.addEventListener("keydown", onChangeLevel, false);
 
-    app.gameLoop(processPieces);
+    if (firstTimeSetup) {
+        app.gameLoop(processPieces);
 
-    app.soundResources['./sounds/music1.mp3'].loop = true;
-    app.soundResources['./sounds/music1.mp3'].play();
+        app.soundResources['./sounds/music1.mp3'].loop = true;
+        app.soundResources['./sounds/music1.mp3'].play();
+
+        firstTimeSetup = false;
+    }
+
+    loadingNewLevel = false;
 };
 
-// let onSpacePress = (event) => {
-//     pieces.forEach( (piece) => {
-//         piece.onSpacePress(event)
-//     })
-// }
+var onChangeLevel = function onChangeLevel(event) {
+    if (event.keyCode === 49) {
+        loadLevel(0);
+    } else if (event.keyCode === 50) {
+        loadLevel(1);
+    }
+};
 
 var processPieces = exports.processPieces = function processPieces() {
     var done = true;
@@ -22303,7 +22352,7 @@ var processPieces = exports.processPieces = function processPieces() {
         done = piece.done && done;
     });
 
-    if (done && app.titleText.text != "Complete!") {
+    if (done && !loadingNewLevel && app.titleText.text != "Complete!") {
         app.titleText.text = "Complete!";
         guide.filters = [];
         pieces.forEach(function (piece) {
@@ -45350,7 +45399,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 var puzzles = exports.puzzles = [{
   name: "Squirrel",
-  file: ["./videos/squirrel.mp4"],
+  file: "./videos/squirrel.mp4",
+  numRows: 4,
+  numColumns: 5
+}, {
+  name: "Shore",
+  file: "./videos/shore.mp4",
   numRows: 4,
   numColumns: 5
 }];
