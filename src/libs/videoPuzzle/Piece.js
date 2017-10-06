@@ -1,13 +1,17 @@
 import 'pixi.js'
+import * as app from './app.js'
 
 export class Piece extends PIXI.Container {
 
   constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, texture) {
     super()
+
+    // Graphics
     this.sprite = new PIXI.Sprite(texture)
     this.sprite.width = pieceWidth
     this.sprite.height = pieceHeight
 
+    // Properties
     this.x = x
     this.y = y
     this.pivot = new PIXI.Point(cellWidth/2, cellHeight/2)
@@ -34,10 +38,17 @@ export class Piece extends PIXI.Container {
     this.interactive = true
     this.buttonMode = true
 
+    // Event handlers
     this.on('pointerdown', this.onDragStart)
     this.on('pointerup', this.onDragEnd)
     this.on('pointerupoutside', this.onDragEnd)
     this.on('pointermove', this.onDragMove)
+
+    // Sounds
+    this.pickUpSfx = app.soundResources['./sounds/pickUp.mp3']
+    this.putDownSfx = app.soundResources['./sounds/putDown.mp3']
+    this.rotateSfx = app.soundResources['./sounds/rotate.mp3']
+    this.correctSfx = app.soundResources['./sounds/correct.mp3']
 
     this.outline = new PIXI.Graphics()
     this.recolourOutline(0xFF0000)
@@ -97,6 +108,7 @@ export class Piece extends PIXI.Container {
     this.data = event.data
     this.dragging = true
     this.recolourOutline(0xFFFF00)
+    this.pickUpSfx.play()
 
     // Bring this piece to the front
     let tempParent = this.parent
@@ -117,9 +129,11 @@ export class Piece extends PIXI.Container {
       this.y = this.yStart
       this.recolourOutline(0x00FF00)
       this.done = true
+      this.correctSfx.play()
     } else {
       this.recolourOutline(0xFF0000)
       this.done = false
+      this.putDownSfx.play()
     }
   }
 
@@ -128,6 +142,13 @@ export class Piece extends PIXI.Container {
       let newPosition = this.data.getLocalPosition(this.parent)
       this.x = newPosition.x
       this.y = newPosition.y
+    }
+  }
+
+  onSpacePress(event) {
+    if (event.keyCode === 32 && this.dragging) {
+      this.angle += 90 * Math.PI / 180
+      this.rotateSfx.play()
     }
   }
 }

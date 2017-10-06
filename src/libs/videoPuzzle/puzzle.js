@@ -28,9 +28,6 @@ export const initGame = () => {
 const setup = () => {
     console.log("Setting up puzzle...")
 
-    let sound = app.soundResources[soundURIs[0]]
-    sound.play()
-
     app.titleText.text = puzzles[0].name
 
     let bw = new PIXI.filters.ColorMatrixFilter()
@@ -81,17 +78,12 @@ const setup = () => {
 }
 
 let onSpacePress = (event) => {
-    if (event.keyCode === 32) {
-        pieces.forEach(function(piece) {
-            if (piece.dragging) {
-                piece.angle += 90 * Math.PI / 180
-            }
-        })
-    }
+    pieces.forEach( (piece) => {
+        piece.onSpacePress(event)
+    })
 }
 
 export const processPieces = () => {
-
     let done = true
 
     pieces.forEach( (piece) => {
