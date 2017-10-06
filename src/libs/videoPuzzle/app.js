@@ -4,6 +4,7 @@ import {Piece} from './Piece.js'
 
 export let pixiApp = undefined
 export let titleText = undefined
+export let soundResources = {}
 let frameSkip = 0
 let fsIndex = 0
 let fpsCount = undefined
@@ -42,17 +43,26 @@ export const initApp = () => {
 }
 
 // Load sprites to cache
-export const loadTextures = (texArray, setup) => {
-
+export const loadTextures = (texArray, next) => {
+    console.log("Loading textures")
     PIXI.loader
     .add(texArray)
     .on("progress", loadProgressHandler)
-    .load(setup)
+    .load(next)
+}
 
-    // Sprite Loader setup
-    function loadProgressHandler(loader, resource) {
-        console.log(`Loading "${resource.url}" ... ${loader.progress}%`)
-    }
+export const loadAudio = (sndArray, next) => {
+    console.log("Loading sounds")
+    
+    sndArray.forEach( (snd) => {
+        soundResources[snd] = PIXI.sound.Sound.from(snd)
+    })
+
+    next()
+}
+
+const loadProgressHandler = (loader, resource) => {
+    console.log(`Loading "${resource.url}" ... ${loader.progress}%`)
 }
 
 export const scaleStageToWindow = () => {
