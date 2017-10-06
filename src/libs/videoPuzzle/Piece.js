@@ -1,6 +1,8 @@
 import 'pixi.js'
 import * as app from './app.js'
 
+let dragDelay = 150
+
 export class Piece extends PIXI.Container {
 
   constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, texture) {
@@ -30,7 +32,9 @@ export class Piece extends PIXI.Container {
     this.angleDelta = 10 * Math.PI / 180
     this.rotation = 0
     this.snapStrength = 32
+    this.clicked = false
     this.dragging = false
+    this.dragAlarm = null
 
     // state of whether the piece is in the correct position and orientation
     this.done = false
@@ -39,9 +43,9 @@ export class Piece extends PIXI.Container {
     this.buttonMode = true
 
     // Event handlers
-    this.on('pointerdown', this.onDragStart)
-    this.on('pointerup', this.onDragEnd)
-    this.on('pointerupoutside', this.onDragEnd)
+    this.on('pointerdown', this.onClick)
+    this.on('pointerup', this.onRelease)
+    this.on('pointerupoutside', this.onRelease)
     this.on('pointermove', this.onDragMove)
 
     // Sounds
@@ -104,36 +108,48 @@ export class Piece extends PIXI.Container {
     }
   }
 
-  onDragStart(event) {
+  onClick(event) {
     this.data = event.data
-    this.dragging = true
-    this.recolourOutline(0xFFFF00)
-    this.pickUpSfx.play()
-
-    // Bring this piece to the front
-    let tempParent = this.parent
-    tempParent.removeChild(this)
-    tempParent.addChild(this)
+    this.clicked = true
+    this.dragAlarm = window.setTimeout( () => {
+      
+      this.dragging = true
+      this.recolourOutline(0xFFFF00)
+      this.pickUpSfx.play()
+  
+      // Bring this piece to the front
+      let tempParent = this.parent
+      tempParent.removeChild(this)
+      tempParent.addChild(this)
+    
+    } , dragDelay)
   }
 
-  onDragEnd() {
-    this.data = null
-    this.dragging = false
+  onRelease() {
+    if (this.dragging) {
+      this.data = null
+      this.dragging = false
 
-    // Snap to correct position if close enough and in the correct orientation
-    if (Math.abs(this.x - this.xStart) < this.snapStrength && 
-        Math.abs(this.y - this.yStart) < this.snapStrength && 
-        this.angle % (2 * Math.PI) === 0) {
+      // Snap to correct position if close enough and in the correct orientation
+      if (Math.abs(this.x - this.xStart) < this.snapStrength && 
+          Math.abs(this.y - this.yStart) < this.snapStrength && 
+          this.angle % (2 * Math.PI) === 0) {
 
-      this.x = this.xStart
-      this.y = this.yStart
-      this.recolourOutline(0x00FF00)
-      this.done = true
-      this.correctSfx.play()
+        this.x = this.xStart
+        this.y = this.yStart
+        this.recolourOutline(0x00FF00)
+        this.done = true
+        this.correctSfx.play()
+      } else {
+        this.recolourOutline(0xFF0000)
+        this.done = false
+        this.putDownSfx.play()
+      }
     } else {
-      this.recolourOutline(0xFF0000)
-      this.done = false
-      this.putDownSfx.play()
+      if (this.clicked) {
+        this.onRotateStart()
+      }
+      window.clearTimeout(this.dragAlarm)
     }
   }
 
@@ -145,10 +161,8 @@ export class Piece extends PIXI.Container {
     }
   }
 
-  onSpacePress(event) {
-    if (event.keyCode === 32 && this.dragging) {
-      this.angle += 90 * Math.PI / 180
-      this.rotateSfx.play()
-    }
+  onRotateStart() {
+    this.angle += 90 * Math.PI / 180
+    this.rotateSfx.play()
   }
 }

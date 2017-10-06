@@ -71,7 +71,7 @@ const setup = () => {
             app.pixiApp.stage.addChild(newPiece)
         }
     }
-    window.addEventListener("keydown", onSpacePress, false)
+    //window.addEventListener("keydown", onSpacePress, false)
     window.addEventListener("resize", app.scaleStageToWindow, false)
 
     app.gameLoop(processPieces)
@@ -80,11 +80,11 @@ const setup = () => {
     app.soundResources['./sounds/music1.mp3'].play()
 }
 
-let onSpacePress = (event) => {
-    pieces.forEach( (piece) => {
-        piece.onSpacePress(event)
-    })
-}
+// let onSpacePress = (event) => {
+//     pieces.forEach( (piece) => {
+//         piece.onSpacePress(event)
+//     })
+// }
 
 export const processPieces = () => {
     let done = true

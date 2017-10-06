@@ -21991,6 +21991,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var dragDelay = 150;
+
 var Piece = exports.Piece = function (_PIXI$Container) {
   _inherits(Piece, _PIXI$Container);
 
@@ -22023,7 +22025,9 @@ var Piece = exports.Piece = function (_PIXI$Container) {
     _this.angleDelta = 10 * Math.PI / 180;
     _this.rotation = 0;
     _this.snapStrength = 32;
+    _this.clicked = false;
     _this.dragging = false;
+    _this.dragAlarm = null;
 
     // state of whether the piece is in the correct position and orientation
     _this.done = false;
@@ -22032,9 +22036,9 @@ var Piece = exports.Piece = function (_PIXI$Container) {
     _this.buttonMode = true;
 
     // Event handlers
-    _this.on('pointerdown', _this.onDragStart);
-    _this.on('pointerup', _this.onDragEnd);
-    _this.on('pointerupoutside', _this.onDragEnd);
+    _this.on('pointerdown', _this.onClick);
+    _this.on('pointerup', _this.onRelease);
+    _this.on('pointerupoutside', _this.onRelease);
     _this.on('pointermove', _this.onDragMove);
 
     // Sounds
@@ -22104,36 +22108,49 @@ var Piece = exports.Piece = function (_PIXI$Container) {
       }
     }
   }, {
-    key: 'onDragStart',
-    value: function onDragStart(event) {
-      this.data = event.data;
-      this.dragging = true;
-      this.recolourOutline(0xFFFF00);
-      this.pickUpSfx.play();
+    key: 'onClick',
+    value: function onClick(event) {
+      var _this2 = this;
 
-      // Bring this piece to the front
-      var tempParent = this.parent;
-      tempParent.removeChild(this);
-      tempParent.addChild(this);
+      this.data = event.data;
+      this.clicked = true;
+      this.dragAlarm = window.setTimeout(function () {
+
+        _this2.dragging = true;
+        _this2.recolourOutline(0xFFFF00);
+        _this2.pickUpSfx.play();
+
+        // Bring this piece to the front
+        var tempParent = _this2.parent;
+        tempParent.removeChild(_this2);
+        tempParent.addChild(_this2);
+      }, dragDelay);
     }
   }, {
-    key: 'onDragEnd',
-    value: function onDragEnd() {
-      this.data = null;
-      this.dragging = false;
+    key: 'onRelease',
+    value: function onRelease() {
+      if (this.dragging) {
+        this.data = null;
+        this.dragging = false;
 
-      // Snap to correct position if close enough and in the correct orientation
-      if (Math.abs(this.x - this.xStart) < this.snapStrength && Math.abs(this.y - this.yStart) < this.snapStrength && this.angle % (2 * Math.PI) === 0) {
+        // Snap to correct position if close enough and in the correct orientation
+        if (Math.abs(this.x - this.xStart) < this.snapStrength && Math.abs(this.y - this.yStart) < this.snapStrength && this.angle % (2 * Math.PI) === 0) {
 
-        this.x = this.xStart;
-        this.y = this.yStart;
-        this.recolourOutline(0x00FF00);
-        this.done = true;
-        this.correctSfx.play();
+          this.x = this.xStart;
+          this.y = this.yStart;
+          this.recolourOutline(0x00FF00);
+          this.done = true;
+          this.correctSfx.play();
+        } else {
+          this.recolourOutline(0xFF0000);
+          this.done = false;
+          this.putDownSfx.play();
+        }
       } else {
-        this.recolourOutline(0xFF0000);
-        this.done = false;
-        this.putDownSfx.play();
+        if (this.clicked) {
+          this.onRotateStart();
+        }
+        window.clearTimeout(this.dragAlarm);
       }
     }
   }, {
@@ -22146,12 +22163,10 @@ var Piece = exports.Piece = function (_PIXI$Container) {
       }
     }
   }, {
-    key: 'onSpacePress',
-    value: function onSpacePress(event) {
-      if (event.keyCode === 32 && this.dragging) {
-        this.angle += 90 * Math.PI / 180;
-        this.rotateSfx.play();
-      }
+    key: 'onRotateStart',
+    value: function onRotateStart() {
+      this.angle += 90 * Math.PI / 180;
+      this.rotateSfx.play();
     }
   }]);
 
@@ -22265,17 +22280,20 @@ var setup = function setup() {
             app.pixiApp.stage.addChild(newPiece);
         }
     }
-    window.addEventListener("keydown", onSpacePress, false);
+    //window.addEventListener("keydown", onSpacePress, false)
     window.addEventListener("resize", app.scaleStageToWindow, false);
 
     app.gameLoop(processPieces);
+
+    app.soundResources['./sounds/music1.mp3'].loop = true;
+    app.soundResources['./sounds/music1.mp3'].play();
 };
 
-var onSpacePress = function onSpacePress(event) {
-    pieces.forEach(function (piece) {
-        piece.onSpacePress(event);
-    });
-};
+// let onSpacePress = (event) => {
+//     pieces.forEach( (piece) => {
+//         piece.onSpacePress(event)
+//     })
+// }
 
 var processPieces = exports.processPieces = function processPieces() {
     var done = true;
@@ -45347,7 +45365,7 @@ var puzzles = exports.puzzles = [{
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var sounds = exports.sounds = ["./sounds/correct.mp3", "./sounds/pickUp.mp3", "./sounds/putDown.mp3", "./sounds/rotate.mp3"];
+var sounds = exports.sounds = ["./sounds/correct.mp3", "./sounds/pickUp.mp3", "./sounds/putDown.mp3", "./sounds/rotate.mp3", "./sounds/music1.mp3"];
 
 /***/ })
 /******/ ]);
