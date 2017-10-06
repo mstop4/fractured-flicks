@@ -6,32 +6,71 @@ import {puzzles} from '../../puzzles.config.js'
 import {sounds} from '../../audio.config.js'
 import {Piece} from './Piece.js'
 
+let currentLevel = 1
+
 let pieces = []
 let guide = undefined
-let textureURIs = puzzles[0].file
+let videoURI = puzzles[currentLevel].file
 let soundURIs = sounds
 let videoScale = 1
-let numRows = puzzles[0].numRows
-let numColumns = puzzles[0].numColumns
+let numRows = puzzles[currentLevel].numRows
+let numColumns = puzzles[currentLevel].numColumns
 let xOffset = 0
 let yOffset = 0
+let loadingNewLevel = false
+let firstTimeSetup = true
 
 let startLocations = []
 
 export const initGame = () => {
     app.initApp()
-    app.loadTextures(textureURIs, () => {
+    app.loadTextures(videoURI, () => {
         app.loadAudio(soundURIs, setup)
     })
 }
 
+const loadLevel = (level) => {
+
+    loadingNewLevel = true
+
+    app.pixiApp.stage.removeChild(guide)
+    guide.destroy({
+        children: true,
+        texture: true,
+        baseTexture: true   
+    })
+    guide = null
+
+    pieces.forEach( (piece) => {
+        app.pixiApp.stage.removeChild(piece)
+        piece.destroy({
+            children: true,
+            texture: true,
+            baseTexture: true
+        })
+        piece = null
+    })
+
+    pieces = []
+
+    currentLevel = level
+    videoURI = puzzles[currentLevel].file
+    app.titleText.text = "Loading"
+
+    if (!PIXI.loader.resources.hasOwnProperty(videoURI)) {
+        app.loadTextures(videoURI, setup)
+    } else {
+        setup()
+    }
+} 
+
 const setup = () => {
     console.log("Setting up puzzle...")
 
-    app.titleText.text = puzzles[0].name
+    app.titleText.text = puzzles[currentLevel].name
 
     let bw = new PIXI.filters.ColorMatrixFilter()
-    let guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[textureURIs[0]].data)
+    let guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[videoURI].data)
     guideTex.baseTexture.source.loop = true
     guide = new PIXI.Sprite(guideTex)
 
@@ -55,7 +94,7 @@ const setup = () => {
         for (let j = 0; j < numColumns; j++) {
 
             let rect = new PIXI.Rectangle(j*cellWidth, i*cellHeight, cellWidth, cellHeight)
-            let pieceTex = PIXI.Texture.fromVideo(PIXI.loader.resources[textureURIs[0]].data)
+            let pieceTex = PIXI.Texture.fromVideo(PIXI.loader.resources[videoURI].data)
             pieceTex.frame = rect
 
             let pieceX = xOffset + (j+0.5)*(cellWidth * videoScale)
@@ -71,20 +110,29 @@ const setup = () => {
             app.pixiApp.stage.addChild(newPiece)
         }
     }
-    //window.addEventListener("keydown", onSpacePress, false)
+    
     window.addEventListener("resize", app.scaleStageToWindow, false)
+    window.addEventListener("keydown", onChangeLevel, false)
 
-    app.gameLoop(processPieces)
+    if (firstTimeSetup) {
+        app.gameLoop(processPieces)
 
-    app.soundResources['./sounds/music1.mp3'].loop = true
-    app.soundResources['./sounds/music1.mp3'].play()
+        app.soundResources['./sounds/music1.mp3'].loop = true
+        app.soundResources['./sounds/music1.mp3'].play()
+
+        firstTimeSetup = false
+    }
+
+    loadingNewLevel = false
 }
 
-// let onSpacePress = (event) => {
-//     pieces.forEach( (piece) => {
-//         piece.onSpacePress(event)
-//     })
-// }
+const onChangeLevel = (event) => {
+    if (event.keyCode === 49) {
+        loadLevel(0)
+    } else if (event.keyCode === 50) {
+        loadLevel(1)
+    }
+}
 
 export const processPieces = () => {
     let done = true
@@ -94,7 +142,7 @@ export const processPieces = () => {
         done = piece.done && done
     })
 
-    if (done && app.titleText.text != "Complete!") {
+    if (done && !loadingNewLevel && app.titleText.text != "Complete!") {
         app.titleText.text = "Complete!"
         guide.filters = []
         pieces.forEach(function(piece) {

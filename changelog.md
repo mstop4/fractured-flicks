@@ -1,5 +1,11 @@
 # Changelog
 
+## v.1.2.0
+
+- Added sound effects and background music
+- Changed control scheme to only require a single-button mouse or touchscreen
+- Can switch between different puzzles
+
 ## v.1.1.0
 
 - Removed frameskip. Game now runs at an uncapped frame rate
