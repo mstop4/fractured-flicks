@@ -5,13 +5,13 @@
 }
 
 body {
-    background-color: #366134;
+    background-color: #001020;
 }
 
 #videoPuzzle{
     z-index: -1;
     padding: 0;
-    border: 8px outset #004060;
+    border: 0px outset #77C9D4;
     margin: auto;
     display: block;
     position: absolute;

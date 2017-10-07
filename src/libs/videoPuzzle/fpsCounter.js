@@ -1,3 +1,5 @@
+// Note: This class is deprecated in favour of using stats.js
+
 const fontStyle = new PIXI.TextStyle({
   fontFamily: 'Arial',
   fontSize: 16,

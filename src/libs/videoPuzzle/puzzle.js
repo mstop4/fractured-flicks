@@ -7,7 +7,8 @@ let currentLevel = 1
 
 let pieces = []
 let guide = undefined
-let commonAssets = ['./images/frame.png']
+let background = undefined
+let commonAssets = ['./images/frame.png', './images/background.png']
 let videoURI = puzzles[currentLevel].file
 let soundURIs = sounds
 let videoScale = 1
@@ -33,11 +34,20 @@ const initSetup = () => {
     xOffset = (app.maxWidth - 960) / 2
     yOffset = (app.maxHeight - 540) / 2
 
+    background = new PIXI.extras.TilingSprite(
+        PIXI.utils.TextureCache["./images/background.png"],
+        app.maxWidth,
+        app.maxHeight
+    )
+
+    app.pixiApp.stage.addChild(background)
+
     let frame = new PIXI.Sprite(PIXI.utils.TextureCache["./images/frame.png"])
     frame.pivot = new PIXI.Point(16,16)
     frame.x = xOffset
     frame.y = yOffset
     app.pixiApp.stage.addChild(frame)
+
     loadLevel(0)
 }
 
@@ -93,7 +103,8 @@ const setup = () => {
 
     guide.x = xOffset
     guide.y = yOffset
-    guide.filters = [bw]
+    //guide.filters = [bw]
+    guide.tint = 0x808080
     bw.blackAndWhite()
 
     app.pixiApp.stage.addChild(guide)
@@ -149,6 +160,10 @@ const onChangeLevel = (event) => {
 }
 
 export const processPieces = () => {
+
+    background.tilePosition.x -= 0.1
+    background.tilePosition.y -= 0.1
+
     let done = true
 
     pieces.forEach( (piece) => {

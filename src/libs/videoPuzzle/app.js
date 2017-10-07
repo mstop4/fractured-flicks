@@ -27,7 +27,7 @@ export const initApp = () => {
     pixiApp = new PIXI.Application({
         width: maxWidth,
         height: maxHeight,
-        backgroundColor: 0x001040,
+        backgroundColor: 0x77C9D4,
         view: canvas
     }) 
 
