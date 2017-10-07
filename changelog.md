@@ -7,7 +7,7 @@
 - Can switch between different puzzles
 - Replaced black-and-white filter in guide with a simple darkening tint to improve performance on lower-end machines
 - Added background and frame graphics
-- Replaced FPS Counter wiht one from stats.js
+- Replaced FPS Counter with one from stats.js
 
 ## v.0.2.0
 
