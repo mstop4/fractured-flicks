@@ -22295,7 +22295,7 @@ var initSetup = function initSetup() {
     frame.y = yOffset;
     app.pixiApp.stage.addChild(frame);
 
-    loadLevel(0);
+    loadLevel(currentLevel);
 };
 
 var loadLevel = function loadLevel(level) {

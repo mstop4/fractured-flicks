@@ -48,7 +48,7 @@ const initSetup = () => {
     frame.y = yOffset
     app.pixiApp.stage.addChild(frame)
 
-    loadLevel(0)
+    loadLevel(currentLevel)
 }
 
 const loadLevel = (level) => {
