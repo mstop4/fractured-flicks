@@ -1,4 +1,6 @@
 import 'pixi.js'
+import 'pixi-filters'
+import 'pixi-sound'
 import {FpsCounter} from './FpsCounter.js'
 import {Piece} from './Piece.js'
 
@@ -33,10 +35,14 @@ export const initApp = () => {
     scaleStageToWindow()
 
     // Fps counter
-    fpsCount = new FpsCounter()
+    fpsCount = new FpsCounter(maxWidth-48,0)
     fpsCount.addToStage(pixiApp.stage)
 
-    titleText = new PIXI.Text("Title")
+    let titleStyle = new PIXI.TextStyle({
+        fontFamily: 'Indie Flower'
+    })
+
+    titleText = new PIXI.Text("Title", titleStyle)
     titleText.x = 0
     titleText.y = 0
     pixiApp.stage.addChild(titleText)

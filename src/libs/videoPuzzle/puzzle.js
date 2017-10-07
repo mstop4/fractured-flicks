@@ -1,6 +1,3 @@
-import 'pixi.js'
-import 'pixi-filters'
-import 'pixi-sound'
 import * as app from './app.js'
 import {puzzles} from '../../puzzles.config.js'
 import {sounds} from '../../audio.config.js'
@@ -10,6 +7,7 @@ let currentLevel = 1
 
 let pieces = []
 let guide = undefined
+let commonAssets = ['./images/frame.png']
 let videoURI = puzzles[currentLevel].file
 let soundURIs = sounds
 let videoScale = 1
@@ -24,9 +22,23 @@ let startLocations = []
 
 export const initGame = () => {
     app.initApp()
-    app.loadTextures(videoURI, () => {
-        app.loadAudio(soundURIs, setup)
+
+    app.loadTextures(commonAssets, () => {
+        app.loadAudio(soundURIs, initSetup)
     })
+}
+
+const initSetup = () => {
+
+    xOffset = (app.maxWidth - 960) / 2
+    yOffset = (app.maxHeight - 540) / 2
+
+    let frame = new PIXI.Sprite(PIXI.utils.TextureCache["./images/frame.png"])
+    frame.pivot = new PIXI.Point(16,16)
+    frame.x = xOffset
+    frame.y = yOffset
+    app.pixiApp.stage.addChild(frame)
+    loadLevel(0)
 }
 
 const loadLevel = (level) => {
@@ -34,25 +46,29 @@ const loadLevel = (level) => {
     console.log("Changing Levels")
     loadingNewLevel = true
 
-    app.pixiApp.stage.removeChild(guide)
-    guide.destroy({
-        children: true,
-        texture: true,
-        baseTexture: true   
-    })
-    guide = null
-
-    pieces.forEach( (piece) => {
-        app.pixiApp.stage.removeChild(piece)
-        piece.destroy({
+    if (guide) {
+        app.pixiApp.stage.removeChild(guide)
+        guide.destroy({
             children: true,
             texture: true,
-            baseTexture: true
+            baseTexture: true   
         })
-        piece = null
-    })
+        guide = null
+    }
 
-    pieces = []
+    if (pieces) {
+        pieces.forEach( (piece) => {
+            app.pixiApp.stage.removeChild(piece)
+            piece.destroy({
+                children: true,
+                texture: true,
+                baseTexture: true
+            })
+            piece = null
+        })
+
+        pieces = []
+    }
 
     currentLevel = level
     videoURI = puzzles[currentLevel].file
@@ -74,9 +90,6 @@ const setup = () => {
     let guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[videoURI].data)
     guideTex.baseTexture.source.loop = true
     guide = new PIXI.Sprite(guideTex)
-
-    xOffset = (app.maxWidth- guide.width) / 2
-    yOffset = (app.maxHeight - guide.height) / 2
 
     guide.x = xOffset
     guide.y = yOffset

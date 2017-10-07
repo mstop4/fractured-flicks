@@ -11,6 +11,7 @@ body {
 canvas {
     z-index: -1;
     padding: 0;
+    border: 8px outset white;
     margin: auto;
     display: block;
     position: absolute;

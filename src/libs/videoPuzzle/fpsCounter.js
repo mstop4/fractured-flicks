@@ -1,23 +1,30 @@
+const fontStyle = new PIXI.TextStyle({
+  fontFamily: 'Arial',
+  fontSize: 16,
+  fill: 'white'
+})
+
 export class FpsCounter {
   
-  constructor() {
-    this.realFpsText = new PIXI.Text("0")
-    this.realFpsText.x = 300
-    this.realFpsText.y = 0
+  constructor(x, y) {
+
+    this.realFpsText = new PIXI.Text("0", fontStyle)
+    this.realFpsText.x = x
+    this.realFpsText.y = y
 
     this.realFpsHistory = []
     this.realThen = window.performance.now()
 
-    this.renderFpsText = new PIXI.Text("0")
-    this.renderFpsText.x = 300
-    this.renderFpsText.y = 30
+    this.renderFpsText = new PIXI.Text("0", fontStyle)
+    this.renderFpsText.x = x
+    this.renderFpsText.y = y+20
 
     this.renderFpsHistory = []
     this.renderThen = window.performance.now()
   }
 
   addToStage(stage) {
-    stage.addChild(this.realFpsText)
+    //stage.addChild(this.realFpsText)
     stage.addChild(this.renderFpsText)
   }
 
@@ -51,7 +58,7 @@ export class FpsCounter {
       }
   
       sum = this.renderFpsHistory.reduce( function (a, b) { return a+b })
-      this.renderFpsText.text = `Render FPS: ${(sum / this.renderFpsHistory.length).toFixed(2)}`
+      this.renderFpsText.text = `${(sum / this.renderFpsHistory.length).toFixed(2)}`
     }
   }
 }
