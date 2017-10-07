@@ -6,12 +6,12 @@ import Stats from 'stats.js'
 import {Piece} from './Piece.js'
 
 export let pixiApp = undefined
-export let titleText = undefined
 export let soundResources = {}
 let fpsCount = undefined
 export let maxWidth = 1280
 export let maxHeight = 720
 let canvas
+let instances = []
 
 export const initApp = () => {
 
@@ -35,7 +35,6 @@ export const initApp = () => {
 
     //Add the canvas to the HTML document
     document.body.appendChild(pixiApp.view)
-    
 
     // Stage
     scaleStageToWindow()
@@ -45,15 +44,7 @@ export const initApp = () => {
     fpsCount.showPanel(0)
     document.body.appendChild(fpsCount.dom)
 
-    let titleStyle = new PIXI.TextStyle({
-        fontFamily: 'Indie Flower',
-        fill: 'white'
-    })
-
-    titleText = new PIXI.Text("Title", titleStyle)
-    titleText.x = 0
-    titleText.y = 0
-    pixiApp.stage.addChild(titleText)
+    gameLoop()
 }
 
 // Load sprites to cache
@@ -89,11 +80,36 @@ export const scaleStageToWindow = () => {
     pixiApp.stage.scale = new PIXI.Point(Math.min(1, leastRatio), Math.min(1, leastRatio))
 }
 
-export const gameLoop = (updateFunc) => {
+export const destroyInstance = (instance) => {
+    if (instance) {
+        pixiApp.stage.removeChild(instance)
+        instance.destroy({
+            children: true,
+            texture: true,
+            baseTexture: true   
+        })
+        instance = null
+    }
+}
+
+export const registerInstance = (inst) => {
+    instances.push(inst)
+}
+
+export const unregisterInstance= (inst) => {
+    let index = instances.indexOf(inst)
+    instances.splice(index, 1)
+}
+
+export const gameLoop = () => {
 
     fpsCount.begin()
-    requestAnimationFrame(function () { gameLoop(updateFunc) } );
-    updateFunc()
+    requestAnimationFrame(gameLoop);
+    
+    instances.forEach( (inst) => {
+        inst.process()
+    })
+
     pixiApp.renderer.render(pixiApp.stage)
 
     fpsCount.end()
