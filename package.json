@@ -27,6 +27,7 @@
     "pixi-filters": "^2.0.2",
     "pixi-sound": "^1.4.2",
     "pixi.js": "^4.5.6",
+    "stats.js": "^0.17.0",
     "webfontloader": "^1.6.28"
   }
 }

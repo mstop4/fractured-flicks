@@ -1,17 +1,17 @@
 import 'pixi.js'
 import 'pixi-filters'
 import 'pixi-sound'
-import {FpsCounter} from './FpsCounter.js'
+//import {FpsCounter} from './FpsCounter.js'
+import Stats from 'stats.js'
 import {Piece} from './Piece.js'
 
 export let pixiApp = undefined
 export let titleText = undefined
 export let soundResources = {}
-let frameSkip = 0
-let fsIndex = 0
 let fpsCount = undefined
 export let maxWidth = 1280
 export let maxHeight = 720
+let canvas
 
 export const initApp = () => {
 
@@ -22,24 +22,32 @@ export const initApp = () => {
 
     PIXI.utils.sayHello(type)
 
+    canvas = document.getElementById('videoPuzzle')
+
     pixiApp = new PIXI.Application({
         width: maxWidth,
         height: maxHeight,
-        backgroundColor: 0x808080,
+        backgroundColor: 0x001040,
+        view: canvas
     }) 
 
+    console.dir(pixiApp.view)
+
     //Add the canvas to the HTML document
-    document.getElementById("videoPuzzle").appendChild(pixiApp.view)
+    document.body.appendChild(pixiApp.view)
+    
 
     // Stage
     scaleStageToWindow()
 
     // Fps counter
-    fpsCount = new FpsCounter(maxWidth-48,0)
-    fpsCount.addToStage(pixiApp.stage)
+    fpsCount = new Stats()
+    fpsCount.showPanel(0)
+    document.body.appendChild(fpsCount.dom)
 
     let titleStyle = new PIXI.TextStyle({
-        fontFamily: 'Indie Flower'
+        fontFamily: 'Indie Flower',
+        fill: 'white'
     })
 
     titleText = new PIXI.Text("Title", titleStyle)
@@ -82,20 +90,11 @@ export const scaleStageToWindow = () => {
 }
 
 export const gameLoop = (updateFunc) => {
+
+    fpsCount.begin()
     requestAnimationFrame(function () { gameLoop(updateFunc) } );
-
     updateFunc()
+    pixiApp.renderer.render(pixiApp.stage)
 
-    let hasRendered = false
-
-    //Tell the `renderer` to `render` the `stage`
-    if (fsIndex === frameSkip) {
-        pixiApp.renderer.render(pixiApp.stage)
-        fsIndex = 0
-        hasRendered = true
-    } else {
-        fsIndex++
-    }
-
-    fpsCount.update(hasRendered)
+    fpsCount.end()
 }
