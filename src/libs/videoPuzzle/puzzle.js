@@ -22,8 +22,8 @@ export class Puzzle {
 
         this.xOffset = 0
         this.yOffset = 0
-        this.loadingNewLevel = false
-        this.firstTimeSetup = true
+        this.loadingNewLevel = true
+        this.puzzleComplete = false
 
         this.startLocations = []
     }
@@ -54,6 +54,10 @@ export class Puzzle {
 
         app.soundResources['./sounds/music1.mp3'].loop = true
         app.soundResources['./sounds/music1.mp3'].play()
+
+        app.registerInstance(this)
+
+        window.addEventListener("keydown", this.onChangeLevel.bind(this), false)
     }
 
     initPuzzleSetup() {
@@ -99,6 +103,7 @@ export class Puzzle {
         this.currentLevel = level
         this.videoURI = puzzles[this.currentLevel].file
         this.titleText.text = "Loading"
+        this.puzzleComplete = false
 
         if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
             app.loadTextures(this.videoURI, this.puzzleSetup.bind(this))
@@ -151,22 +156,18 @@ export class Puzzle {
                 app.pixiApp.stage.addChild(newPiece)
             }
         }
-        
-        window.addEventListener("keydown", this.onChangeLevel, false)
-
-        if (this.firstTimeSetup) {
-            app.registerInstance(this)
-            this.firstTimeSetup = false
-        }
 
         this.loadingNewLevel = false
     }
 
     onChangeLevel(event) {
-        if (event.keyCode === 49) {
-            this.loadLevel(0)
-        } else if (event.keyCode === 50) {
-            this.loadLevel(1)
+        console.log(this)
+        if (!this.loadingNewLevel) {
+            if (event.keyCode === 49) {
+                this.loadLevel(0)
+            } else if (event.keyCode === 50) {
+                this.loadLevel(1)
+            }
         }
     }
 
@@ -182,8 +183,9 @@ export class Puzzle {
             done = piece.done && done
         })
 
-        if (done && !this.loadingNewLevel && this.titleText.text != "Complete!") {
+        if (done && !this.loadingNewLevel && !this.puzzleComplete) {
             this.titleText.text = "Complete!"
+            this.puzzleComplete = true
             //this.guide.filters = []
             this.guide.tint = 0xFFFFFF
             this.pieces.forEach(function(piece) {
