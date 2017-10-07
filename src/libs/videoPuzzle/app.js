@@ -12,8 +12,9 @@ export let maxWidth = 1280
 export let maxHeight = 720
 let canvas
 let instances = []
+let puzzleManager
 
-export const initApp = () => {
+export const initApp = (pm) => {
 
     let type = "WebGL"
     if(!PIXI.utils.isWebGLSupported()){
@@ -39,10 +40,17 @@ export const initApp = () => {
     // Stage
     scaleStageToWindow()
 
+    // Puzzle Manager
+    puzzleManager = pm
+
     // Fps counter
     fpsCount = new Stats()
     fpsCount.showPanel(0)
     document.body.appendChild(fpsCount.dom)
+
+    // responsive canvas
+
+    window.addEventListener("resize", scaleStageToWindow, false)
 
     gameLoop()
 }
@@ -96,7 +104,7 @@ export const registerInstance = (inst) => {
     instances.push(inst)
 }
 
-export const unregisterInstance= (inst) => {
+export const unregisterInstance = (inst) => {
     let index = instances.indexOf(inst)
     instances.splice(index, 1)
 }

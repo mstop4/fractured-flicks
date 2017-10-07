@@ -1,7 +1,5 @@
-import * as puzzle from './puzzle.js'
-
 export class TitleScreen extends PIXI.Container{
-  constructor(app) {
+  constructor(app, puzzleManager) {
     super()
 
     this.app = app
@@ -36,6 +34,8 @@ export class TitleScreen extends PIXI.Container{
     this.startTextTriggerTime = 30
     this.startTextCounter = 0
 
+    this.puzzleManager = puzzleManager
+
     this.on('pointertap', this.onClick)
 
     this.app.registerInstance(this)
@@ -61,8 +61,9 @@ export class TitleScreen extends PIXI.Container{
   }
 
   onClick() {
+    console.log(this.puzzleManager)
     this.app.unregisterInstance(this)
     this.app.destroyInstance(this)
-    puzzle.initPuzzleSetup()
+    this.puzzleManager.initPuzzleSetup()
   }
 } 

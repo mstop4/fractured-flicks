@@ -1,4 +1,4 @@
-import * as vp from './libs/videoPuzzle/puzzle.js'
+import {Puzzle} from './libs/videoPuzzle/puzzle.js'
 import WebFont from 'webfontloader'
 
 window.onload = () => {
@@ -6,6 +6,7 @@ window.onload = () => {
 
     // triggers when fonts has loaded
     active: () => {
+      let vp = new Puzzle()
       vp.initGame()
     },
 

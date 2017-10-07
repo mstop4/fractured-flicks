@@ -4,187 +4,191 @@ import {sounds} from '../../audio.config.js'
 import {Piece} from './Piece.js'
 import {TitleScreen} from './TitleScreen.js'
 
-let currentLevel = 1
+export class Puzzle {
+    constructor() {
+        this.currentLevel = 1
 
-let pieces = []
-let guide = undefined
-let background = undefined
-let titleText = undefined
+        this.pieces = []
+        this.guide = undefined
+        this.background = undefined
+        this.titleText = undefined
 
-let commonAssets = ['./images/frame.png', './images/background.png']
-let videoURI = puzzles[currentLevel].file
-let videoScale = 1
-let numRows = puzzles[currentLevel].numRows
-let numColumns = puzzles[currentLevel].numColumns
-let soundURIs = sounds
+        this.commonAssets = ['./images/frame.png', './images/background.png']
+        this.videoURI = puzzles[this.currentLevel].file
+        this.videoScale = 1
+        this.numRows = puzzles[this.currentLevel].numRows
+        this.numColumns = puzzles[this.currentLevel].numColumns
+        this.soundURIs = sounds
 
-let xOffset = 0
-let yOffset = 0
-let loadingNewLevel = false
-let firstTimeSetup = true
+        this.xOffset = 0
+        this.yOffset = 0
+        this.loadingNewLevel = false
+        this.firstTimeSetup = true
 
-let startLocations = []
+        this.startLocations = []
+    }
 
-export const initGame = () => {
-    app.initApp()
+    initGame() {
+        app.initApp(this)
 
-    app.loadTextures(commonAssets, () => {
-        app.loadAudio(soundURIs, initGameSetup)
-    })
-}
+        let that = this
 
-const initGameSetup = () => {
+        app.loadTextures(this.commonAssets, () => {
+            app.loadAudio(this.soundURIs, that.initGameSetup.bind(that))
+        })
+    }
 
-    // Add background
-    background = new PIXI.extras.TilingSprite(
-        PIXI.utils.TextureCache["./images/background.png"],
-        app.maxWidth,
-        app.maxHeight
-    )
+    initGameSetup() {
+        // Add background
 
-    app.pixiApp.stage.addChild(background)
+        this.background = new PIXI.extras.TilingSprite(
+            PIXI.utils.TextureCache["./images/background.png"],
+            app.maxWidth,
+            app.maxHeight
+        )
 
-    let titleScreen = new TitleScreen(app)
-    app.pixiApp.stage.addChild(titleScreen)
+        app.pixiApp.stage.addChild(this.background)
 
-    app.soundResources['./sounds/music1.mp3'].loop = true
-    app.soundResources['./sounds/music1.mp3'].play()
-}
+        let titleScreen = new TitleScreen(app, this)
+        app.pixiApp.stage.addChild(titleScreen)
 
-export const initPuzzleSetup = () => {
+        app.soundResources['./sounds/music1.mp3'].loop = true
+        app.soundResources['./sounds/music1.mp3'].play()
+    }
 
-    xOffset = (app.maxWidth - 960) / 2
-    yOffset = (app.maxHeight - 540) / 2
+    initPuzzleSetup() {
+        this.xOffset = (app.maxWidth - 960) / 2
+        this.yOffset = (app.maxHeight - 540) / 2
 
-    // Add frame
-    let frame = new PIXI.Sprite(PIXI.utils.TextureCache["./images/frame.png"])
-    frame.pivot = new PIXI.Point(16,16)
-    frame.x = xOffset
-    frame.y = yOffset
-    app.pixiApp.stage.addChild(frame)
+        // Add frame
+        let frame = new PIXI.Sprite(PIXI.utils.TextureCache["./images/frame.png"])
+        frame.pivot = new PIXI.Point(16,16)
+        frame.x = this.xOffset
+        frame.y = this.yOffset
+        app.pixiApp.stage.addChild(frame)
 
-    // Add Title
-    let titleStyle = new PIXI.TextStyle({
-        fontFamily: 'Indie Flower',
-        fill: 'white'
-    })
-
-    titleText = new PIXI.Text("Title", titleStyle)
-    titleText.x = 0
-    titleText.y = 0
-    app.pixiApp.stage.addChild(titleText)
-
-    loadLevel(currentLevel)
-}
-
-const loadLevel = (level) => {
-
-    console.log("Changing Levels")
-    loadingNewLevel = true
-
-    app.destroyInstance(guide)
-
-    if (pieces) {
-        pieces.forEach( (piece) => {
-            app.destroyInstance(piece)
+        // Add Title
+        let titleStyle = new PIXI.TextStyle({
+            fontFamily: 'Indie Flower',
+            fill: 'white'
         })
 
-        pieces = []
+        this.titleText = new PIXI.Text("Title", titleStyle)
+        this.titleText.x = 0
+        this.titleText.y = 0
+        app.pixiApp.stage.addChild(this.titleText)
+
+        this.loadLevel(this.currentLevel)
     }
 
-    currentLevel = level
-    videoURI = puzzles[currentLevel].file
-    titleText.text = "Loading"
+    loadLevel(level) {
 
-    if (!PIXI.loader.resources.hasOwnProperty(videoURI)) {
-        app.loadTextures(videoURI, puzzleSetup)
-    } else {
-        puzzleSetup()
+        console.log("Changing Levels")
+        this.loadingNewLevel = true
+
+        app.destroyInstance(this.guide)
+
+        if (this.pieces) {
+            this.pieces.forEach( (piece) => {
+                app.destroyInstance(piece)
+            })
+
+            this.pieces = []
+        }
+
+        this.currentLevel = level
+        this.videoURI = puzzles[this.currentLevel].file
+        this.titleText.text = "Loading"
+
+        if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
+            app.loadTextures(this.videoURI, this.puzzleSetup.bind(this))
+        } else {
+            this.puzzleSetup()
+        }
+    } 
+
+    puzzleSetup() {
+        console.log("Setting up puzzle...")
+
+        this.titleText.text = puzzles[this.currentLevel].name
+
+        //let bw = new PIXI.filters.ColorMatrixFilter()
+        let guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
+        guideTex.baseTexture.source.loop = true
+        this.guide = new PIXI.Sprite(guideTex)
+
+        this.guide.x = this.xOffset
+        this.guide.y = this.yOffset
+        //guide.filters = [bw]
+        this.guide.tint = 0x808080
+        //bw.blackAndWhite()
+
+        app.pixiApp.stage.addChild(this.guide)
+
+        let cellWidth = this.guide.width / this.numColumns
+        let cellHeight = this.guide.height / this.numRows
+
+        let pieceWidth = cellWidth / this.numColumns * this.videoScale
+        let pieceHeight = cellHeight / this.numRows * this.videoScale
+
+        for (let i = 0; i < this.numRows; i++) {
+            for (let j = 0; j < this.numColumns; j++) {
+
+                let rect = new PIXI.Rectangle(j*cellWidth, i*cellHeight, cellWidth, cellHeight)
+                let pieceTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
+                pieceTex.frame = rect
+
+                let pieceX = this.xOffset + (j+0.5)*(cellWidth * this.videoScale)
+                let pieceY = this.yOffset + (i+0.5)*(cellHeight * this.videoScale)
+
+                let newPiece = new Piece(pieceX, pieceY, pieceWidth, pieceHeight, cellWidth, cellHeight, pieceTex)
+                newPiece.randomizePosition(this.xOffset - 50, 
+                                        this.yOffset - 50, 
+                                        this.xOffset + this.guide.width + 50,
+                                        this.yOffset + this.guide.height + 50)
+
+                this.pieces.push(newPiece)
+                app.pixiApp.stage.addChild(newPiece)
+            }
+        }
+        
+        window.addEventListener("keydown", this.onChangeLevel, false)
+
+        if (this.firstTimeSetup) {
+            app.registerInstance(this)
+            this.firstTimeSetup = false
+        }
+
+        this.loadingNewLevel = false
     }
-} 
 
-const puzzleSetup = () => {
-    console.log("Setting up puzzle...")
-
-    titleText.text = puzzles[currentLevel].name
-
-    let bw = new PIXI.filters.ColorMatrixFilter()
-    let guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[videoURI].data)
-    guideTex.baseTexture.source.loop = true
-    guide = new PIXI.Sprite(guideTex)
-
-    guide.x = xOffset
-    guide.y = yOffset
-    //guide.filters = [bw]
-    guide.tint = 0x808080
-    bw.blackAndWhite()
-
-    app.pixiApp.stage.addChild(guide)
-
-    let cellWidth = guide.width / numColumns
-    let cellHeight = guide.height / numRows
-
-    let pieceWidth = cellWidth / numColumns * videoScale
-    let pieceHeight = cellHeight / numRows * videoScale
-
-    for (let i = 0; i < numRows; i++) {
-        for (let j = 0; j < numColumns; j++) {
-
-            let rect = new PIXI.Rectangle(j*cellWidth, i*cellHeight, cellWidth, cellHeight)
-            let pieceTex = PIXI.Texture.fromVideo(PIXI.loader.resources[videoURI].data)
-            pieceTex.frame = rect
-
-            let pieceX = xOffset + (j+0.5)*(cellWidth * videoScale)
-            let pieceY = yOffset + (i+0.5)*(cellHeight * videoScale)
-
-            let newPiece = new Piece(pieceX, pieceY, pieceWidth, pieceHeight, cellWidth, cellHeight, pieceTex)
-            newPiece.randomizePosition(xOffset - 50, 
-                                       yOffset - 50, 
-                                       xOffset + guide.width + 50,
-                                       yOffset + guide.height + 50)
-
-            pieces.push(newPiece)
-            app.pixiApp.stage.addChild(newPiece)
+    onChangeLevel(event) {
+        if (event.keyCode === 49) {
+            this.loadLevel(0)
+        } else if (event.keyCode === 50) {
+            this.loadLevel(1)
         }
     }
-    
-    window.addEventListener("resize", app.scaleStageToWindow, false)
-    window.addEventListener("keydown", onChangeLevel, false)
 
-    if (firstTimeSetup) {
-        app.registerInstance(this)
-        firstTimeSetup = false
-    }
+    process() {
 
-    loadingNewLevel = false
-}
+        this.background.tilePosition.x -= 0.1
+        this.background.tilePosition.y -= 0.1
 
-const onChangeLevel = (event) => {
-    if (event.keyCode === 49) {
-        loadLevel(0)
-    } else if (event.keyCode === 50) {
-        loadLevel(1)
-    }
-}
+        let done = true
 
-export const process = () => {
-
-    background.tilePosition.x -= 0.1
-    background.tilePosition.y -= 0.1
-
-    let done = true
-
-    pieces.forEach( (piece) => {
-        piece.process()
-        done = piece.done && done
-    })
-
-    if (done && !loadingNewLevel && titleText.text != "Complete!") {
-        titleText.text = "Complete!"
-        guide.filters = []
-        guide.tint = 0xFFFFFF
-        pieces.forEach(function(piece) {
-            piece.visible = false
+        this.pieces.forEach( (piece) => {
+            piece.process()
+            done = piece.done && done
         })
+
+        if (done && !this.loadingNewLevel && this.titleText.text != "Complete!") {
+            this.titleText.text = "Complete!"
+            //this.guide.filters = []
+            this.guide.tint = 0xFFFFFF
+            this.pieces.forEach(function(piece) {
+                piece.visible = false
+            })
+        }
     }
 }
