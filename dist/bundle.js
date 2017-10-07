@@ -22418,6 +22418,7 @@ var processPieces = exports.processPieces = function processPieces() {
     if (done && !loadingNewLevel && app.titleText.text != "Complete!") {
         app.titleText.text = "Complete!";
         guide.filters = [];
+        guide.tint = 0xFFFFFF;
         pieces.forEach(function (piece) {
             piece.visible = false;
         });
