@@ -1,3 +1,30 @@
 import * as vp from './libs/videoPuzzle/puzzle.js'
+import WebFont from 'webfontloader'
 
-vp.initGame()
+window.onload = () => {
+  WebFont.load({
+
+    // triggers when fonts has loaded
+    active: () => {
+      vp.initGame()
+    },
+
+    fontLoading: preRenderFont,
+
+    google: {
+      families: [ 'Indie Flower' ]
+    }
+  })
+}
+
+const preRenderFont = () => {
+  // create <p> tag with our font and render some text secretly. We don't need to see it after all...
+	
+	var el = document.createElement('p');
+	el.style.fontFamily = fontName;
+	el.style.fontSize = "0px";
+	el.style.visibility = "hidden";
+	el.innerHTML = '.';
+	
+	document.body.appendChild(el);
+}
