@@ -105,7 +105,7 @@ export const registerInstance = (inst) => {
 export const unregisterInstance = (inst) => {
     let index = instances.indexOf(inst)
 
-    if (index) {
+    if (index > -1) {
         instances.splice(index, 1)
     }
 }

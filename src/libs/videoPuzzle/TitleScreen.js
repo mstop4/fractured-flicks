@@ -37,7 +37,6 @@ export class TitleScreen extends PIXI.Container{
     this.puzzleManager = puzzleManager
 
     this.on('pointertap', this.onClick)
-
     this.app.registerInstance(this)
   }
 

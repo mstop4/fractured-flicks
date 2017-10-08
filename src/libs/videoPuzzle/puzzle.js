@@ -91,28 +91,32 @@ export class Puzzle {
         this.loadingNewLevel = true
 
         if (this.guide) {
-            console.dir(this.guide.texture.baseTexture.source)
+            // Pause and reset current video
             this.guide.texture.baseTexture.source.pause()
             this.guide.texture.baseTexture.source.currentTime = 0
+
+            // remove guide
+            app.unregisterInstance(this.guide)
+            app.destroyInstance(this.guide)
         }
 
-        app.unregisterInstance(this.guide)
-        app.destroyInstance(this.guide)
-
+        // remvoe pieces
         if (this.pieces) {
             this.pieces.forEach( (piece) => {
-                app.destroyInstance(piece)
+                app.unregisterInstance(piece)
                 app.destroyInstance(piece)
             })
 
             this.pieces = []
         }
 
+        // load new puzzle
         this.currentLevel = level
         this.videoURI = puzzles[this.currentLevel].file
         this.titleText.text = "Loading"
         this.puzzleComplete = false
 
+        // if video isn't already in cache, load it
         if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
             app.loadTextures(this.videoURI, this.puzzleSetup.bind(this))
         } else {
@@ -160,7 +164,8 @@ export class Puzzle {
                                         this.yOffset - 50, 
                                         this.xOffset + this.guide.width + 50,
                                         this.yOffset + this.guide.height + 50)
-
+                
+                app.registerInstance(newPiece)
                 this.pieces.push(newPiece)
                 app.pixiApp.stage.addChild(newPiece)
             }
@@ -180,14 +185,12 @@ export class Puzzle {
     }
 
     process() {
-
         this.background.tilePosition.x -= 0.1
         this.background.tilePosition.y -= 0.1
 
         let done = true
 
         this.pieces.forEach( (piece) => {
-            piece.process()
             done = piece.done && done
         })
 

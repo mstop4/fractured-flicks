@@ -96,20 +96,6 @@ export class Piece extends PIXI.Container {
       this.rotation = (this.startAngle - this.goalAngle) * Math.pow(1-(this.rotationT / 100), 3) + this.goalAngle
       this.rotationT += 5
     }
-
-    // if (this.angle > this.rotation) {
-    //   if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
-    //     this.rotation = this.angle
-    //   } else {
-    //     this.rotation += this.angleDelta
-    //   }
-    // } else if (this.angle < this.rotation) {
-    //   if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
-    //     this.rotation = this.angle
-    //   } else {
-    //     this.rotation -= this.angleDelta
-    //   }
-    // }
   }
 
   onClick(event) {
@@ -151,10 +137,12 @@ export class Piece extends PIXI.Container {
       }
     } else {
       if (this.clicked) {
+        window.clearTimeout(this.dragAlarm)
         this.onRotateStart()
       }
-      window.clearTimeout(this.dragAlarm)
     }
+
+    this.clicked = false
   }
 
   onDragMove() {
