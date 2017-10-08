@@ -1,4 +1,3 @@
-// import 'pixi.js'
 import * as app from './app.js'
 
 let dragDelay = 150

@@ -1,5 +1,9 @@
 # Changelog
 
+## v.0.4.0
+
+- Added title screen
+
 ## v.0.3.0
 
 - Added sound effects and background music

@@ -3,6 +3,7 @@ import {puzzles} from '../../puzzles.config.js'
 import {sounds} from '../../audio.config.js'
 import {Piece} from './Piece.js'
 import {TitleScreen} from './TitleScreen.js'
+import {Button} from './Button.js'
 
 export class Puzzle {
     constructor() {
@@ -170,6 +171,9 @@ export class Puzzle {
                 app.pixiApp.stage.addChild(newPiece)
             }
         }
+
+        this.button = new Button(100, 100, "Test")
+        app.pixiApp.stage.addChild(this.button)    
 
         this.loadingNewLevel = false
     }

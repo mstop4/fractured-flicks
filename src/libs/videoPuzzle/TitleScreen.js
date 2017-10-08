@@ -28,6 +28,7 @@ export class TitleScreen extends PIXI.Container{
     this.versionText = this.addText("v.0.4.0", this.infoStyle, 1280, 704, 1, 1)
 
     this.interactive = true
+    this.interactiveChildren = true
     this.buttonMode = true
     this.hitArea = new PIXI.Rectangle(0, 0, 1280, 720)
 
