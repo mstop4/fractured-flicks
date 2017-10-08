@@ -82,6 +82,13 @@ export class Puzzle extends App {
     this.titleText.y = 0
     this.pixiApp.stage.addChild(this.titleText)
 
+    this.button = []
+    
+    this.button[0] = new Button(this.maxWidth-100, 0, 50, 50, "1", this.loadLevel.bind(this, [0]))
+    this.button[1] = new Button(this.maxWidth-50, 0, 50, 50, "2", this.loadLevel.bind(this, [1]))
+    this.pixiApp.stage.addChild(this.button[0])
+    this.pixiApp.stage.addChild(this.button[1])    
+
     this.loadLevel(this.currentLevel)
   }
 
@@ -171,14 +178,10 @@ export class Puzzle extends App {
       }
     }
 
-    this.button = []
-
-    this.button[0] = new Button(this.maxWidth-100, 0, 50, 50, "1", this.loadLevel.bind(this, [0]))
-    this.button[1] = new Button(this.maxWidth-50, 0, 50, 50, "2", this.loadLevel.bind(this, [1]))
-    this.pixiApp.stage.addChild(this.button[0])
-    this.pixiApp.stage.addChild(this.button[1])    
-
     this.loadingNewLevel = false
+
+    console.dir(this.pixiApp.stage)
+    console.dir(PIXI.utils)
   }
 
   process() {

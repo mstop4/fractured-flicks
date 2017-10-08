@@ -7,7 +7,6 @@ import {Piece} from './Piece.js'
 export class App {
 
   constructor() {
-
     this.pixiApp = undefined
     this.fpsCount = undefined
     this.canvas = undefined
