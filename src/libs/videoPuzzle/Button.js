@@ -1,7 +1,12 @@
 export class Button extends PIXI.Container {
   
-  constructor(width, height, text) {
+  constructor(x, y, width, height, text, clickFunc = null) {
     super()
+
+    this.x = x
+    this.y = y
+
+    this.clickFunc = clickFunc
 
     this.shape = new PIXI.Graphics()
     this.shape.drawRect(0,0,width,height)
@@ -30,7 +35,7 @@ export class Button extends PIXI.Container {
     this.on('pointerup', () => {
       if (this.isDown) {
         this.isDown = false
-        console.log("Tap")
+        this.clickFunc()
       }
     })
   }

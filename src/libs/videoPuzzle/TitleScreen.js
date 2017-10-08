@@ -1,5 +1,5 @@
 export class TitleScreen extends PIXI.Container{
-  constructor(app, puzzleManager) {
+  constructor(app) {
     super()
 
     this.app = app
@@ -35,8 +35,6 @@ export class TitleScreen extends PIXI.Container{
     this.startTextTriggerTime = 30
     this.startTextCounter = 0
 
-    this.puzzleManager = puzzleManager
-
     this.on('pointertap', this.onClick)
     this.app.registerInstance(this)
   }
@@ -63,6 +61,6 @@ export class TitleScreen extends PIXI.Container{
   onClick() {
     this.app.unregisterInstance(this)
     this.app.destroyInstance(this)
-    this.puzzleManager.initPuzzleSetup()
+    this.app.initPuzzleSetup()
   }
 } 

@@ -1,4 +1,4 @@
-import {Puzzle} from './libs/videoPuzzle/puzzle.js'
+import {Puzzle} from './libs/videoPuzzle/Puzzle.js'
 import WebFont from 'webfontloader'
 
 window.onload = () => {

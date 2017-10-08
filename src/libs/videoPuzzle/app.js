@@ -1,125 +1,123 @@
 import 'pixi.js'
 import 'pixi-filters'
 import 'pixi-sound'
-//import {FpsCounter} from './FpsCounter.js'
 import Stats from 'stats.js'
 import {Piece} from './Piece.js'
 
-export let pixiApp = undefined
-export let soundResources = {}
-let fpsCount = undefined
-export let maxWidth = 1280
-export let maxHeight = 720
-let canvas
-let instances = []
-let puzzleManager
+export class App {
 
-export const initApp = (pm) => {
+  constructor() {
+
+    this.pixiApp = undefined
+    this.fpsCount = undefined
+    this.canvas = undefined
+
+    this.maxWidth = 1280
+    this.maxHeight = 720
+
+    this.soundResources = {}
+    this.instances = []
+  }
+
+  initApp(pm) {
 
     let type = "WebGL"
-    if(!PIXI.utils.isWebGLSupported()){
+      if(!PIXI.utils.isWebGLSupported()){
       type = "canvas"
     }
 
     PIXI.utils.sayHello(type)
 
-    canvas = document.getElementById('videoPuzzle')
-
-    pixiApp = new PIXI.Application({
-        width: maxWidth,
-        height: maxHeight,
-        backgroundColor: 0x77C9D4,
-        view: canvas
+    this.canvas = document.getElementById('videoPuzzle')
+    this.pixiApp = new PIXI.Application({
+      width: this.maxWidth,
+      height: this.maxHeight,
+      backgroundColor: 0x77C9D4,
+      view: this.canvas
     }) 
 
     //Add the canvas to the HTML document
-    document.body.appendChild(pixiApp.view)
+    document.body.appendChild(this.pixiApp.view)
 
     // Stage
-    scaleStageToWindow()
-
-    // Puzzle Manager
-    puzzleManager = pm
+    this.scaleStageToWindow()
 
     // Fps counter
-    fpsCount = new Stats()
-    fpsCount.showPanel(0)
-    document.body.appendChild(fpsCount.dom)
+    this.fpsCount = new Stats()
+    this.fpsCount.showPanel(0)
+    document.body.appendChild(this.fpsCount.dom)
 
     // responsive canvas
 
-    window.addEventListener("resize", scaleStageToWindow, false)
+    window.addEventListener("resize", this.scaleStageToWindow.bind(this), false)
 
-    gameLoop()
-}
+    this.gameLoop()
+  }
 
-// Load sprites to cache
-export const loadTextures = (texArray, next) => {
+  // Load sprites to cache
+  loadTextures(texArray, next) {
     console.log("Loading textures")
     PIXI.loader
     .add(texArray)
-    .on("progress", loadProgressHandler)
+    .on("progress", this.loadProgressHandler)
     .load(next)
-}
+  }
 
-export const loadAudio = (sndArray, next) => {
-    console.log("Loading sounds")
-    
+  loadAudio(sndArray, next) {
+    console.log("Loading sounds")    
     sndArray.forEach( (snd) => {
-        soundResources[snd] = PIXI.sound.Sound.from(snd)
+      this.soundResources[snd] = PIXI.sound.Sound.from(snd)
     })
-
     next()
-}
+  }
 
-const loadProgressHandler = (loader, resource) => {
+  loadProgressHandler(loader, resource) {
     console.log(`Loading "${resource.url}" ... ${loader.progress}%`)
-}
+  }
 
-export const scaleStageToWindow = () => {
-
-    let hRatio = (window.innerHeight) / maxHeight
-    let wRatio = (window.innerWidth) / maxWidth
+  scaleStageToWindow() {
+    let hRatio = (window.innerHeight) / this.maxHeight
+    let wRatio = (window.innerWidth) / this.maxWidth
     let leastRatio = Math.min(hRatio, wRatio)
     
-    pixiApp.renderer.resize(Math.min(maxWidth * leastRatio, maxWidth), Math.min(maxHeight * leastRatio, maxHeight))
-    pixiApp.stage.scale = new PIXI.Point(Math.min(1, leastRatio), Math.min(1, leastRatio))
-}
+    this.pixiApp.renderer.resize(Math.min(this.maxWidth * leastRatio, this.maxWidth), Math.min(this.maxHeight * leastRatio, this.maxHeight))
+    this.pixiApp.stage.scale = new PIXI.Point(Math.min(1, leastRatio), Math.min(1, leastRatio))
+  }
 
-export const destroyInstance = (instance) => {
+  destroyInstance(instance) {
     if (instance) {
-        pixiApp.stage.removeChild(instance)
-        instance.destroy({
-            children: true,
-            texture: true,
-            baseTexture: false   
-        })
-        instance = null
+      this.pixiApp.stage.removeChild(instance)
+      instance.destroy({
+        children: true,
+        texture: true,
+        baseTexture: false   
+      })
+      instance = null
     }
-}
+  }
 
-export const registerInstance = (inst) => {
-    instances.push(inst)
-}
+  registerInstance(inst) {
+    this.instances.push(inst)
+  }
 
-export const unregisterInstance = (inst) => {
-    let index = instances.indexOf(inst)
+  unregisterInstance(inst) {
+    let index = this.instances.indexOf(inst)
 
     if (index > -1) {
-        instances.splice(index, 1)
+      this.instances.splice(index, 1)
     }
-}
+  }
 
-export const gameLoop = () => {
-
-    fpsCount.begin()
-    requestAnimationFrame(gameLoop);
+  gameLoop() {
+    this.fpsCount.begin()
+    requestAnimationFrame(this.gameLoop.bind(this));
     
-    instances.forEach( (inst) => {
-        inst.process()
+    this.instances.forEach( (inst) => {
+      inst.process()
     })
 
-    pixiApp.renderer.render(pixiApp.stage)
+    this.pixiApp.renderer.render(this.pixiApp.stage)
 
-    fpsCount.end()
+    this.fpsCount.end()
+  }
 }

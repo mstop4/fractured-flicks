@@ -1,11 +1,11 @@
-import * as app from './app.js'
-
 let dragDelay = 150
 
 export class Piece extends PIXI.Container {
 
-  constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, texture) {
+  constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, texture, app) {
     super()
+
+    this.app = app
 
     // Graphics
     this.sprite = new PIXI.Sprite(texture)
@@ -46,10 +46,10 @@ export class Piece extends PIXI.Container {
     this.on('pointermove', this.onDragMove)
 
     // Sounds
-    this.pickUpSfx = app.soundResources['./sounds/pickUp.mp3']
-    this.putDownSfx = app.soundResources['./sounds/putDown.mp3']
-    this.rotateSfx = app.soundResources['./sounds/rotate.mp3']
-    this.correctSfx = app.soundResources['./sounds/correct.mp3']
+    this.pickUpSfx = this.app.soundResources['./sounds/pickUp.mp3']
+    this.putDownSfx = this.app.soundResources['./sounds/putDown.mp3']
+    this.rotateSfx = this.app.soundResources['./sounds/rotate.mp3']
+    this.correctSfx = this.app.soundResources['./sounds/correct.mp3']
 
     this.outline = new PIXI.Graphics()
     this.recolourOutline(0xFF0000)
