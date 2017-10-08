@@ -90,10 +90,18 @@ export class Puzzle {
         console.log("Changing Levels")
         this.loadingNewLevel = true
 
+        if (this.guide) {
+            console.dir(this.guide.texture.baseTexture.source)
+            this.guide.texture.baseTexture.source.pause()
+            this.guide.texture.baseTexture.source.currentTime = 0
+        }
+
+        app.unregisterInstance(this.guide)
         app.destroyInstance(this.guide)
 
         if (this.pieces) {
             this.pieces.forEach( (piece) => {
+                app.destroyInstance(piece)
                 app.destroyInstance(piece)
             })
 
@@ -120,6 +128,7 @@ export class Puzzle {
         //let bw = new PIXI.filters.ColorMatrixFilter()
         let guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
         guideTex.baseTexture.source.loop = true
+        guideTex.baseTexture.source.play()
         this.guide = new PIXI.Sprite(guideTex)
 
         this.guide.x = this.xOffset
@@ -161,7 +170,6 @@ export class Puzzle {
     }
 
     onChangeLevel(event) {
-        console.log(this)
         if (!this.loadingNewLevel) {
             if (event.keyCode === 49) {
                 this.loadLevel(0)

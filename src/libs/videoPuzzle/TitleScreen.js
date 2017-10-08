@@ -61,7 +61,6 @@ export class TitleScreen extends PIXI.Container{
   }
 
   onClick() {
-    console.log(this.puzzleManager)
     this.app.unregisterInstance(this)
     this.app.destroyInstance(this)
     this.puzzleManager.initPuzzleSetup()

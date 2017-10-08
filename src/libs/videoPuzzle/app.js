@@ -32,8 +32,6 @@ export const initApp = (pm) => {
         view: canvas
     }) 
 
-    console.dir(pixiApp.view)
-
     //Add the canvas to the HTML document
     document.body.appendChild(pixiApp.view)
 
@@ -94,7 +92,7 @@ export const destroyInstance = (instance) => {
         instance.destroy({
             children: true,
             texture: true,
-            baseTexture: true   
+            baseTexture: false   
         })
         instance = null
     }
@@ -106,7 +104,10 @@ export const registerInstance = (inst) => {
 
 export const unregisterInstance = (inst) => {
     let index = instances.indexOf(inst)
-    instances.splice(index, 1)
+
+    if (index) {
+        instances.splice(index, 1)
+    }
 }
 
 export const gameLoop = () => {

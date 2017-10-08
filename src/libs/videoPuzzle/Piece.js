@@ -24,13 +24,11 @@ export class Piece extends PIXI.Container {
     this.outlineWidth = cellWidth
     this.outlineHeight = cellHeight
 
-    // rotation = current rotation being rendered
-    // angle = actual rotation value internal to the instance
-    // angleDelta = transition speed between rotation and angle
-
-    this.angle = Math.floor(Math.random() * 4) * 90 * Math.PI / 180
-    this.angleDelta = 10 * Math.PI / 180
+    this.goalAngle = Math.floor(Math.random() * 4) * 90 * Math.PI / 180
+    this.startAngle = 0
     this.rotation = 0
+    this.rotationT = 0
+
     this.snapStrength = 32
     this.clicked = false
     this.dragging = false
@@ -92,20 +90,26 @@ export class Piece extends PIXI.Container {
   }
 
   process() {
-    // Handle transition between rotation and angle
-    if (this.angle > this.rotation) {
-      if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
-        this.rotation = this.angle
-      } else {
-        this.rotation += this.angleDelta
-      }
-    } else if (this.angle < this.rotation) {
-      if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
-        this.rotation = this.angle
-      } else {
-        this.rotation -= this.angleDelta
-      }
+    // Handle transition between startAngle and goalAngle
+
+    if (this.rotationT <= 100) {
+      this.rotation = (this.startAngle - this.goalAngle) * Math.pow(1-(this.rotationT / 100), 3) + this.goalAngle
+      this.rotationT += 5
     }
+
+    // if (this.angle > this.rotation) {
+    //   if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
+    //     this.rotation = this.angle
+    //   } else {
+    //     this.rotation += this.angleDelta
+    //   }
+    // } else if (this.angle < this.rotation) {
+    //   if (Math.abs(this.angle - this.rotation) < this.angleDelta) {
+    //     this.rotation = this.angle
+    //   } else {
+    //     this.rotation -= this.angleDelta
+    //   }
+    // }
   }
 
   onClick(event) {
@@ -162,7 +166,9 @@ export class Piece extends PIXI.Container {
   }
 
   onRotateStart() {
-    this.angle += 90 * Math.PI / 180
+    this.goalAngle = this.goalAngle + 90 * Math.PI / 180
+    this.startAngle = this.rotation
+    this.rotationT = 0
     this.rotateSfx.play()
   }
 }
