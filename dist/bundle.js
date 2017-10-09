@@ -21879,7 +21879,7 @@ var Piece = exports.Piece = function (_PIXI$Container) {
         this.dragging = false;
 
         // Snap to correct position if close enough and in the correct orientation
-        if (Math.abs(this.x - this.xStart) < this.snapStrength && Math.abs(this.y - this.yStart) < this.snapStrength && this.angle % (2 * Math.PI) === 0) {
+        if (Math.abs(this.x - this.xStart) < this.snapStrength && Math.abs(this.y - this.yStart) < this.snapStrength && this.goalAngle % (2 * Math.PI) === 0) {
 
           this.x = this.xStart;
           this.y = this.yStart;
