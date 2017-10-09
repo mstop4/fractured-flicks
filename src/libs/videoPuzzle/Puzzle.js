@@ -14,6 +14,10 @@ export class Puzzle extends App {
     this.guide = undefined
     this.background = undefined
     this.titleText = undefined
+    this.timerText = undefined
+
+    this.timerStartTime = 0
+    this.timerNowTime = 0
 
     this.commonAssets = ['./images/frame.png', './images/background.png']
     this.videoURI = puzzles[this.currentLevel].file
@@ -81,6 +85,11 @@ export class Puzzle extends App {
     this.titleText.x = 0
     this.titleText.y = 0
     this.pixiApp.stage.addChild(this.titleText)
+
+    this.timerText = new PIXI.Text("0:00", titleStyle)
+    this.timerText.x = 200
+    this.timerText.y = 0
+    this.pixiApp.stage.addChild(this.timerText)
 
     this.button = []
     
@@ -179,6 +188,8 @@ export class Puzzle extends App {
     }
 
     this.loadingNewLevel = false
+    this.timerNowTime = window.performance.now()
+    this.timerStartTime = this.timerNowTime
   }
 
   process() {
@@ -191,14 +202,27 @@ export class Puzzle extends App {
       done = piece.done && done
     })
 
-    if (done && !this.loadingNewLevel && !this.puzzleComplete) {
-      this.titleText.text = "Complete!"
-      this.puzzleComplete = true
-      //this.guide.filters = []
-      this.guide.tint = 0xFFFFFF
-      this.pieces.forEach(function(piece) {
-        piece.visible = false
-      })
+    if (!this.loadingNewLevel) {
+      if (done && !this.puzzleComplete) {
+        this.titleText.text = "Complete!"
+        this.puzzleComplete = true
+        //this.guide.filters = []
+        this.guide.tint = 0xFFFFFF
+        this.pieces.forEach(function(piece) {
+          piece.visible = false
+        })
+      } else {
+        this.timerNowTime = window.performance.now()
+        let duration = this.timerNowTime - this.timerStartTime
+        let min = Math.floor(duration/1000/60)
+        let sec = ((duration/1000) % 60).toFixed(1)
+
+        if (sec < 10) {
+          this.timerText.text = `${min}:0${sec}`
+        } else {
+          this.timerText.text = `${min}:${sec}`
+        }
+      }
     }
   }
 }
