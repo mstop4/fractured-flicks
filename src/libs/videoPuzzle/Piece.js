@@ -122,7 +122,7 @@ export class Piece extends PIXI.Container {
       // Snap to correct position if close enough and in the correct orientation
       if (Math.abs(this.x - this.xStart) < this.snapStrength && 
           Math.abs(this.y - this.yStart) < this.snapStrength && 
-          this.goalAngle % (2 * Math.PI) === 0) {
+          (this.goalAngle % (2 * Math.PI)).toFixed(2) === 0) {
 
         this.x = this.xStart
         this.y = this.yStart
