@@ -179,9 +179,6 @@ export class Puzzle extends App {
     }
 
     this.loadingNewLevel = false
-
-    console.dir(this.pixiApp.stage)
-    console.dir(PIXI.utils)
   }
 
   process() {
