@@ -22033,7 +22033,7 @@ var Button = exports.Button = function (_PIXI$Container) {
 
 var _Puzzle = __webpack_require__(98);
 
-var _webfontloader = __webpack_require__(223);
+var _webfontloader = __webpack_require__(224);
 
 var _webfontloader2 = _interopRequireDefault(_webfontloader);
 
@@ -22084,17 +22084,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _app = __webpack_require__(99);
 
-var _puzzlesConfig = __webpack_require__(219);
+var _puzzlesConfig = __webpack_require__(220);
 
-var _audioConfig = __webpack_require__(220);
+var _audioConfig = __webpack_require__(221);
 
-var _PuzzleMenu = __webpack_require__(221);
+var _PuzzleMenu = __webpack_require__(222);
 
 var _Piece = __webpack_require__(95);
 
 var _Button = __webpack_require__(96);
 
-var _TitleScreen = __webpack_require__(222);
+var _TitleScreen = __webpack_require__(223);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -22203,11 +22203,13 @@ var Puzzle = exports.Puzzle = function (_App) {
       this.titleText = new PIXI.Text("Title", titleStyle);
       this.titleText.x = 0;
       this.titleText.y = 0;
+      this.titleText.displayGroup = this.uiLayer;
       this.pixiApp.stage.addChild(this.titleText);
 
       this.timerText = new PIXI.Text("0:00", titleStyle);
       this.timerText.x = 200;
       this.timerText.y = 0;
+      this.timerText.displayGroup = this.uiLayer;
       this.pixiApp.stage.addChild(this.timerText);
     }
   }, {
@@ -22275,6 +22277,7 @@ var Puzzle = exports.Puzzle = function (_App) {
       }
 
       this.backButton = new _Button.Button(this.maxWidth - 100, 0, 100, 50, "Back", this.backToMenu.bind(this));
+      this.backButton.displayGroup = this.uiLayer;
       this.pixiApp.stage.addChild(this.backButton);
 
       this.loadingNewLevel = false;
@@ -22389,7 +22392,9 @@ __webpack_require__(203);
 
 __webpack_require__(7);
 
-var _stats = __webpack_require__(218);
+__webpack_require__(218);
+
+var _stats = __webpack_require__(219);
 
 var _stats2 = _interopRequireDefault(_stats);
 
@@ -22445,8 +22450,11 @@ var App = exports.App = function () {
       document.body.appendChild(this.fpsCount.dom);
 
       // responsive canvas
-
       window.addEventListener("resize", this.scaleStageToWindow.bind(this), false);
+
+      // Display groups
+      this.pixiApp.stage.displayList = new PIXI.DisplayList();
+      this.uiLayer = new PIXI.DisplayGroup(1, false);
 
       this.gameLoop();
     }
@@ -45609,6 +45617,464 @@ Object.defineProperty(SoundPrototype, "complete", {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+PIXI.DISPLAY_FLAG = {
+    AUTO_CHILDREN: 0,
+    AUTO_CONTAINER: 1,
+    AUTO_OBJECT: 2,
+    MANUAL_CONTAINER: 3
+};
+var WebGLRenderer = PIXI.WebGLRenderer;
+var CanvasRenderer = PIXI.CanvasRenderer;
+Object.assign(PIXI.Container.prototype, {
+    displayList: null,
+    displayChildren: null,
+    displayParent: null,
+    updateTransform: function updateTransform() {
+        if (!this.visible) {
+            return;
+        }
+        this.containerUpdateTransform();
+        if (this.displayList) {
+            this.displayList.update(this);
+        }
+    },
+    renderCanvas: function renderCanvas(renderer) {
+        if (!this.visible) {
+            this.displayOrder = 0;
+            return;
+        }
+        this.displayOrder = renderer.incDisplayOrder();
+        if (this.worldAlpha <= 0 || !this.renderable) {
+            return;
+        }
+        if (this.displayList) {
+            this.displayList.renderCanvas(this, renderer);
+            return;
+        }
+        this.containerRenderCanvas(renderer);
+    },
+    renderWebGL: function renderWebGL(renderer) {
+        if (!this.visible) {
+            this.displayOrder = 0;
+            return;
+        }
+        this.displayOrder = renderer.incDisplayOrder();
+        if (this.worldAlpha <= 0 || !this.renderable) {
+            return;
+        }
+        if (this.displayList) {
+            this.displayList.renderWebGL(this, renderer);
+            return;
+        }
+        this.containerRenderWebGL(renderer);
+    },
+    containerRenderWebGL: PIXI.Container.prototype.renderWebGL,
+    containerRenderCanvas: PIXI.Container.prototype.renderCanvas
+});
+var __extends = undefined && undefined.__extends || function (d, b) {
+    for (var p in b) {
+        if (b.hasOwnProperty(p)) d[p] = b[p];
+    }function __() {
+        this.constructor = d;
+    }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var pixi_display;
+(function (pixi_display) {
+    var utils = PIXI.utils;
+    var DisplayGroup = function (_super) {
+        __extends(DisplayGroup, _super);
+        function DisplayGroup(zIndex, sorting) {
+            _super.call(this);
+            this.currentIndex = 0;
+            this.zIndex = 0;
+            this.enableSort = false;
+            this.computedChildren = [];
+            this.currentDisplayList = null;
+            this.currentIndex = 0;
+            this.zIndex = zIndex || 0;
+            this.enableSort = !!sorting;
+            if (typeof sorting === 'function') {
+                this.on('add', sorting);
+            }
+        }
+        DisplayGroup.compareZOrder = function (a, b) {
+            if (a.zOrder < b.zOrder) {
+                return 1;
+            }
+            if (a.zOrder > b.zOrder) {
+                return -1;
+            }
+            return a.updateOrder - b.updateOrder;
+        };
+        ;
+        DisplayGroup.prototype.clear = function () {
+            var list = this.computedChildren;
+            for (var i = 0; i < list.length; i++) {
+                var children = list[i].displayChildren;
+                if (children && children.length > 0) {
+                    for (var j = 0; j < children.length; j++) {
+                        children[j].displayParent = null;
+                    }
+                    children.length = 0;
+                }
+                list[i].displayParent = null;
+            }
+            list.length = 0;
+            this.currentDisplayList = null;
+            this.currentIndex = 0;
+        };
+        ;
+        DisplayGroup.prototype.add = function (displayObject) {
+            displayObject.displayOrder = this.computedChildren.length;
+            this.emit('add', displayObject);
+            this.computedChildren.push(displayObject);
+        };
+        ;
+        DisplayGroup.prototype.update = function () {
+            this.emit('update');
+            if (this.enableSort && this.computedChildren.length > 1) {
+                this.computedChildren.sort(DisplayGroup.compareZOrder);
+            }
+        };
+        ;
+        DisplayGroup.prototype.renderWebGL = function (parentContainer, renderer) {
+            var list = this.computedChildren;
+            for (var j = 0; j < list.length; j++) {
+                var container = list[j];
+                if (container.displayFlag) {
+                    container.renderWebGL(renderer);
+                } else {
+                    container.displayOrder = renderer.incDisplayOrder();
+                    container._renderWebGL(renderer);
+                    var children = container.displayChildren;
+                    if (children && children.length) {
+                        for (var k = 0; k < children.length; k++) {
+                            var child = children[k];
+                            child.displayOrder = renderer.incDisplayOrder();
+                            if (child.displayFlag) {
+                                child.renderWebGL(renderer);
+                            } else {
+                                child._renderWebGL(renderer);
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        ;
+        DisplayGroup.prototype.renderCanvas = function (parentContainer, renderer) {
+            var list = this.computedChildren;
+            for (var j = 0; j < list.length; j++) {
+                var container = list[j];
+                if (container.displayFlag) {
+                    container.renderCanvas(renderer);
+                } else {
+                    container.displayOrder = renderer.incDisplayOrder();
+                    container._renderCanvas(renderer);
+                    var children = container.displayChildren;
+                    if (children && children.length) {
+                        for (var k = 0; k < children.length; k++) {
+                            var child = children[k];
+                            child.displayOrder = renderer.incDisplayOrder();
+                            if (child.displayFlag) {
+                                child.renderCanvas(renderer);
+                            } else {
+                                child._renderCanvas(renderer);
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        ;
+        return DisplayGroup;
+    }(utils.EventEmitter);
+    pixi_display.DisplayGroup = DisplayGroup;
+})(pixi_display || (pixi_display = {}));
+var pixi_display;
+(function (pixi_display) {
+    var utils = PIXI.utils;
+    var DisplayList = function (_super) {
+        __extends(DisplayList, _super);
+        function DisplayList() {
+            _super.call(this);
+            this.container = null;
+            this.totalElements = 0;
+            this.displayGroups = [];
+            this.defaultDisplayGroup = new pixi_display.DisplayGroup(0, false);
+        }
+        DisplayList.prototype.clear = function () {
+            var list = this.displayGroups;
+            for (var i = 0; i < list.length; i++) {
+                list[i].clear();
+            }
+            list.length = 0;
+            this.totalElements = 0;
+            this.container = null;
+        };
+        ;
+        DisplayList.prototype.destroy = function () {
+            this.clear();
+        };
+        ;
+        DisplayList.compareZIndex = function (a, b) {
+            if (a.zIndex !== b.zIndex) {
+                return a.zIndex - b.zIndex;
+            }
+            return a.currentIndex - b.currentIndex;
+        };
+        ;
+        DisplayList.prototype._addRecursive = function (displayObject, parent) {
+            var container = displayObject;
+            if (!container.visible || !container.renderable) {
+                return;
+            }
+            var groups = this.displayGroups;
+            var group = parent.displayGroup;
+            container.updateOrder = this.totalElements++;
+            if (container.displayGroup) {
+                group = container.displayGroup;
+                if (!group.currentDisplayList) {
+                    group.currentDisplayList = this;
+                    group.currentIndex = groups.length;
+                    groups.push(group);
+                }
+                group.add(container);
+                container.displayParent = container;
+            } else {
+                container.displayParent = parent;
+                if (!parent.displayChildren) {
+                    parent.displayChildren = [];
+                }
+                parent.displayChildren.push(container);
+            }
+            if (container.displayFlag !== PIXI.DISPLAY_FLAG.MANUAL_CONTAINER) {
+                var children = container.children;
+                if (children && children.length > 0) {
+                    if (container._mask || container._filters && container._filters.length || container.displayList) {
+                        container.displayFlag = PIXI.DISPLAY_FLAG.AUTO_CONTAINER;
+                    } else {
+                        container.displayFlag = PIXI.DISPLAY_FLAG.AUTO_CHILDREN;
+                        for (var i = 0; i < children.length; i++) {
+                            this._addRecursive(children[i], container.displayParent);
+                        }
+                    }
+                } else {
+                    container.displayFlag = PIXI.DISPLAY_FLAG.AUTO_OBJECT;
+                }
+            }
+        };
+        ;
+        DisplayList.prototype.update = function (parentContainer) {
+            this.clear();
+            var tempGroup = parentContainer.displayGroup;
+            this.displayGroups.push(this.defaultDisplayGroup);
+            this.defaultDisplayGroup.add(parentContainer);
+            this.container = parentContainer;
+            var children = parentContainer.children;
+            var i = 0;
+            for (i = 0; i < children.length; i++) {
+                this._addRecursive(children[i], parentContainer);
+            }
+            var groups = this.displayGroups;
+            groups.sort(DisplayList.compareZIndex);
+            for (i = 0; i < groups.length; i++) {
+                groups[i].currentIndex = i;
+                groups[i].update();
+            }
+            this.emit('afterUpdate');
+        };
+        ;
+        DisplayList.prototype.renderWebGL = function (parentContainer, renderer) {
+            parentContainer.displayFlag = PIXI.DISPLAY_FLAG.AUTO_CHILDREN;
+            var groups = this.displayGroups;
+            for (var i = 0; i < groups.length; i++) {
+                var group = groups[i];
+                group.renderWebGL(parentContainer, renderer);
+            }
+        };
+        ;
+        DisplayList.prototype.renderCanvas = function (parentContainer, renderer) {
+            var groups = this.displayGroups;
+            for (var i = 0; i < groups.length; i++) {
+                var group = groups[i];
+                group.renderCanvas(parentContainer, renderer);
+            }
+        };
+        ;
+        return DisplayList;
+    }(utils.EventEmitter);
+    pixi_display.DisplayList = DisplayList;
+})(pixi_display || (pixi_display = {}));
+Object.assign(PIXI.DisplayObject.prototype, {
+    displayGroup: null,
+    displayFlag: PIXI.DISPLAY_FLAG.AUTO_CHILDREN,
+    displayParent: null,
+    zOrder: 0,
+    updateOrder: 0,
+    displayOrder: 0
+});
+var pixi_display;
+(function (pixi_display) {
+    var InteractionManager = PIXI.interaction.InteractionManager;
+    Object.assign(InteractionManager.prototype, {
+        _queue: [[], []],
+        _displayProcessInteractive: function _displayProcessInteractive(point, displayObject, hitTestOrder, interactive) {
+            if (!displayObject || !displayObject.visible) {
+                return 0;
+            }
+            var hit = 0,
+                interactiveParent = interactive = displayObject.interactive || interactive;
+            if (displayObject.hitArea) {
+                interactiveParent = false;
+            }
+            var mask = displayObject._mask;
+            if (hitTestOrder < Infinity && mask) {
+                if (!mask.containsPoint(point)) {
+                    hitTestOrder = Infinity;
+                }
+            }
+            if (hitTestOrder < Infinity && displayObject.filterArea) {
+                if (!displayObject.filterArea.contains(point.x, point.y)) {
+                    hitTestOrder = Infinity;
+                }
+            }
+            var children = displayObject.children;
+            if (displayObject.interactiveChildren && children) {
+                for (var i = children.length - 1; i >= 0; i--) {
+                    var child = children[i];
+                    var hitChild = this._displayProcessInteractive(point, child, hitTestOrder, interactiveParent);
+                    if (hitChild) {
+                        if (!child.parent) {
+                            continue;
+                        }
+                        hit = hitChild;
+                        hitTestOrder = hitChild;
+                    }
+                }
+            }
+            if (interactive) {
+                if (hitTestOrder < displayObject.displayOrder) {
+                    if (displayObject.hitArea) {
+                        displayObject.worldTransform.applyInverse(point, this._tempPoint);
+                        if (displayObject.hitArea.contains(this._tempPoint.x, this._tempPoint.y)) {
+                            hit = displayObject.displayOrder;
+                        }
+                    } else if (displayObject.containsPoint) {
+                        if (displayObject.containsPoint(point)) {
+                            hit = displayObject.displayOrder;
+                        }
+                    }
+                }
+                if (displayObject.interactive) {
+                    this._queueAdd(displayObject, hit);
+                }
+            }
+            return hit;
+        },
+        processInteractive: function processInteractive(strangeStuff, displayObject, func, hitTest, interactive) {
+            var interactionEvent = null;
+            var point = null;
+            if (strangeStuff.data && strangeStuff.data.global) {
+                interactionEvent = strangeStuff;
+                point = interactionEvent.data.global;
+            } else {
+                point = strangeStuff;
+            }
+            this._startInteractionProcess();
+            this._displayProcessInteractive(point, displayObject, hitTest ? 0 : Infinity, false);
+            this._finishInteractionProcess(interactionEvent, func);
+        },
+        _startInteractionProcess: function _startInteractionProcess() {
+            this._eventDisplayOrder = 1;
+            if (!this._queue) {
+                this._queue = [[], []];
+            }
+            this._queue[0].length = 0;
+            this._queue[1].length = 0;
+        },
+        _queueAdd: function _queueAdd(displayObject, order) {
+            var queue = this._queue;
+            if (order < this._eventDisplayOrder) {
+                queue[0].push(displayObject);
+            } else {
+                if (order > this._eventDisplayOrder) {
+                    this._eventDisplayOrder = order;
+                    var q = queue[1];
+                    for (var i = 0; i < q.length; i++) {
+                        queue[0].push(q[i]);
+                    }
+                    queue[1].length = 0;
+                }
+                queue[1].push(displayObject);
+            }
+        },
+        _finishInteractionProcess: function _finishInteractionProcess(event, func) {
+            var queue = this._queue;
+            var q = queue[0];
+            var i = 0;
+            for (; i < q.length; i++) {
+                if (event) {
+                    func(event, q[i], false);
+                } else {
+                    func(q[i], false);
+                }
+            }
+            q = queue[1];
+            for (i = 0; i < q.length; i++) {
+                if (event) {
+                    if (!event.target) {
+                        event.target = q[i];
+                    }
+                    func(event, q[i], true);
+                } else {
+                    func(q[i], true);
+                }
+            }
+        }
+    });
+})(pixi_display || (pixi_display = {}));
+Object.assign(WebGLRenderer.prototype, {
+    _lastDisplayOrder: 0,
+    incDisplayOrder: function incDisplayOrder() {
+        return ++this._lastDisplayOrder;
+    },
+    _oldRender: WebGLRenderer.prototype.render,
+    render: function render(displayObject, renderTexture, clear, transform, skipUpdateTransform) {
+        if (!renderTexture) {
+            this._lastDisplayOrder = 0;
+        }
+        this._oldRender(displayObject, renderTexture, clear, transform, skipUpdateTransform);
+    }
+});
+Object.assign(CanvasRenderer.prototype, {
+    _lastDisplayOrder: 0,
+    incDisplayOrder: function incDisplayOrder() {
+        return ++this._lastDisplayOrder;
+    },
+    _oldRender: CanvasRenderer.prototype.render,
+    render: function render(displayObject, renderTexture, clear, transform, skipUpdateTransform) {
+        if (!renderTexture) {
+            this._lastDisplayOrder = 0;
+        }
+        this._oldRender(displayObject, renderTexture, clear, transform, skipUpdateTransform);
+    }
+});
+Object.assign(PIXI, {
+    display: pixi_display,
+    DisplayGroup: pixi_display.DisplayGroup,
+    DisplayList: pixi_display.DisplayList
+});
+//# sourceMappingURL=pixi-display.js.map
+
+/***/ }),
+/* 219 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -45666,7 +46132,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 219 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45688,7 +46154,7 @@ var puzzles = exports.puzzles = [{
 }];
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45700,7 +46166,7 @@ Object.defineProperty(exports, "__esModule", {
 var sounds = exports.sounds = ["./sounds/correct.mp3", "./sounds/pickUp.mp3", "./sounds/putDown.mp3", "./sounds/rotate.mp3", "./sounds/music1.mp3"];
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45738,6 +46204,17 @@ var PuzzleMenu = exports.PuzzleMenu = function (_PIXI$Container) {
     _this.buttonHeight = 50;
     _this.buttonMarginX = 10;
 
+    _this.titleStyle = new PIXI.TextStyle({
+      fill: 0xFFFFFF,
+      fontSize: 36
+    });
+
+    _this.titleLabel = new PIXI.Text("Select a puzzle", _this.titleStyle);
+    _this.titleLabel.x = _this.app.maxWidth / 2;
+    _this.titleLabel.y = 100;
+    _this.titleLabel.anchor.set(0.5, 0.5);
+    _this.addChild(_this.titleLabel);
+
     for (var i = 0; i < _this.buttonsPerRow; i++) {
       _this.createButton(_this.app.maxWidth / 2 - (_this.buttonWidth + _this.buttonMarginX) * (_this.buttonsPerRow - 1) / 2 + i * (_this.buttonWidth + _this.buttonMarginX), _this.app.maxHeight / 2, 100, 50, (i + 1).toString(), i);
     }
@@ -45747,7 +46224,7 @@ var PuzzleMenu = exports.PuzzleMenu = function (_PIXI$Container) {
   }
 
   _createClass(PuzzleMenu, [{
-    key: 'createButton',
+    key: "createButton",
     value: function createButton(x, y, width, height, label, level) {
       this.buttons[this.buttonCount] = new _Button.Button(x, y, width, height, label, this.gotoLevel.bind(this, level));
       this.buttons[this.buttonCount].pivot = new PIXI.Point(width / 2, height / 2);
@@ -45755,27 +46232,20 @@ var PuzzleMenu = exports.PuzzleMenu = function (_PIXI$Container) {
       this.buttonCount++;
     }
   }, {
-    key: 'gotoLevel',
+    key: "gotoLevel",
     value: function gotoLevel(level) {
       this.processPaused = true;
       this.visible = false;
-
-      // this.buttons.forEach( (button) => {
-      //   button.visible = false
-      // })
       this.app.loadLevel(level);
     }
   }, {
-    key: 'activate',
+    key: "activate",
     value: function activate() {
       this.processPaused = false;
       this.visible = true;
-      this.buttons.forEach(function (button) {
-        button.visible = true;
-      });
     }
   }, {
-    key: 'process',
+    key: "process",
     value: function process() {
       // stuff
     }
@@ -45785,7 +46255,7 @@ var PuzzleMenu = exports.PuzzleMenu = function (_PIXI$Container) {
 }(PIXI.Container);
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45834,7 +46304,7 @@ var TitleScreen = exports.TitleScreen = function (_PIXI$Container) {
     _this.titleBanner = _this.addText("Video Jigsaw Puzzle", _this.bannerStyle, 1280 / 2, 100, 0.5, 0.5);
     _this.startText = _this.addText("Tap to Start", _this.bannerStyle, 1280 / 2, 720 / 2, 0.5, 0.5);
     _this.infoText = _this.addText("github.com/mstop4", _this.infoStyle, 0, 704, 0, 1);
-    _this.versionText = _this.addText("v.0.4.0", _this.infoStyle, 1280, 704, 1, 1);
+    _this.versionText = _this.addText("v.0.5.0", _this.infoStyle, 1280, 704, 1, 1);
 
     _this.interactive = true;
     _this.interactiveChildren = true;
@@ -45883,7 +46353,7 @@ var TitleScreen = exports.TitleScreen = function (_PIXI$Container) {
 }(PIXI.Container);
 
 /***/ }),
-/* 223 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
