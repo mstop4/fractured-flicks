@@ -1,9 +1,10 @@
 import {App} from './app.js'
 import {puzzles} from '../../puzzles.config.js'
 import {sounds} from '../../audio.config.js'
+import {PuzzleMenu} from './PuzzleMenu.js'
 import {Piece} from './Piece.js'
-import {TitleScreen} from './TitleScreen.js'
 import {Button} from './Button.js'
+import {TitleScreen} from './TitleScreen.js'
 
 export class Puzzle extends App {
   constructor() {
@@ -11,10 +12,13 @@ export class Puzzle extends App {
     this.currentLevel = 1
 
     this.pieces = []
+    this.menuScreen = undefined
     this.guide = undefined
+    this.frame = undefined
     this.background = undefined
     this.titleText = undefined
     this.timerText = undefined
+    this.backButton = undefined
 
     this.timerStartTime = 0
     this.timerNowTime = 0
@@ -64,16 +68,26 @@ export class Puzzle extends App {
     this.registerInstance(this)
   }
 
+  menuSetup() {
+    // create menu screen
+    this.menuScreen = new PuzzleMenu(this)
+    this.pixiApp.stage.addChild(this.menuScreen)
+
+    // create puzzle screen
+    this.initPuzzleSetup()
+    this.toggleUIVisibility(false)
+  }
+
   initPuzzleSetup() {
     this.xOffset = (this.maxWidth - 960) / 2
     this.yOffset = (this.maxHeight - 540) / 2
 
     // Add frame
-    let frame = new PIXI.Sprite(PIXI.utils.TextureCache["./images/frame.png"])
-    frame.pivot = new PIXI.Point(16,16)
-    frame.x = this.xOffset
-    frame.y = this.yOffset
-    this.pixiApp.stage.addChild(frame)
+    this.frame = new PIXI.Sprite(PIXI.utils.TextureCache["./images/frame.png"])
+    this.frame.pivot = new PIXI.Point(16,16)
+    this.frame.x = this.xOffset
+    this.frame.y = this.yOffset
+    this.pixiApp.stage.addChild(this.frame)
 
     // Add Title
     let titleStyle = new PIXI.TextStyle({
@@ -90,41 +104,10 @@ export class Puzzle extends App {
     this.timerText.x = 200
     this.timerText.y = 0
     this.pixiApp.stage.addChild(this.timerText)
-
-    this.button = []
-    
-    this.button[0] = new Button(this.maxWidth-100, 0, 50, 50, "1", this.loadLevel.bind(this, [0]))
-    this.button[1] = new Button(this.maxWidth-50, 0, 50, 50, "2", this.loadLevel.bind(this, [1]))
-    this.pixiApp.stage.addChild(this.button[0])
-    this.pixiApp.stage.addChild(this.button[1])    
-
-    this.loadLevel(this.currentLevel)
   }
 
   loadLevel(level) {
-
     console.log("Changing Levels")
-    this.loadingNewLevel = true
-
-    if (this.guide) {
-      // Pause and reset current video
-      this.guide.texture.baseTexture.source.pause()
-      this.guide.texture.baseTexture.source.currentTime = 0
-
-      // remove guide
-      this.unregisterInstance(this.guide)
-      this.destroyInstance(this.guide)
-    }
-
-    // remvoe pieces
-    if (this.pieces) {
-      this.pieces.forEach( (piece) => {
-        this.unregisterInstance(piece)
-        this.destroyInstance(piece)
-      })
-
-      this.pieces = []
-    }
 
     // load new puzzle
     this.currentLevel = level
@@ -187,9 +170,55 @@ export class Puzzle extends App {
       }
     }
 
+    this.backButton = new Button(this.maxWidth-100, 0, 100, 50, "Back", this.backToMenu.bind(this))
+    this.pixiApp.stage.addChild(this.backButton)
+
     this.loadingNewLevel = false
     this.timerNowTime = window.performance.now()
     this.timerStartTime = this.timerNowTime
+    this.toggleUIVisibility(true)
+  }
+
+  removePuzzle() {
+    this.loadingNewLevel = true
+    
+    if (this.guide) {
+      // Pause and reset current video
+      this.guide.texture.baseTexture.source.pause()
+      this.guide.texture.baseTexture.source.currentTime = 0
+
+      // remove guide
+      this.unregisterInstance(this.guide)
+      this.destroyInstance(this.guide)
+    }
+
+    // remove pieces
+    if (this.pieces) {
+      this.pieces.forEach( (piece) => {
+        this.unregisterInstance(piece)
+        this.destroyInstance(piece)
+      })
+
+      this.pieces = []
+    }
+
+    // remove back button
+    if (this.backButton) {
+      this.unregisterInstance(this.backButton)
+      this.destroyInstance(this.backButton)
+    }
+  }
+
+  toggleUIVisibility(on) {
+    this.frame.visible = on
+    this.titleText.visible = on
+    this.timerText.visible = on
+  }
+
+  backToMenu() {
+    this.removePuzzle()
+    this.toggleUIVisibility()
+    this.menuScreen.activate()
   }
 
   process() {

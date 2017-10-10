@@ -9,6 +9,7 @@ export class Button extends PIXI.Container {
     this.clickFunc = clickFunc
 
     this.shape = new PIXI.Graphics()
+    this.shape.beginFill(0x808080)
     this.shape.drawRect(0,0,width,height)
 
     this.addChild(this.shape)

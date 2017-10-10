@@ -112,7 +112,9 @@ export class App {
     requestAnimationFrame(this.gameLoop.bind(this));
     
     this.instances.forEach( (inst) => {
-      inst.process()
+      if (!inst.processPaused) {
+        inst.process()
+      }
     })
 
     this.pixiApp.renderer.render(this.pixiApp.stage)
