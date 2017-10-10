@@ -1,5 +1,5 @@
 {
-  "name": "video--jigsaw-puzzle",
+  "name": "video-jigsaw-puzzle",
   "version": "0.3.0",
   "description": "A web-based jigsaw puzzle game where players put pieces of a video back together.",
   "main": "index.js",
