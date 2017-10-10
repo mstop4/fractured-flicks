@@ -2,7 +2,7 @@ let dragDelay = 150
 
 export class Piece extends PIXI.Container {
 
-  constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, texture, app) {
+  constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, scale, texture, app) {
     super()
 
     this.app = app
@@ -20,8 +20,8 @@ export class Piece extends PIXI.Container {
     this.yStart = y
     this.width = pieceWidth
     this.height = pieceHeight
-    this.outlineWidth = cellWidth
-    this.outlineHeight = cellHeight
+    this.outlineWidth = cellWidth * scale
+    this.outlineHeight = cellHeight * scale
 
     this.goalAngle = Math.floor(Math.random() * 4) * 90 * Math.PI / 180
     this.startAngle = 0

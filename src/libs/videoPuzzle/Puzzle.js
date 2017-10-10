@@ -161,7 +161,7 @@ export class Puzzle extends App {
         let pieceX = this.xOffset + (j+0.5)*(cellWidth * this.videoScale)
         let pieceY = this.yOffset + (i+0.5)*(cellHeight * this.videoScale)
 
-        let newPiece = new Piece(pieceX, pieceY, pieceWidth, pieceHeight, cellWidth, cellHeight, pieceTex, this)
+        let newPiece = new Piece(pieceX, pieceY, pieceWidth, pieceHeight, cellWidth, cellHeight, this.videoScale, pieceTex, this)
         newPiece.randomizePosition(this.xOffset - 50, 
                     this.yOffset - 50, 
                     this.xOffset + this.guide.width + 50,
