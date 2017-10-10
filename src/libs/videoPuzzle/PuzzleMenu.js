@@ -13,6 +13,17 @@ export class PuzzleMenu extends PIXI.Container {
     this.buttonHeight = 50
     this.buttonMarginX = 10 
 
+    this.titleStyle = new PIXI.TextStyle({
+      fill: 0xFFFFFF,
+      fontSize: 36
+    })
+
+    this.titleLabel = new PIXI.Text("Select a puzzle", this.titleStyle)
+    this.titleLabel.x = this.app.maxWidth / 2
+    this.titleLabel.y = 100
+    this.titleLabel.anchor.set(0.5, 0.5)
+    this.addChild(this.titleLabel)
+
     for (let i = 0; i < this.buttonsPerRow; i++) {
       this.createButton(this.app.maxWidth / 2 - ((this.buttonWidth + this.buttonMarginX) * (this.buttonsPerRow - 1) / 2) + i * (this.buttonWidth + this.buttonMarginX), 
                         this.app.maxHeight / 2, 
@@ -33,19 +44,12 @@ export class PuzzleMenu extends PIXI.Container {
   gotoLevel(level) {
     this.processPaused = true
     this.visible = false
-
-    this.buttons.forEach( (button) => {
-      button.visible = false
-    })
     this.app.loadLevel(level) 
   }
 
   activate() {
     this.processPaused = false
     this.visible = true
-    this.buttons.forEach( (button) => {
-      button.visible = true
-    })
   }
 
   process() {

@@ -1,6 +1,7 @@
 import 'pixi.js'
 import 'pixi-filters'
 import 'pixi-sound'
+import 'pixi-display'
 import Stats from 'stats.js'
 import {Piece} from './Piece.js'
 
@@ -47,8 +48,11 @@ export class App {
     document.body.appendChild(this.fpsCount.dom)
 
     // responsive canvas
-
     window.addEventListener("resize", this.scaleStageToWindow.bind(this), false)
+
+    // Display groups
+    this.pixiApp.stage.displayList = new PIXI.DisplayList()
+    this.uiLayer = new PIXI.DisplayGroup(1, false)
 
     this.gameLoop()
   }

@@ -1,5 +1,10 @@
 # Changelog
 
+## v.0.5.0
+
+- Added Puzzle select screen
+- UI elements are now drawn on top of pieces
+
 ## v.0.4.0
 
 - Added title screen

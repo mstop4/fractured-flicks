@@ -98,11 +98,13 @@ export class Puzzle extends App {
     this.titleText = new PIXI.Text("Title", titleStyle)
     this.titleText.x = 0
     this.titleText.y = 0
+    this.titleText.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.titleText)
 
     this.timerText = new PIXI.Text("0:00", titleStyle)
     this.timerText.x = 200
     this.timerText.y = 0
+    this.timerText.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.timerText)
   }
 
@@ -171,6 +173,7 @@ export class Puzzle extends App {
     }
 
     this.backButton = new Button(this.maxWidth-100, 0, 100, 50, "Back", this.backToMenu.bind(this))
+    this.backButton.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.backButton)
 
     this.loadingNewLevel = false
