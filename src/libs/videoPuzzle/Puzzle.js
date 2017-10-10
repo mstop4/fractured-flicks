@@ -14,6 +14,7 @@ export class Puzzle extends App {
     this.pieces = []
     this.menuScreen = undefined
     this.guide = undefined
+    this.videoTex = undefined
     this.frame = undefined
     this.background = undefined
     this.titleText = undefined
@@ -79,8 +80,8 @@ export class Puzzle extends App {
   }
 
   initPuzzleSetup() {
-    this.xOffset = (this.maxWidth - 960) / 2
-    this.yOffset = (this.maxHeight - 540) / 2
+    this.xOffset = (this.maxWidth - 853) / 2
+    this.yOffset = (this.maxHeight - 480) / 2
 
     // Add frame
     this.frame = new PIXI.Sprite(PIXI.utils.TextureCache["./images/frame.png"])
@@ -131,10 +132,10 @@ export class Puzzle extends App {
     this.titleText.text = puzzles[this.currentLevel].name
 
     //let bw = new PIXI.filters.ColorMatrixFilter()
-    let guideTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
-    guideTex.baseTexture.source.loop = true
-    guideTex.baseTexture.source.play()
-    this.guide = new PIXI.Sprite(guideTex)
+    this.videoTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
+    this.videoTex.baseTexture.source.loop = true
+    this.videoTex.baseTexture.source.play()
+    this.guide = new PIXI.Sprite(this.videoTex)
 
     this.guide.x = this.xOffset
     this.guide.y = this.yOffset
@@ -154,7 +155,7 @@ export class Puzzle extends App {
       for (let j = 0; j < this.numColumns; j++) {
 
         let rect = new PIXI.Rectangle(j*cellWidth, i*cellHeight, cellWidth, cellHeight)
-        let pieceTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
+        let pieceTex = new PIXI.Texture(this.videoTex.baseTexture)
         pieceTex.frame = rect
 
         let pieceX = this.xOffset + (j+0.5)*(cellWidth * this.videoScale)
