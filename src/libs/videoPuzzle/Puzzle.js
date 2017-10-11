@@ -176,7 +176,7 @@ export class Puzzle extends App {
       }
     }
 
-    this.backButton = new Button(this.maxWidth-100, 0, 100, 50, "PAck", this.backToMenu.bind(this))
+    this.backButton = new Button(this.maxWidth-100, 0, 100, 50, "Back", this.backToMenu.bind(this))
     this.backButton.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.backButton)
 
