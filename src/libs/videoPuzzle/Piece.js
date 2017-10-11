@@ -51,10 +51,10 @@ export class Piece extends PIXI.Container {
     this.on('pointermove', this.onDragMove)
 
     // Sounds
-    this.pickUpSfx = this.app.soundResources['./sounds/pickUp.mp3']
-    this.putDownSfx = this.app.soundResources['./sounds/putDown.mp3']
-    this.rotateSfx = this.app.soundResources['./sounds/rotate.mp3']
-    this.correctSfx = this.app.soundResources['./sounds/correct.mp3']
+    this.pickUpSfx = this.app.soundResources['snd_pickUp']
+    this.putDownSfx = this.app.soundResources['snd_putDown']
+    this.rotateSfx = this.app.soundResources['snd_rotate']
+    this.correctSfx = this.app.soundResources['snd_correct']
 
     this.outline = new PIXI.Graphics()
     this.recolourOutline(0xFF0000)

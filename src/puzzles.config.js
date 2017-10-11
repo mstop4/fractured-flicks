@@ -9,5 +9,11 @@ export const puzzles = [
     name: "Shore",
     file: "./videos/shore.mp4",
     scale: 2
+  },
+
+  {
+    name: "Tic-Tac-Toe",
+    file: "./videos/blackboard.mp4",
+    scale: 2
   }
 ]

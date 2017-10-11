@@ -64,8 +64,8 @@ export class Puzzle extends App {
     let titleScreen = new TitleScreen(this)
     this.pixiApp.stage.addChild(titleScreen)
 
-    this.soundResources['./sounds/music1.mp3'].loop = true
-    this.soundResources['./sounds/music1.mp3'].play()
+    console.dir(this.soundResources)
+    this.soundResources['mus_1'].play()
 
     this.registerInstance(this)
   }
@@ -239,24 +239,26 @@ export class Puzzle extends App {
     })
 
     if (!this.loadingNewLevel) {
-      if (done && !this.puzzleComplete) {
-        this.titleText.text = "Complete!"
-        this.puzzleComplete = true
-        //this.guide.filters = []
-        this.guide.tint = 0xFFFFFF
-        this.pieces.forEach(function(piece) {
-          piece.visible = false
-        })
-      } else {
-        this.timerNowTime = window.performance.now()
-        let duration = this.timerNowTime - this.timerStartTime
-        let min = Math.floor(duration/1000/60)
-        let sec = ((duration/1000) % 60).toFixed(1)
-
-        if (sec < 10) {
-          this.timerText.text = `${min}:0${sec}`
+      if (!this.puzzleComplete) {
+        if (done) {
+          this.titleText.text = "Complete!"
+          this.puzzleComplete = true
+          //this.guide.filters = []
+          this.guide.tint = 0xFFFFFF
+          this.pieces.forEach(function(piece) {
+            piece.visible = false
+          })
         } else {
-          this.timerText.text = `${min}:${sec}`
+          this.timerNowTime = window.performance.now()
+          let duration = this.timerNowTime - this.timerStartTime
+          let min = Math.floor(duration/1000/60)
+          let sec = ((duration/1000) % 60).toFixed(1)
+
+          if (sec < 10) {
+            this.timerText.text = `${min}:0${sec}`
+          } else {
+            this.timerText.text = `${min}:${sec}`
+          }
         }
       }
     }

@@ -8,14 +8,18 @@ export class PuzzleMenu extends PIXI.Container {
     this.buttons = []
     this.buttonCount = 0
     this.processPaused = false
-    this.buttonsPerRow = 2
+    this.buttonsPerRow = 3
     this.buttonWidth = 100
     this.buttonHeight = 50
     this.buttonMarginX = 10 
 
     this.titleStyle = new PIXI.TextStyle({
+      fontFamily: 'Indie Flower',
+      fontSize: 72,
       fill: 0xFFFFFF,
-      fontSize: 36
+      stroke: '#404060',
+      strokeThickness: 10,
+      padding: 20
     })
 
     this.titleLabel = new PIXI.Text("Select a puzzle", this.titleStyle)

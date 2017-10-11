@@ -78,7 +78,9 @@ export class App {
   loadAudio(sndArray, next) {
     console.log("Loading sounds")    
     sndArray.forEach( (snd) => {
-      this.soundResources[snd] = PIXI.sound.Sound.from(snd)
+      this.soundResources[snd.name] = PIXI.sound.Sound.from(snd.file)
+      this.soundResources[snd.name].loop = snd.loop
+      this.soundResources[snd.name].volume = snd.volume
     })
     next()
   }
