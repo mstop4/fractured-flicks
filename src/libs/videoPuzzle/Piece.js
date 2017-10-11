@@ -1,4 +1,7 @@
 let dragDelay = 150
+let idleColor = 0xFF4040
+let dragColor = 0xFFFF40
+let correctColor = 0x40FF40
 
 export class Piece extends PIXI.Container {
 
@@ -57,7 +60,8 @@ export class Piece extends PIXI.Container {
     this.correctSfx = this.app.soundResources['snd_correct']
 
     this.outline = new PIXI.Graphics()
-    this.recolourOutline(0xFF0000)
+    this.outline.cacheAsBitmap = true
+    this.recolourOutline(idleColor)
 
     this.addChild(this.sprite)
     this.addChild(this.outline)
@@ -88,9 +92,11 @@ export class Piece extends PIXI.Container {
   }
 
   recolourOutline(colour) {
+    this.outline.cacheAsBitmap = false
     this.outline.clear()
     this.outline.lineStyle(2,colour,1)
     this.outline.drawRect(0,0,this.outlineWidth,this.outlineHeight)
+    this.outline.cacheAsBitmap = true
   }
 
   process() {
@@ -116,7 +122,7 @@ export class Piece extends PIXI.Container {
       
       this.dragging = true
       this.onScaleStart(0.95, 0.95, 1, 1, 5) 
-      this.recolourOutline(0xFFFF00)
+      this.recolourOutline(dragColor)
       this.pickUpSfx.play()
   
       // Bring this piece to the front
@@ -175,12 +181,12 @@ export class Piece extends PIXI.Container {
 
       this.x = this.xStart
       this.y = this.yStart
-      this.recolourOutline(0x00FF00)
+      this.recolourOutline(correctColor)
       this.done = true
       this.correctSfx.play()
       this.onScaleStart(0.95, 0.95, 1, 1, 5) 
     } else {
-      this.recolourOutline(0xFF0000)
+      this.recolourOutline(idleColor)
       this.done = false
       if (!supressPutDownSFX) {
         this.putDownSfx.play()

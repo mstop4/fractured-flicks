@@ -8,14 +8,15 @@ export class Button extends PIXI.Container {
 
     this.clickFunc = clickFunc
 
-    this.shape = new PIXI.Graphics()
-    this.shape.beginFill(0x808080)
-    this.shape.drawRect(0,0,width,height)
-
+    this.shape = new PIXI.Sprite(PIXI.utils.TextureCache["./images/button-100.png"])
+    // this.shape.beginFill(0x808080)
+    // this.shape.drawRect(0,0,width,height)
     this.addChild(this.shape)
 
     this.labelStyle = new PIXI.TextStyle({
-      fill: 0xFFFFFF
+      fill: 0xFFFFFF,
+      stroke: 0x000000,
+      strokeThickness: 4
     })
 
     this.label = new PIXI.Text(text, this.labelStyle)

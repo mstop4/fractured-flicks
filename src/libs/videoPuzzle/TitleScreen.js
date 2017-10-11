@@ -60,7 +60,7 @@ export class TitleScreen extends PIXI.Container{
 
   onClick() {
     this.app.unregisterInstance(this)
-    this.app.destroyInstance(this)
+    this.app.destroyInstance(this, true, false)
     this.app.menuSetup()
   }
 } 

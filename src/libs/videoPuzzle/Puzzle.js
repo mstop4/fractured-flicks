@@ -1,6 +1,9 @@
 import {App} from './app.js'
+
 import {puzzles} from '../../puzzles.config.js'
 import {sounds} from '../../audio.config.js'
+import {commonAssets} from '../../common.config.js'
+
 import {PuzzleMenu} from './PuzzleMenu.js'
 import {Piece} from './Piece.js'
 import {Button} from './Button.js'
@@ -24,7 +27,7 @@ export class Puzzle extends App {
     this.timerStartTime = 0
     this.timerNowTime = 0
 
-    this.commonAssets = ['./images/frame.png', './images/background.png']
+    this.commonAssets = commonAssets
     this.videoURI = puzzles[this.currentLevel].file
     this.videoScale = puzzles[this.currentLevel].scale
     this.numRows = 4
@@ -143,7 +146,7 @@ export class Puzzle extends App {
     this.guide.scale.x = this.videoScale
     this.guide.scale.y = this.videoScale
     //guide.filters = [bw]
-    this.guide.tint = 0x808080
+    this.guide.tint = 0x606060
     //bw.blackAndWhite()
 
     this.pixiApp.stage.addChild(this.guide)
@@ -196,14 +199,14 @@ export class Puzzle extends App {
 
       // remove guide
       this.unregisterInstance(this.guide)
-      this.destroyInstance(this.guide)
+      this.destroyInstance(this.guide, true, false)
     }
 
     // remove pieces
     if (this.pieces) {
       this.pieces.forEach( (piece) => {
         this.unregisterInstance(piece)
-        this.destroyInstance(piece)
+        this.destroyInstance(piece, true, false)
       })
 
       this.pieces = []
@@ -212,7 +215,7 @@ export class Puzzle extends App {
     // remove back button
     if (this.backButton) {
       this.unregisterInstance(this.backButton)
-      this.destroyInstance(this.backButton)
+      this.destroyInstance(this.backButton, false, false)
     }
   }
 

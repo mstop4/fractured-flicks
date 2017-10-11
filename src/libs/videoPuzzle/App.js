@@ -98,13 +98,13 @@ export class App {
     this.pixiApp.stage.scale = new PIXI.Point(Math.min(1, leastRatio), Math.min(1, leastRatio))
   }
 
-  destroyInstance(instance) {
+  destroyInstance(instance, removeTexture, removeBaseTexture) {
     if (instance) {
       this.pixiApp.stage.removeChild(instance)
       instance.destroy({
         children: true,
-        texture: true,
-        baseTexture: false   
+        texture: removeTexture,
+        baseTexture: removeBaseTexture   
       })
       instance = null
     }
