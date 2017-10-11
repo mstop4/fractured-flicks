@@ -14,6 +14,8 @@ export class Button extends PIXI.Container {
     this.addChild(this.shape)
 
     this.labelStyle = new PIXI.TextStyle({
+      fontFamily: 'Indie Flower',
+      fontSize: 32,
       fill: 0xFFFFFF,
       stroke: 0x000000,
       strokeThickness: 4

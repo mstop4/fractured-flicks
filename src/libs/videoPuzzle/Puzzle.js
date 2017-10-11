@@ -97,6 +97,9 @@ export class Puzzle extends App {
     // Add Title
     let titleStyle = new PIXI.TextStyle({
       fontFamily: 'Indie Flower',
+      fontSize: 36,
+      stroke: 0x000000,
+      strokeThickness: 4,
       fill: 'white'
     })
 
@@ -107,8 +110,9 @@ export class Puzzle extends App {
     this.pixiApp.stage.addChild(this.titleText)
 
     this.timerText = new PIXI.Text("0:00", titleStyle)
-    this.timerText.x = 200
+    this.timerText.x = this.maxWidth / 2
     this.timerText.y = 0
+    this.timerText.anchor.set(0.5, 0)
     this.timerText.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.timerText)
   }
@@ -168,10 +172,10 @@ export class Puzzle extends App {
         let pieceY = this.yOffset + (i+0.5)*(cellHeight * this.videoScale)
 
         let newPiece = new Piece(pieceX, pieceY, pieceWidth, pieceHeight, cellWidth, cellHeight, this.videoScale, pieceTex, this)
-        newPiece.randomizePosition(this.xOffset - 50, 
-                    this.yOffset - 50, 
-                    this.xOffset + this.guide.width + 50,
-                    this.yOffset + this.guide.height + 50)
+        newPiece.randomizePosition(this.xOffset - 99, 
+                    this.yOffset - 52, 
+                    this.xOffset + this.guide.width + 99,
+                    this.yOffset + this.guide.height + 52)
         
         this.registerInstance(newPiece)
         this.pieces.push(newPiece)
