@@ -152,27 +152,27 @@ export class Puzzle extends App {
     let pieceWidth = cellWidth / this.numColumns * this.videoScale
     let pieceHeight = cellHeight / this.numRows * this.videoScale
 
-    // for (let i = 0; i < this.numRows; i++) {
-    //   for (let j = 0; j < this.numColumns; j++) {
+    for (let i = 0; i < this.numRows; i++) {
+      for (let j = 0; j < this.numColumns; j++) {
 
-    //     let rect = new PIXI.Rectangle(j*cellWidth, i*cellHeight, cellWidth, cellHeight)
-    //     let pieceTex = new PIXI.Texture(this.videoTex.baseTexture)
-    //     pieceTex.frame = rect
+        let rect = new PIXI.Rectangle(j*cellWidth, i*cellHeight, cellWidth, cellHeight)
+        let pieceTex = new PIXI.Texture(this.videoTex.baseTexture)
+        pieceTex.frame = rect
 
-    //     let pieceX = this.xOffset + (j+0.5)*(cellWidth * this.videoScale)
-    //     let pieceY = this.yOffset + (i+0.5)*(cellHeight * this.videoScale)
+        let pieceX = this.xOffset + (j+0.5)*(cellWidth * this.videoScale)
+        let pieceY = this.yOffset + (i+0.5)*(cellHeight * this.videoScale)
 
-    //     let newPiece = new Piece(pieceX, pieceY, pieceWidth, pieceHeight, cellWidth, cellHeight, this.videoScale, pieceTex, this)
-    //     newPiece.randomizePosition(this.xOffset - 50, 
-    //                 this.yOffset - 50, 
-    //                 this.xOffset + this.guide.width + 50,
-    //                 this.yOffset + this.guide.height + 50)
+        let newPiece = new Piece(pieceX, pieceY, pieceWidth, pieceHeight, cellWidth, cellHeight, this.videoScale, pieceTex, this)
+        newPiece.randomizePosition(this.xOffset - 50, 
+                    this.yOffset - 50, 
+                    this.xOffset + this.guide.width + 50,
+                    this.yOffset + this.guide.height + 50)
         
-    //     this.registerInstance(newPiece)
-    //     this.pieces.push(newPiece)
-    //     this.pixiApp.stage.addChild(newPiece)
-    //   }
-    // }
+        this.registerInstance(newPiece)
+        this.pieces.push(newPiece)
+        this.pixiApp.stage.addChild(newPiece)
+      }
+    }
 
     this.backButton = new Button(this.maxWidth-100, 0, 100, 50, "Back", this.backToMenu.bind(this))
     this.backButton.displayGroup = this.uiLayer
