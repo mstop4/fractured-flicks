@@ -15,9 +15,8 @@ export class App {
     this.maxWidth = 1280
     this.maxHeight = 720
 
-    this.targetFPS = 30
+    this.targetFPS = 60
     this.lastTick = window.performance.now() / 1000
-    this.timeSinceLastFrame = 0
     this.hasFocus = true
 
     this.soundResources = {}
@@ -32,6 +31,7 @@ export class App {
     }
 
     PIXI.utils.sayHello(type)
+    console.log(this.targetFPS)
 
     this.canvas = document.getElementById('videoPuzzle')
     this.pixiApp = new PIXI.Application({
@@ -145,14 +145,12 @@ export class App {
 
     if (this.hasFocus) {
       let thisTick = window.performance.now() / 1000
-      this.timeSinceLastFrame += thisTick - this.lastTick
+      let elapsed = thisTick - this.lastTick
 
-      if (this.timeSinceLastFrame >= 1 / this.targetFPS) {
+      if (elapsed > 1 / this.targetFPS) {
         this.pixiApp.renderer.render(this.pixiApp.stage)
-        this.timeSinceLastFrame = 0
+        this.lastTick = thisTick - (elapsed % (1 / this.targetFPS))
       }
-
-      this.lastTick = thisTick
     }
 
     if (process.env.NODE_ENV != 'production') {

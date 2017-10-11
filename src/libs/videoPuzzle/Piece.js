@@ -15,7 +15,7 @@ export class Piece extends PIXI.Container {
     // Properties
     this.x = x
     this.y = y
-    this.pivot = new PIXI.Point(cellWidth/2, cellHeight/2)
+    this.pivot = new PIXI.Point(cellWidth/2*scale, cellHeight/2*scale)
     this.xStart = x
     this.yStart = y
     this.width = pieceWidth

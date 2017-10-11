@@ -26,9 +26,9 @@ export class Puzzle extends App {
 
     this.commonAssets = ['./images/frame.png', './images/background.png']
     this.videoURI = puzzles[this.currentLevel].file
-    this.videoScale = 1
-    this.numRows = puzzles[this.currentLevel].numRows
-    this.numColumns = puzzles[this.currentLevel].numColumns
+    this.videoScale = puzzles[this.currentLevel].scale
+    this.numRows = 4
+    this.numColumns = 5
     this.soundURIs = sounds
 
     this.xOffset = 0
@@ -81,7 +81,7 @@ export class Puzzle extends App {
   }
 
   initPuzzleSetup() {
-    this.xOffset = (this.maxWidth - 853) / 2
+    this.xOffset = (this.maxWidth - 854) / 2
     this.yOffset = (this.maxHeight - 480) / 2
 
     // Add frame
@@ -140,14 +140,16 @@ export class Puzzle extends App {
 
     this.guide.x = this.xOffset
     this.guide.y = this.yOffset
+    this.guide.scale.x = this.videoScale
+    this.guide.scale.y = this.videoScale
     //guide.filters = [bw]
     this.guide.tint = 0x808080
     //bw.blackAndWhite()
 
     this.pixiApp.stage.addChild(this.guide)
 
-    let cellWidth = this.guide.width / this.numColumns
-    let cellHeight = this.guide.height / this.numRows
+    let cellWidth = this.videoTex.width / this.numColumns
+    let cellHeight = this.videoTex.height / this.numRows
 
     let pieceWidth = cellWidth / this.numColumns * this.videoScale
     let pieceHeight = cellHeight / this.numRows * this.videoScale
