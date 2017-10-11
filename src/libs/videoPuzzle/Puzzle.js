@@ -40,8 +40,6 @@ export class Puzzle extends App {
   }
 
   initGame() {
-
-    debugger
     console.log(process.env.NODE_ENV)
     this.initApp(this)
 

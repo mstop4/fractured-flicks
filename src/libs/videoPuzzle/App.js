@@ -15,6 +15,11 @@ export class App {
     this.maxWidth = 1280
     this.maxHeight = 720
 
+    this.targetFPS = 30
+    this.lastTick = window.performance.now() / 1000
+    this.timeSinceLastFrame = 0
+    this.hasFocus = true
+
     this.soundResources = {}
     this.instances = []
   }
@@ -51,6 +56,8 @@ export class App {
 
     // responsive canvas
     window.addEventListener("resize", this.scaleStageToWindow.bind(this), false)
+
+    window.addEventListener("visibilitychange", this.onVisibiityChange.bind(this), false)
 
     // Display groups
     this.pixiApp.stage.displayList = new PIXI.DisplayList()
@@ -113,6 +120,16 @@ export class App {
     }
   }
 
+  onVisibiityChange() {
+    if (document.hidden) {
+      this.hasFocus = false
+    } else {
+      this.hasFocus = true
+      this.lastTick = window.performance.now() / 1000
+      this.timeSinceLastFrame = 0
+    }
+  }
+
   gameLoop() {
     if (process.env.NODE_ENV != 'production') {
       this.fpsCount.begin()
@@ -126,7 +143,17 @@ export class App {
       }
     })
 
-    this.pixiApp.renderer.render(this.pixiApp.stage)
+    if (this.hasFocus) {
+      let thisTick = window.performance.now() / 1000
+      this.timeSinceLastFrame += thisTick - this.lastTick
+
+      if (this.timeSinceLastFrame >= 1 / this.targetFPS) {
+        this.pixiApp.renderer.render(this.pixiApp.stage)
+        this.timeSinceLastFrame = 0
+      }
+
+      this.lastTick = thisTick
+    }
 
     if (process.env.NODE_ENV != 'production') {
       this.fpsCount.end()
