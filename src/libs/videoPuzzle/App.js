@@ -43,9 +43,11 @@ export class App {
     this.scaleStageToWindow()
 
     // Fps counter
-    this.fpsCount = new Stats()
-    this.fpsCount.showPanel(0)
-    document.body.appendChild(this.fpsCount.dom)
+    if (process.env.NODE_ENV != 'production') {
+      this.fpsCount = new Stats()
+      this.fpsCount.showPanel(0)
+      document.body.appendChild(this.fpsCount.dom)
+    }
 
     // responsive canvas
     window.addEventListener("resize", this.scaleStageToWindow.bind(this), false)
@@ -112,7 +114,10 @@ export class App {
   }
 
   gameLoop() {
-    this.fpsCount.begin()
+    if (process.env.NODE_ENV != 'production') {
+      this.fpsCount.begin()
+    }
+    
     requestAnimationFrame(this.gameLoop.bind(this));
     
     this.instances.forEach( (inst) => {
@@ -123,6 +128,8 @@ export class App {
 
     this.pixiApp.renderer.render(this.pixiApp.stage)
 
-    this.fpsCount.end()
+    if (process.env.NODE_ENV != 'production') {
+      this.fpsCount.end()
+    }
   }
 }
