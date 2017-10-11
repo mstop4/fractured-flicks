@@ -2,7 +2,7 @@ export const puzzles = [
   {
     name: "Squirrel",
     file: "./videos/squirrel.mp4",
-    scale: 1
+    scale: 2
   },
 
   {
