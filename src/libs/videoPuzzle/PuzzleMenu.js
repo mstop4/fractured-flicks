@@ -1,4 +1,5 @@
-import {Button} from './Button.js'
+import {ButtonVideo} from './ButtonVideo.js'
+import {puzzles} from '../../puzzles.config.js'
 
 export class PuzzleMenu extends PIXI.Container {
   constructor(app) {
@@ -9,8 +10,8 @@ export class PuzzleMenu extends PIXI.Container {
     this.buttonCount = 0
     this.processPaused = false
     this.buttonsPerRow = 3
-    this.buttonWidth = 100
-    this.buttonHeight = 50
+    this.buttonWidth = 200
+    this.buttonHeight = 200
     this.buttonMarginX = 10 
 
     this.titleStyle = new PIXI.TextStyle({
@@ -28,18 +29,19 @@ export class PuzzleMenu extends PIXI.Container {
     this.titleLabel.anchor.set(0.5, 0.5)
     this.addChild(this.titleLabel)
 
-    for (let i = 0; i < this.buttonsPerRow; i++) {
+    for (let i = 0; i < puzzles.length; i++) {
       this.createButton(this.app.maxWidth / 2 - ((this.buttonWidth + this.buttonMarginX) * (this.buttonsPerRow - 1) / 2) + i * (this.buttonWidth + this.buttonMarginX), 
                         this.app.maxHeight / 2, 
-                        100, 50, 
-                        (i+1).toString(), i)
+                        this.buttonWidth, this.buttonHeight,
+                        puzzles[i].preview,
+                        puzzles[i].name, i)
     }
 
     this.app.registerInstance(this)
   }
 
-  createButton(x, y, width, height, label, level) {
-    this.buttons[this.buttonCount] = new Button(x, y, width, height, label, this.gotoLevel.bind(this, level))
+  createButton(x, y, width, height, preview, label, level) {
+    this.buttons[this.buttonCount] = new ButtonVideo(x, y, width, height, preview, label, this.gotoLevel.bind(this, level))
     this.buttons[this.buttonCount].pivot = new PIXI.Point(width / 2, height / 2)
     this.addChild(this.buttons[this.buttonCount])
     this.buttonCount++
