@@ -54,7 +54,7 @@ export class Puzzle extends App {
 
   initGameSetup() {
 
-    let loadEl = document.getElementById('loading');
+    let loadEl = document.getElementById('loading-outer');
     loadEl.style.visibility = 'hidden'
 
     // Add background

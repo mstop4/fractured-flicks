@@ -8,17 +8,46 @@ body {
     background-color: #001020;
 }
 
-#loading {
+#loading-outer {
     font-family: Verdana, Geneva, sans-serif;
-    font-size: 48;
+    display: table;
     position: absolute;
-    display: block;
-    left: 0;
-    top: 50%;
+    height: 100%;
     width: 100%;
-    margin: auto;
-    color: white;
+    color: #ffffff;
+}
+
+#loading-inner {
+    display: table-cell;
     text-align: center;
+    vertical-align: middle;
+}
+
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 0.25em;
+}
+
+#spinner {
+    border: 0.5em solid #ffffff;
+    border-radius: 50%;
+    border-top: 0.5em solid blue;
+    width: 3em;
+    height: 3em;
+    margin: 2em auto 0;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 #videoPuzzle{

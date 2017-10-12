@@ -76,6 +76,8 @@ export class App {
   }
 
   loadProgressHandler(loader, resource) {
+    let loadMessage = document.getElementById('loadMessage')
+    loadMessage.innerHTML = `${resource.url} ... ${loader.progress}%`
     console.log(`Loading "${resource.url}" ... ${loader.progress}%`)
   }
 

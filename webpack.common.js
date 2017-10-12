@@ -9,17 +9,9 @@ module.exports = {
     node: {
       fs: "empty"
     },
-x
+
     module: {
       rules: [
-        // {
-        //   test: /\.css$/,
-        //   use: [
-        //     'style-loader',
-        //     'css-loader'
-        //   ]
-        // },
-
         {
           test: /\.js$/,
           loader: 'babel-loader',
