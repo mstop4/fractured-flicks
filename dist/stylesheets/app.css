@@ -5,7 +5,7 @@
 }
 
 body {
-    background-color: #001020;
+    background-color: #080f1d;
 }
 
 #loading-outer {
@@ -30,9 +30,9 @@ h1 {
 }
 
 #spinner {
-    border: 0.5em solid #ffffff;
+    border: 0.5em solid #C1C8E4;
     border-radius: 50%;
-    border-top: 0.5em solid blue;
+    border-top: 0.5em solid #5680e9;
     width: 3em;
     height: 3em;
     margin: 2em auto 0;

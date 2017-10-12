@@ -37,7 +37,7 @@ export class App {
     this.pixiApp = new PIXI.Application({
       width: this.maxWidth,
       height: this.maxHeight,
-      backgroundColor: 0x001020,
+      backgroundColor: 0x080F1D,
       view: this.canvas
     }) 
 

@@ -90,6 +90,7 @@ export class Puzzle extends App {
 
     // Play Music
     console.dir(PIXI.loader.resources)
+    PIXI.loader.resources['sounds/music1.mp3'].sound.loop = true
     PIXI.loader.resources['sounds/music1.mp3'].sound.play()
 
     this.registerInstance(this)
