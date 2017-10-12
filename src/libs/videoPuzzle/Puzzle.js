@@ -1,7 +1,7 @@
 import {App} from './app.js'
 
 import {puzzles} from '../../puzzles.config.js'
-import {sounds} from '../../audio.config.js'
+//import {sounds} from '../../audio.config.js'
 import {commonAssets} from '../../common.config.js'
 
 import {PuzzleMenu} from './PuzzleMenu.js'
@@ -23,6 +23,7 @@ export class Puzzle extends App {
     this.titleText = undefined
     this.timerText = undefined
     this.backButton = undefined
+    this.loadingMessage = undefined
 
     this.timerStartTime = 0
     this.timerNowTime = 0
@@ -32,7 +33,7 @@ export class Puzzle extends App {
     this.videoScale = puzzles[this.currentLevel].scale
     this.numRows = 4
     this.numColumns = 5
-    this.soundURIs = sounds
+    //this.soundURIs = sounds
 
     this.xOffset = 0
     this.yOffset = 0
@@ -45,30 +46,51 @@ export class Puzzle extends App {
   initGame() {
     console.log(process.env.NODE_ENV)
     this.initApp(this)
-
+  
     let that = this
 
-    this.loadTextures(this.commonAssets, () => {
-      this.loadAudio(this.soundURIs, that.initGameSetup.bind(that))
-    })
+    this.loadResources(this.commonAssets, this.initGameSetup.bind(this))
   }
 
   initGameSetup() {
-    // Add background
 
+    let loadEl = document.getElementById('loading');
+    loadEl.style.visibility = 'hidden'
+
+    // Add background
     this.background = new PIXI.extras.TilingSprite(
-      PIXI.utils.TextureCache["./images/background.png"],
+      PIXI.utils.TextureCache["images/background.png"],
       this.maxWidth,
       this.maxHeight
     )
 
     this.pixiApp.stage.addChild(this.background)
 
+    let loadingStyle = new PIXI.TextStyle({
+      fontFamily: 'Indie Flower',
+      fontSize: 72,
+      fill: 0xFFFFFF,
+      stroke: '#404060',
+      strokeThickness: 10,
+      padding: 20
+    })
+
+    // loading message
+    this.loadingMessage = new PIXI.Text("Loading...", loadingStyle)
+    this.loadingMessage.x = this.maxWidth / 2
+    this.loadingMessage.y = this.maxHeight / 2
+    this.loadingMessage.anchor.set(0.5, 0.5)
+    this.loadingMessage.displayGroup = this.uiLayer
+    this.loadingMessage.visible = false
+    this.pixiApp.stage.addChild(this.loadingMessage)
+
+    // title screen
     let titleScreen = new TitleScreen(this)
     this.pixiApp.stage.addChild(titleScreen)
 
-    console.dir(this.soundResources)
-    this.soundResources['mus_1'].play()
+    // Play Music
+    console.dir(PIXI.loader.resources)
+    PIXI.loader.resources['sounds/music1.mp3'].sound.play()
 
     this.registerInstance(this)
   }
@@ -88,7 +110,7 @@ export class Puzzle extends App {
     this.yOffset = (this.maxHeight - 480) / 2
 
     // Add frame
-    this.frame = new PIXI.Sprite(PIXI.utils.TextureCache["./images/frame.png"])
+    this.frame = new PIXI.Sprite(PIXI.utils.TextureCache["images/frame.png"])
     this.frame.pivot = new PIXI.Point(16,16)
     this.frame.x = this.xOffset
     this.frame.y = this.yOffset
@@ -103,12 +125,14 @@ export class Puzzle extends App {
       fill: 'white'
     })
 
+    // Puzzle Name
     this.titleText = new PIXI.Text("Title", titleStyle)
     this.titleText.x = 0
     this.titleText.y = 0
     this.titleText.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.titleText)
 
+    // Timer
     this.timerText = new PIXI.Text("0:00", titleStyle)
     this.timerText.x = this.maxWidth / 2
     this.timerText.y = 0
@@ -119,6 +143,8 @@ export class Puzzle extends App {
 
   loadLevel(level) {
     console.log("Changing Levels")
+
+    this.loadingMessage.visible = true
 
     // load new puzzle
     this.currentLevel = level
@@ -190,6 +216,8 @@ export class Puzzle extends App {
     this.loadingNewLevel = false
     this.timerNowTime = window.performance.now()
     this.timerStartTime = this.timerNowTime
+
+    this.loadingMessage.visible = false
     this.toggleUIVisibility(true)
   }
 

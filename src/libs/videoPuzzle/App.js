@@ -23,7 +23,7 @@ export class App {
     this.instances = []
   }
 
-  initApp(pm) {
+  initApp() {
 
     let type = "WebGL"
       if(!PIXI.utils.isWebGLSupported()){
@@ -37,7 +37,7 @@ export class App {
     this.pixiApp = new PIXI.Application({
       width: this.maxWidth,
       height: this.maxHeight,
-      backgroundColor: 0x77C9D4,
+      backgroundColor: 0x001020,
       view: this.canvas
     }) 
 
@@ -56,7 +56,6 @@ export class App {
 
     // responsive canvas
     window.addEventListener("resize", this.scaleStageToWindow.bind(this), false)
-
     window.addEventListener("visibilitychange", this.onVisibiityChange.bind(this), false)
 
     // Display groups
@@ -66,23 +65,14 @@ export class App {
     this.gameLoop()
   }
 
-  // Load sprites to cache
-  loadTextures(texArray, next) {
-    console.log("Loading textures")
+  // Load resources to loader
+  loadResources(resArray, next) {
+    console.log("Loading resources")
+
     PIXI.loader
-    .add(texArray)
+    .add(resArray)
     .on("progress", this.loadProgressHandler)
     .load(next)
-  }
-
-  loadAudio(sndArray, next) {
-    console.log("Loading sounds")    
-    sndArray.forEach( (snd) => {
-      this.soundResources[snd.name] = PIXI.sound.Sound.from(snd.file)
-      this.soundResources[snd.name].loop = snd.loop
-      this.soundResources[snd.name].volume = snd.volume
-    })
-    next()
   }
 
   loadProgressHandler(loader, resource) {
