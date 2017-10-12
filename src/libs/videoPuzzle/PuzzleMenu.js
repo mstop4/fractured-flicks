@@ -34,7 +34,7 @@ export class PuzzleMenu extends PIXI.Container {
                         this.app.maxHeight / 2, 
                         this.buttonWidth, this.buttonHeight,
                         puzzles[i].preview,
-                        puzzles[i].name, i)
+                        puzzles[i].name, puzzles[i].id)
     }
 
     this.app.registerInstance(this)
