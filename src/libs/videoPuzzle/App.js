@@ -31,7 +31,6 @@ export class App {
     }
 
     PIXI.utils.sayHello(type)
-    console.log(this.targetFPS)
 
     this.canvas = document.getElementById('videoPuzzle')
     this.pixiApp = new PIXI.Application({
