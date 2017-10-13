@@ -21,7 +21,9 @@ export class App {
 
     this.instances = []
 
-    this.loadOptions = {}
+    this.loadOptions = {
+      crossOrigin: ''
+    }
   }
 
   initApp() {
