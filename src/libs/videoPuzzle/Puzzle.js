@@ -165,6 +165,8 @@ export class Puzzle extends App {
 
     this.titleText.text = puzzles[this.currentLevel].name
 
+    debugger
+
     //let bw = new PIXI.filters.ColorMatrixFilter()
     this.videoTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
     this.videoTex.baseTexture.source.loop = true

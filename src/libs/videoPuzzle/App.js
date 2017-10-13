@@ -19,8 +19,9 @@ export class App {
     this.lastTick = window.performance.now() / 1000
     this.hasFocus = true
 
-    this.soundResources = {}
     this.instances = []
+
+    this.loadOptions = {}
   }
 
   initApp() {
@@ -69,7 +70,7 @@ export class App {
     console.log("Loading resources")
 
     PIXI.loader
-    .add(resArray)
+    .add(resArray, this.loadOptions)
     .on("progress", this.loadProgressHandler)
     .load(next)
   }
