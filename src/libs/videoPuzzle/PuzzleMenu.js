@@ -12,10 +12,10 @@ export class PuzzleMenu extends PIXI.Container {
     this.buttonsPerRow = 3
     this.buttonWidth = 200
     this.buttonHeight = 200
-    this.buttonMarginX = 20
+    this.buttonMarginX = 40
 
     this.titleStyle = new PIXI.TextStyle({
-      fontFamily: 'Indie Flower',
+      fontFamily: 'Kite One',
       fontSize: 72,
       fill: 0xFFFFFF,
       stroke: '#404060',

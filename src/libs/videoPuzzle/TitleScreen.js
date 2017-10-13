@@ -5,7 +5,7 @@ export class TitleScreen extends PIXI.Container{
     this.app = app
 
     this.bannerStyle = new PIXI.TextStyle({
-      fontFamily: 'Indie Flower',
+      fontFamily: 'Kite One',
       fontSize: 72,
       fill: 0xFFFFFF,
       stroke: '#404060',
@@ -13,9 +13,18 @@ export class TitleScreen extends PIXI.Container{
       padding: 20
     })
 
+    this.tapStartStyle = new PIXI.TextStyle({
+      fontFamily: 'Kite One',
+      fontSize: 64,
+      fill: 0xFFFFFF,
+      stroke: '#404060',
+      strokeThickness: 10,
+      padding: 20
+    })
+
     this.infoStyle = new PIXI.TextStyle({
-      fontFamily: 'Indie Flower',
-      fontSize: 36,
+      fontFamily: 'Kite One',
+      fontSize: 30,
       fill: 0xFFFFFF,
       stroke: '#404060',
       strokeThickness: 5,
@@ -23,7 +32,7 @@ export class TitleScreen extends PIXI.Container{
     })
 
     this.titleBanner = this.addText("Video Jigsaw Puzzle", this.bannerStyle, 1280 / 2, 100, 0.5, 0.5)
-    this.startText = this.addText("Tap to Start", this.bannerStyle, 1280 / 2, 720 / 2, 0.5, 0.5)
+    this.startText = this.addText("Tap to Start", this.tapStartStyle, 1280 / 2, 720 / 2, 0.5, 0.5)
     this.infoText = this.addText("github.com/mstop4", this.infoStyle, 0, 704, 0, 1)
     this.versionText = this.addText("v.0.6.1", this.infoStyle, 1280, 704, 1, 1)
 
