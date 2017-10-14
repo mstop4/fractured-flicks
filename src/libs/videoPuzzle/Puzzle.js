@@ -176,22 +176,22 @@ export class Puzzle extends App {
 
     //let bw = new PIXI.filters.ColorMatrixFilter()
 
-    let vidEl = document.createElement('video')
-    vidEl.crossOrigin = "anonymous"
-    vidEl.autoplay = true
-    vidEl.width = 427
-    vidEl.height = 270
+    // let vidEl = document.createElement('video')
+    // vidEl.crossOrigin = "anonymous"
+    // vidEl.autoplay = true
+    // vidEl.width = 427
+    // vidEl.height = 270
 
-    vidEl.src = this.videoURI
+    // vidEl.src = this.videoURI
 
-    this.videoTex = PIXI.Texture.fromVideo(vidEl)
-    this.videoTex.width = 427
-    this.videoTex.height = 270
+    //this.videoTex = PIXI.Texture.fromVideo(vidEl)
+    // this.videoTex.width = 427
+    // this.videoTex.height = 270
 
-    //this.videoTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
-    // this.videoTex.baseTexture.source.loop = true
-    // this.videoTex.baseTexture.source.crossOrigin = 'anonymous'
-    // this.videoTex.baseTexture.source.play()
+    this.videoTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
+    this.videoTex.baseTexture.source.loop = true
+    this.videoTex.baseTexture.source.crossOrigin = 'anonymous'
+    this.videoTex.baseTexture.source.play()
     this.guide = new PIXI.Sprite(this.videoTex)
 
     this.guide.x = this.xOffset
@@ -212,8 +212,6 @@ export class Puzzle extends App {
 
     for (let i = 0; i < this.numRows; i++) {
       for (let j = 0; j < this.numColumns; j++) {
-
-        debugger
 
         let rect = new PIXI.Rectangle(j*cellWidth, i*cellHeight, cellWidth, cellHeight)
         let pieceTex = new PIXI.Texture(this.videoTex.baseTexture, rect)

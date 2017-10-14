@@ -28,7 +28,7 @@
   "dependencies": {
     "path": "^0.12.7",
     "pixi-display": "^1.1.1",
-    "pixi-filters": "^2.0.2",
+    "pixi-filters": "^2.1.1",
     "pixi-sound": "^1.4.2",
     "pixi.js": "^4.5.6",
     "stats.js": "^0.17.0",
