@@ -48,8 +48,8 @@ export class Puzzle extends App {
     this.initApp(this)
   
     let that = this
-
-    this.loadResources(this.commonAssets, this.initGameSetup.bind(this))
+    // Delay calling initGameSetup so player can see the 100% loading progress message
+    this.loadResources(this.commonAssets, this.initGameSetup.bind(this), 500)
   }
 
   initGameSetup() {
@@ -67,10 +67,10 @@ export class Puzzle extends App {
     this.pixiApp.stage.addChild(this.background)
 
     let loadingStyle = new PIXI.TextStyle({
-      fontFamily: 'Indie Flower',
+      fontFamily: 'Kite One',
       fontSize: 72,
       fill: 0xFFFFFF,
-      stroke: '#404060',
+      stroke: 0x404060,
       strokeThickness: 10,
       padding: 20
     })
@@ -117,11 +117,20 @@ export class Puzzle extends App {
     this.pixiApp.stage.addChild(this.frame)
 
     // Add Title
+
     let titleStyle = new PIXI.TextStyle({
-      fontFamily: 'Indie Flower',
-      fontSize: 36,
-      stroke: 0x000000,
-      strokeThickness: 4,
+      fontFamily: 'Kite One',
+      fontSize: 40,
+      stroke: 0x404060,
+      strokeThickness: 6,
+      fill: 'white'
+    })
+
+    let timerStyle = new PIXI.TextStyle({
+      fontFamily: 'Kite One',
+      fontSize: 48,
+      stroke: 0x404060,
+      strokeThickness: 6,
       fill: 'white'
     })
 
@@ -133,7 +142,7 @@ export class Puzzle extends App {
     this.pixiApp.stage.addChild(this.titleText)
 
     // Timer
-    this.timerText = new PIXI.Text("0:00", titleStyle)
+    this.timerText = new PIXI.Text("0:00", timerStyle)
     this.timerText.x = this.maxWidth / 2
     this.timerText.y = 0
     this.timerText.anchor.set(0.5, 0)
@@ -154,7 +163,7 @@ export class Puzzle extends App {
 
     // if video isn't already in cache, load it
     if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
-      this.loadResources(this.videoURI, this.puzzleSetup.bind(this))
+      this.loadResources(this.videoURI, this.puzzleSetup.bind(this), 0)
     } else {
       this.puzzleSetup()
     }

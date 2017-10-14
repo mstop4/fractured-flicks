@@ -21,8 +21,8 @@ export class ButtonVideo extends PIXI.Container {
     this.addChild(this.preview)
 
     this.labelStyle = new PIXI.TextStyle({
-      fontFamily: 'Indie Flower',
-      fontSize: 32,
+      fontFamily: 'Kite One',
+      fontSize: 28,
       fill: 0xFFFFFF,
       stroke: 0x000000,
       strokeThickness: 4

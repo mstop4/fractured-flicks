@@ -1,7 +1,7 @@
 let dragDelay = 150
-let idleColor = 0xFF4040
-let dragColor = 0xFFFF40
-let correctColor = 0x40FF40
+let idleColor = 0xE20000
+let dragColor = 0xF9DC00
+let correctColor = 0x83D92B
 
 export class Piece extends PIXI.Container {
 

@@ -68,13 +68,13 @@ export class App {
   }
 
   // Load resources to loader
-  loadResources(resArray, next) {
+  loadResources(resArray, next, nextDelay) {
     console.log("Loading resources")
 
     PIXI.loader
     .add(resArray, this.loadOptions)
     .on("progress", this.loadProgressHandler)
-    .load(next)
+    .load( () => { setTimeout(next, nextDelay) } )
   }
 
   loadProgressHandler(loader, resource) {
