@@ -17,21 +17,8 @@ export class Button extends ButtonBase {
     this.label.y = this.height / 2
     this.addChild(this.label)
 
-    this.on('pointerdown', () => {
-      this.onScaleStart(1, 1, 0.95, 0.95, 25)
-      this.isDown = true
-    })
-
-    this.on('pointerup', () => {
-      if (this.isDown) {
-        this.isDown = false
-        this.onScaleStart(0.9, 0.9, 1, 1, 5) 
-        this.clickFunc()
-      }
-    })
-
     this.on('pointerover', () => {
-      this.onScaleStart(0.9, 0.9, 1, 1, 5)
+      this.onScaleStart(0.95, 0.95, 1, 1, 5)
     })
   }
 }
