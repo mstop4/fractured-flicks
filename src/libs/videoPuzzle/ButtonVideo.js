@@ -4,10 +4,7 @@ export class ButtonVideo extends ButtonBase {
   constructor(x, y, width, height, video, text, clickFunc = null) {
     super(x, y, width, height, text, clickFunc)
     this.video = video
-    this.setup()
-  }
 
-  setup() {
     this.shape = new PIXI.Sprite(PIXI.utils.TextureCache["images/button-video.png"])
     this.addChild(this.shape)
 

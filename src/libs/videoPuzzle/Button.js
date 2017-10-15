@@ -4,10 +4,7 @@ export class Button extends ButtonBase {
   
   constructor(x, y, width, height, text, clickFunc = null) {
     super(x, y, width, height, text, clickFunc)
-    this.setup()
-  }
 
-  setup() {
     this.shape = new PIXI.Sprite(PIXI.utils.TextureCache["images/button-100.png"])
     this.addChild(this.shape)
 
