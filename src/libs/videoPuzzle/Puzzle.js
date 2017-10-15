@@ -1,8 +1,7 @@
 import {App} from './app.js'
 
-import {puzzles} from '../../puzzles.config.js'
-//import {sounds} from '../../audio.config.js'
-import {commonAssets} from '../../common.config.js'
+import {puzzles} from '../../puzzles.manifest.js'
+import {commonAssets} from '../../common.manifest.js'
 
 import {PuzzleMenu} from './PuzzleMenu.js'
 import {Piece} from './Piece.js'

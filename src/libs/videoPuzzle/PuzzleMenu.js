@@ -1,5 +1,5 @@
 import {ButtonVideo} from './ButtonVideo.js'
-import {puzzles} from '../../puzzles.config.js'
+import {puzzles} from '../../puzzles.manifest.js'
 
 export class PuzzleMenu extends PIXI.Container {
   constructor(app) {
