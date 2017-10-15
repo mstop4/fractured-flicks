@@ -8,7 +8,7 @@ export class Piece extends PIXI.Container {
   constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, scale, texture, app) {
     super()
 
-    this.app = app
+    //this.app = app
 
     // Graphics
     this.sprite = new PIXI.Sprite(texture)

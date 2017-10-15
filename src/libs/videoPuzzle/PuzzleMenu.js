@@ -37,12 +37,13 @@ export class PuzzleMenu extends PIXI.Container {
                         puzzles[i].name, puzzles[i].id)
     }
 
-    this.app.registerInstance(this)
+    //this.app.registerInstance(this)
   }
 
   createButton(x, y, width, height, preview, label, level) {
     this.buttons[this.buttonCount] = new ButtonVideo(x, y, width, height, preview, label, this.gotoLevel.bind(this, level))
     this.buttons[this.buttonCount].pivot = new PIXI.Point(width / 2, height / 2)
+    this.app.registerInstance(this.buttons[this.buttonCount])
     this.addChild(this.buttons[this.buttonCount])
     this.buttonCount++
   }
@@ -58,7 +59,7 @@ export class PuzzleMenu extends PIXI.Container {
     this.visible = true
   }
 
-  process() {
+  //process() {
     // stuff
-  }
+  //}
 }
