@@ -1,15 +1,12 @@
 export class ButtonBase extends PIXI.Container {
   
-  constructor(x, y, width, height, text, clickFunc = null) {
+  constructor(x, y, text, clickFunc = null) {
     super()
 
     this.x = x
     this.y = y
     this.clickFunc = clickFunc
-    this.width = width
-    this.height = height
     this.text = text
-    this.pivot.set(width / 2, height / 2)
 
     this.labelStyle = new PIXI.TextStyle({
       fontFamily: 'Kite One',
@@ -22,7 +19,6 @@ export class ButtonBase extends PIXI.Container {
     this.interactive = true
     this.buttonMode = true
     this.isDown = false
-    this.hitArea = new PIXI.Rectangle(0, 0, width, height)
 
     this.goalScale = new PIXI.Point(1,1)
     this.startScale = new PIXI.Point(1,1)

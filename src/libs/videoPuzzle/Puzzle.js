@@ -3,10 +3,11 @@ import {App} from './app.js'
 import {puzzles} from '../../puzzles.manifest.js'
 import {commonAssets} from '../../common.manifest.js'
 
+import {TitleScreen} from './TitleScreen.js'
 import {PuzzleMenu} from './PuzzleMenu.js'
+import {AudioManager} from './AudioManager.js'
 import {Piece} from './Piece.js'
 import {Button} from './Button.js'
-import {TitleScreen} from './TitleScreen.js'
 
 export class Puzzle extends App {
   constructor() {
@@ -32,7 +33,6 @@ export class Puzzle extends App {
     this.videoScale = puzzles[this.currentLevel].scale
     this.numRows = 4
     this.numColumns = 5
-    //this.soundURIs = sounds
 
     this.xOffset = 0
     this.yOffset = 0
@@ -87,9 +87,11 @@ export class Puzzle extends App {
     let titleScreen = new TitleScreen(this)
     this.pixiApp.stage.addChild(titleScreen)
 
+    // Audio Manager
+    this.am = new AudioManager()
+
     // Play Music
-    PIXI.loader.resources['sounds/music1.mp3'].sound.loop = true
-    PIXI.loader.resources['sounds/music1.mp3'].sound.play()
+    this.am.playSound('sounds/music1.mp3')
 
     this.registerInstance(this)
   }
@@ -198,7 +200,7 @@ export class Puzzle extends App {
     for (let i = 0; i < this.numRows; i++) {
       for (let j = 0; j < this.numColumns; j++) {
 
-        let rect = new PIXI.Rectangle(j*cellWidth, i*cellHeight, cellWidth, cellHeight)
+        let rect = new PIXI.Rectangle((j*cellWidth).toFixed(2), (i*cellHeight).toFixed(2), cellWidth, cellHeight)
         let pieceTex = new PIXI.Texture(this.videoTex.baseTexture)
         pieceTex.frame = rect
 
@@ -217,7 +219,7 @@ export class Puzzle extends App {
       }
     }
 
-    this.backButton = new Button(this.maxWidth-50, 25, 100, 50, "Back", this.backToMenu.bind(this))
+    this.backButton = new Button(this.maxWidth-50, 25, "images/button-100.png", "Back", this.backToMenu.bind(this))
     this.backButton.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.backButton)
     this.registerInstance(this.backButton)

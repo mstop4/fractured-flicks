@@ -8,7 +8,7 @@ export class Piece extends PIXI.Container {
   constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, scale, texture, app) {
     super()
 
-    //this.app = app
+    this.app = app
 
     // Graphics
     this.sprite = new PIXI.Sprite(texture)
@@ -54,10 +54,10 @@ export class Piece extends PIXI.Container {
     this.on('pointermove', this.onDragMove)
 
     // Sounds
-    this.pickUpSfx = PIXI.loader.resources['sounds/pickUp.mp3'].sound
-    this.putDownSfx = PIXI.loader.resources['sounds/putDown.mp3'].sound
-    this.rotateSfx = PIXI.loader.resources['sounds/rotate.mp3'].sound
-    this.correctSfx = PIXI.loader.resources['sounds/correct.mp3'].sound
+    this.pickUpSfx = 'sounds/pickUp.mp3'
+    this.putDownSfx = 'sounds/putDown.mp3'
+    this.rotateSfx = 'sounds/rotate.mp3'
+    this.correctSfx = 'sounds/correct.mp3'
 
     this.outline = new PIXI.Graphics()
     this.outline.cacheAsBitmap = true
@@ -123,7 +123,7 @@ export class Piece extends PIXI.Container {
       this.dragging = true
       this.onScaleStart(0.95, 0.95, 1, 1, 5) 
       this.recolourOutline(dragColor)
-      this.pickUpSfx.play()
+      this.app.am.playSound(this.pickUpSfx)
   
       // Bring this piece to the front
       let tempParent = this.parent
@@ -161,7 +161,7 @@ export class Piece extends PIXI.Container {
     this.goalAngle = this.goalAngle + deltaAngle * Math.PI / 180
     this.startAngle = this.rotation
     this.rotationT = 0
-    this.rotateSfx.play()
+    this.app.am.playSound(this.rotateSfx)
   }
 
   onScaleStart(startScaleX, startScaleY, goalScaleX, goalScaleY, deltaT) {
@@ -183,13 +183,13 @@ export class Piece extends PIXI.Container {
       this.y = this.yStart
       this.recolourOutline(correctColor)
       this.done = true
-      this.correctSfx.play()
+      this.app.am.playSound(this.correctSfx)
       this.onScaleStart(0.95, 0.95, 1, 1, 5) 
     } else {
       this.recolourOutline(idleColor)
       this.done = false
       if (!supressPutDownSFX) {
-        this.putDownSfx.play()
+        this.app.am.playSound(this.putDownSfx)
       }
       this.onScaleStart(0.9, 0.9, 1, 1, 5) 
     }
