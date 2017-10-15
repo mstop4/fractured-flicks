@@ -5,6 +5,7 @@ import {commonAssets} from '../../common.manifest.js'
 
 import {TitleScreen} from './TitleScreen.js'
 import {PuzzleMenu} from './PuzzleMenu.js'
+import {OptionsMenu} from './OptionsMenu.js'
 import {AudioManager} from './AudioManager.js'
 import {Piece} from './Piece.js'
 import {Button} from './Button.js'
@@ -16,17 +17,20 @@ export class Puzzle extends App {
 
     this.pieces = []
     this.menuScreen = undefined
+    this.optionsScreen = undefined
+    this.am = undefined
     this.guide = undefined
     this.videoTex = undefined
     this.frame = undefined
     this.background = undefined
     this.titleText = undefined
     this.timerText = undefined
-    this.backButton = undefined
+    this.pauseButton = undefined
     this.loadingMessage = undefined
 
-    this.timerStartTime = 0
+    this.timerThenTime = 0
     this.timerNowTime = 0
+    this.duration = 0
 
     this.commonAssets = commonAssets
     this.videoURI = puzzles[this.currentLevel].file
@@ -38,6 +42,7 @@ export class Puzzle extends App {
     this.yOffset = 0
     this.loadingNewLevel = true
     this.puzzleComplete = false
+    this.processPaused = false
 
     this.startLocations = []
   }
@@ -83,7 +88,7 @@ export class Puzzle extends App {
     this.loadingMessage.visible = false
     this.pixiApp.stage.addChild(this.loadingMessage)
 
-    // title screen
+    // Title screen
     let titleScreen = new TitleScreen(this)
     this.pixiApp.stage.addChild(titleScreen)
 
@@ -100,6 +105,10 @@ export class Puzzle extends App {
     // create menu screen
     this.menuScreen = new PuzzleMenu(this)
     this.pixiApp.stage.addChild(this.menuScreen)
+
+    this.optionsScreen = new OptionsMenu(this)
+    this.optionsScreen.deactivate()
+    this.pixiApp.stage.addChild(this.optionsScreen)
 
     // create puzzle screen
     this.initPuzzleSetup()
@@ -185,9 +194,7 @@ export class Puzzle extends App {
     this.guide.y = this.yOffset
     this.guide.scale.x = this.videoScale
     this.guide.scale.y = this.videoScale
-    //guide.filters = [bw]
     this.guide.tint = 0x606060
-    //bw.blackAndWhite()
 
     this.pixiApp.stage.addChild(this.guide)
 
@@ -219,16 +226,18 @@ export class Puzzle extends App {
       }
     }
 
-    this.backButton = new Button(this.maxWidth-50, 25, "images/button-100.png", "Back", this.backToMenu.bind(this))
-    this.backButton.displayGroup = this.uiLayer
-    this.pixiApp.stage.addChild(this.backButton)
-    this.registerInstance(this.backButton)
+    this.pauseButton = new Button(this.maxWidth-50, 25, "images/button-100.png", "Menu", this.togglePauseGame.bind(this, true))
+    this.pauseButton.displayGroup = this.uiLayer
+    this.pixiApp.stage.addChild(this.pauseButton)
+    this.registerInstance(this.pauseButton)
 
     this.loadingNewLevel = false
     this.timerNowTime = window.performance.now()
-    this.timerStartTime = this.timerNowTime
+    this.timerThenTime = this.timerNowTime
+    this.duration = 0
 
     this.loadingMessage.visible = false
+    this.processPaused = false
     this.toggleUIVisibility(true)
   }
 
@@ -256,21 +265,52 @@ export class Puzzle extends App {
     }
 
     // remove back button
-    if (this.backButton) {
-      this.unregisterInstance(this.backButton)
-      this.destroyInstance(this.backButton, false, false)
+    if (this.pauseButton) {
+      this.unregisterInstance(this.pauseButton)
+      this.destroyInstance(this.pauseButton, false, false)
     }
   }
 
   toggleUIVisibility(on) {
-    this.frame.visible = on
-    this.titleText.visible = on
-    this.timerText.visible = on
+
+    // check to see if the instance exists before toggling its visibility
+    const safeToggle = (inst, on) => {
+      if (inst) {
+        inst.visible = on
+      }
+    }
+
+    safeToggle(this.frame, on)
+    safeToggle(this.titleText, on)
+    safeToggle(this.timerText, on)
+    safeToggle(this.pauseButton, on)
+    safeToggle(this.guide, on)
+
+    this.pieces.forEach( (piece) => {
+      safeToggle(piece, on)
+    })
+  }
+
+  togglePauseGame(pause) {
+    this.processPaused = pause
+    this.toggleUIVisibility(!pause)
+
+    if (pause) {
+      if (this.guide) {
+        this.guide.texture.baseTexture.source.pause()
+      }
+      this.optionsScreen.activate()
+    } else {
+      if (this.guide) {
+        this.guide.texture.baseTexture.source.play()
+        this.timerThenTime = window.performance.now()
+      }
+    }
   }
 
   backToMenu() {
     this.removePuzzle()
-    this.toggleUIVisibility()
+    this.toggleUIVisibility(false)
     this.menuScreen.activate()
   }
 
@@ -288,23 +328,24 @@ export class Puzzle extends App {
       if (!this.puzzleComplete) {
         if (done) {
           this.titleText.text = "Complete!"
-          this.puzzleComplete = true
-          //this.guide.filters = []
+          this.puzzleComplete = trues
           this.guide.tint = 0xFFFFFF
           this.pieces.forEach(function(piece) {
             piece.visible = false
           })
         } else {
           this.timerNowTime = window.performance.now()
-          let duration = this.timerNowTime - this.timerStartTime
-          let min = Math.floor(duration/1000/60)
-          let sec = ((duration/1000) % 60).toFixed(1)
+          this.duration += this.timerNowTime - this.timerThenTime
+          let min = Math.floor(this.duration/1000/60)
+          let sec = ((this.duration/1000) % 60).toFixed(1)
 
           if (sec < 10) {
             this.timerText.text = `${min}:0${sec}`
           } else {
             this.timerText.text = `${min}:${sec}`
           }
+
+          this.timerThenTime = this.timerNowTime
         }
       }
     }
