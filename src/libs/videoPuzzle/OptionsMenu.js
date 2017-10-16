@@ -6,20 +6,28 @@ export class OptionsMenu extends PIXI.Container {
 
     this.app = app
 
-    this.resumeButton = this.createButton(100, 100, "images/button-100.png", "Resume", this.deactivate.bind(this))
-    this.backButton = this.createButton(100, 200, "images/button-100.png", "Quit", this.onBackButton.bind(this))
-    this.musicToggle = this.createButton(100, 300, "images/button-100.png", "Music", this.onMusicToggle.bind(this))
-    this.sfxToggle = this.createButton(100, 400, "images/button-100.png", "SFX", null)
+    this.resumeButton = this.createButton(100, 100, "images/button-150.png", "Resume", this.deactivate.bind(this))
+    this.backButton = this.createButton(100, 200, "images/button-150.png", "Quit", this.onBackButton.bind(this))
+    this.musicToggle = this.createButton(100, 300, "images/button-150.png", "Music", this.onMusicToggle.bind(this))
+    this.sfxToggle = this.createButton(100, 400, "images/button-150.png", "SFX", null)
 
     this.titleStyle = new PIXI.TextStyle({
-      fill: 0xffffff
+      fontFamily: "Kite One",
+      fill: 0xffffff,
+      stroke: 0x000000
     })
     this.contentStyle = new PIXI.TextStyle({
-      fill: 0xffffff
+      fontFamily: "Kite One",
+      fill: 0xffffff,
+      stroke: 0x000000
     })
 
     this.controlsTitle = new PIXI.Text("Controls", this.titleStyle)
+    this.controlsTitle.x = 300
+    this.controlsTitle.y = 100
     this.controlText = new PIXI.Text("Tap - Rotate piece\nHold & Drag - Move piece", this.contentStyle)
+    this.controlText.x = 300
+    this.controlText.y = 200
 
     this.addChild(this.controlsTitle)
     this.addChild(this.controlText)

@@ -36,21 +36,19 @@ export class PuzzleMenu extends PIXI.Container {
                         puzzles[i].preview,
                         puzzles[i].name, puzzles[i].id)
     }
-
-    //this.app.registerInstance(this)
   }
 
   createButton(x, y, textureID, preview, label, level) {
-    this.buttons[this.buttonCount] = new ButtonVideo(x, y, textureID, preview, label, this.gotoLevel.bind(this, level))
-    //this.buttons[this.buttonCount].pivot = new PIXI.Point(width / 2, height / 2)
+    this.buttons[this.buttonCount] = new ButtonVideo(x, y, textureID, preview, label, this.gotoLevel.bind(this, level, this.buttonCount))
     this.app.registerInstance(this.buttons[this.buttonCount])
     this.addChild(this.buttons[this.buttonCount])
     this.buttonCount++
   }
 
-  gotoLevel(level) {
+  gotoLevel(level, buttonID) {
     this.processPaused = true
     this.visible = false
+    this.buttons[buttonID].preview.texture.baseTexture.source.pause()
     this.app.loadLevel(level) 
   }
 

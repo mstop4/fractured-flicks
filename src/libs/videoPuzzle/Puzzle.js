@@ -9,6 +9,7 @@ import {OptionsMenu} from './OptionsMenu.js'
 import {AudioManager} from './AudioManager.js'
 import {Piece} from './Piece.js'
 import {Button} from './Button.js'
+import {Background} from './Background.js'
 
 export class Puzzle extends App {
   constructor() {
@@ -16,13 +17,13 @@ export class Puzzle extends App {
     this.currentLevel = 1
 
     this.pieces = []
+    this.background = undefined
     this.menuScreen = undefined
     this.optionsScreen = undefined
     this.am = undefined
     this.guide = undefined
     this.videoTex = undefined
     this.frame = undefined
-    this.background = undefined
     this.titleText = undefined
     this.timerText = undefined
     this.pauseButton = undefined
@@ -57,18 +58,13 @@ export class Puzzle extends App {
   }
 
   initGameSetup() {
-
     let loadEl = document.getElementById('loading-outer');
     loadEl.style.visibility = 'hidden'
 
     // Add background
-    this.background = new PIXI.extras.TilingSprite(
-      PIXI.utils.TextureCache["images/background.png"],
-      this.maxWidth,
-      this.maxHeight
-    )
-
+    this.background = new Background('images/background.png', this.maxWidth, this.maxHeight)
     this.pixiApp.stage.addChild(this.background)
+    this.registerInstance(this.background)
 
     let loadingStyle = new PIXI.TextStyle({
       fontFamily: 'Kite One',
@@ -315,9 +311,6 @@ export class Puzzle extends App {
   }
 
   process() {
-    this.background.tilePosition.x -= 0.1
-    this.background.tilePosition.y -= 0.1
-
     let done = true
 
     this.pieces.forEach( (piece) => {
