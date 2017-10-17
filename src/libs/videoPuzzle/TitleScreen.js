@@ -34,7 +34,7 @@ export class TitleScreen extends PIXI.Container{
     this.titleBanner = this.addText("Video Jigsaw Puzzle", this.bannerStyle, 1280 / 2, 100, 0.5, 0.5)
     this.startText = this.addText("Tap to Start", this.tapStartStyle, 1280 / 2, 720 / 2, 0.5, 0.5)
     this.infoText = this.addText("github.com/mstop4", this.infoStyle, 0, 704, 0, 1)
-    this.versionText = this.addText("v.0.6.1", this.infoStyle, 1280, 704, 1, 1)
+    this.versionText = this.addText("v.0.6.2", this.infoStyle, 1280, 704, 1, 1)
 
     this.interactive = true
     this.interactiveChildren = true

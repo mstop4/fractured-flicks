@@ -20,5 +20,10 @@ export class Button extends ButtonBase {
     this.on('pointerover', () => {
       this.onScaleStart(0.95, 0.95, 1, 1, 5)
     })
+
+    this.on('pointerout', () => {
+      this.isDown = false
+      this.onScaleStart(0.95, 0.95, 1, 1, 5) 
+    })
   }
 }

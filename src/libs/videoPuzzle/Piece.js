@@ -152,8 +152,10 @@ export class Piece extends PIXI.Container {
   onDragMove() {
     if (this.dragging) {
       let newPosition = this.data.getLocalPosition(this.parent)
-      this.x = newPosition.x
-      this.y = newPosition.y
+
+      // prevent piece from going out of sight and unselectable
+      this.x = Math.max( Math.min(newPosition.x, this.app.maxWidth), 0)
+      this.y = Math.max( Math.min(newPosition.y, this.app.maxHeight), 0)
     }
   }
 
