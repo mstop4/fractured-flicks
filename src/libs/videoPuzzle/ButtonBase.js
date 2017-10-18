@@ -12,7 +12,7 @@ export class ButtonBase extends PIXI.Container {
       fontFamily: 'Kite One',
       fontSize: 28,
       fill: 0xFFFFFF,
-      stroke: 0x000000,
+      stroke: 0x202030,
       strokeThickness: 4,
       padding: 20
     })

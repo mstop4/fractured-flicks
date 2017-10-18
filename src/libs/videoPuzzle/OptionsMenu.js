@@ -6,33 +6,27 @@ export class OptionsMenu extends PIXI.Container {
 
     this.app = app
 
-    this.resumeButton = this.createButton(100, 100, "images/button-150.png", "Resume", this.deactivate.bind(this))
-    this.backButton = this.createButton(100, 200, "images/button-150.png", "Quit", this.onBackButton.bind(this))
-    this.musicToggle = this.createButton(100, 300, "images/button-150.png", "Music", this.onMusicToggle.bind(this))
-    this.sfxToggle = this.createButton(100, 400, "images/button-150.png", "SFX", this.onSfxToggle.bind(this))
+    this.resumeButton = this.createButton(this.app.maxWidth / 2 - 100, 525, "images/button-150.png", "Resume", this.deactivate.bind(this))
+    this.backButton = this.createButton(this.app.maxWidth / 2 + 100, 525, "images/button-150.png", "Quit", this.onBackButton.bind(this))
+    this.musicToggle = this.createButton(this.app.maxWidth / 2, 350, "images/button-150.png", "Music", this.onMusicToggle.bind(this))
+    this.sfxToggle = this.createButton(this.app.maxWidth / 2, 425, "images/button-150.png", "SFX", this.onSfxToggle.bind(this))
 
     this.updateAudioButtonLabels()
 
     this.titleStyle = new PIXI.TextStyle({
       fontFamily: "Kite One",
       fill: 0xffffff,
-      stroke: 0x000000
-    })
-    this.contentStyle = new PIXI.TextStyle({
-      fontFamily: "Kite One",
-      fill: 0xffffff,
-      stroke: 0x000000
+      stroke: 0x404060,
+      strokeThickness: 10,
+      fontSize: 72 
     })
 
-    this.controlsTitle = new PIXI.Text("Controls", this.titleStyle)
-    this.controlsTitle.x = 300
-    this.controlsTitle.y = 100
-    this.controlText = new PIXI.Text("Tap - Rotate piece\nHold & Drag - Move piece", this.contentStyle)
-    this.controlText.x = 300
-    this.controlText.y = 200
+    this.titleText = new PIXI.Text("Game Paused", this.titleStyle)
+    this.titleText.x = this.app.maxWidth / 2
+    this.titleText.y = 200
+    this.titleText.anchor.set(0.5,0.5)
 
-    this.addChild(this.controlsTitle)
-    this.addChild(this.controlText)
+    this.addChild(this.titleText)
   }
 
   createButton(x, y, textureID, label, clickFunc) {
@@ -57,7 +51,7 @@ export class OptionsMenu extends PIXI.Container {
   }
 
   onMusicToggle() {
-    let curSound = 'sounds/music1.mp3'
+    let curSound = 'sounds/DST-TimeToDream.mp3'
     this.app.am.musicOn = !this.app.am.musicOn
 
     if (this.app.am.musicOn) {

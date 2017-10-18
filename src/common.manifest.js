@@ -12,5 +12,5 @@ export const commonAssets = [
   'sounds/pickUp.mp3',
   'sounds/putDown.mp3',
   'sounds/rotate.mp3',
-  'sounds/music1.mp3'
+  'sounds/DST-TimeToDream.mp3'
 ]

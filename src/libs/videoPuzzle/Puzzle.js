@@ -92,7 +92,7 @@ export class Puzzle extends App {
     this.am = new AudioManager()
 
     // Play Music
-    this.am.playSound('sounds/music1.mp3')
+    this.am.playSound('sounds/DST-TimeToDream.mp3')
 
     this.registerInstance(this)
   }
