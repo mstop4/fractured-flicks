@@ -1,6 +1,14 @@
 export class AudioManager {
   constructor() {
+    this.musicOn = true
+    this.sfxOn = true
     PIXI.loader.resources['sounds/music1.mp3'].sound.loop = true
+  }
+
+  playSfx(soundRef) {
+    if (this.sfxOn) {
+      this.playSound(soundRef)
+    }
   }
 
   isPlaying(soundRef) {

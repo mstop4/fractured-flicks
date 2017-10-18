@@ -9,7 +9,9 @@ export class OptionsMenu extends PIXI.Container {
     this.resumeButton = this.createButton(100, 100, "images/button-150.png", "Resume", this.deactivate.bind(this))
     this.backButton = this.createButton(100, 200, "images/button-150.png", "Quit", this.onBackButton.bind(this))
     this.musicToggle = this.createButton(100, 300, "images/button-150.png", "Music", this.onMusicToggle.bind(this))
-    this.sfxToggle = this.createButton(100, 400, "images/button-150.png", "SFX", null)
+    this.sfxToggle = this.createButton(100, 400, "images/button-150.png", "SFX", this.onSfxToggle.bind(this))
+
+    this.updateAudioButtonLabels()
 
     this.titleStyle = new PIXI.TextStyle({
       fontFamily: "Kite One",
@@ -40,14 +42,36 @@ export class OptionsMenu extends PIXI.Container {
     return newButton
   }
 
+  updateAudioButtonLabels() {
+    if (this.app.am.musicOn) {
+      this.musicToggle.label.text = "Music: On"
+    } else {
+      this.musicToggle.label.text = "Music: Off"
+    }
+
+    if (this.app.am.sfxOn) {
+      this.sfxToggle.label.text = "SFX: On"
+    } else {
+      this.sfxToggle.label.text = "SFX: Off"
+    }
+  }
+
   onMusicToggle() {
     let curSound = 'sounds/music1.mp3'
+    this.app.am.musicOn = !this.app.am.musicOn
 
-    if (this.app.am.isPlaying(curSound)) {
-      this.app.am.pauseSound(curSound)
-    } else {
+    if (this.app.am.musicOn) {
       this.app.am.playSound(curSound)
+    } else {
+      this.app.am.pauseSound(curSound)
     }
+
+    this.updateAudioButtonLabels.apply(this)
+  }
+
+  onSfxToggle() {
+    this.app.am.sfxOn = !this.app.am.sfxOn
+    this.updateAudioButtonLabels.apply(this)
   }
 
   onBackButton() {

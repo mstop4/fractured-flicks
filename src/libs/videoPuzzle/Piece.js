@@ -123,7 +123,7 @@ export class Piece extends PIXI.Container {
       this.dragging = true
       this.onScaleStart(0.95, 0.95, 1, 1, 5) 
       this.recolourOutline(dragColor)
-      this.app.am.playSound(this.pickUpSfx)
+      this.app.am.playSfx(this.pickUpSfx)
   
       // Bring this piece to the front
       let tempParent = this.parent
@@ -163,7 +163,7 @@ export class Piece extends PIXI.Container {
     this.goalAngle = this.goalAngle + deltaAngle * Math.PI / 180
     this.startAngle = this.rotation
     this.rotationT = 0
-    this.app.am.playSound(this.rotateSfx)
+    this.app.am.playSfx(this.rotateSfx)
   }
 
   onScaleStart(startScaleX, startScaleY, goalScaleX, goalScaleY, deltaT) {
@@ -185,13 +185,13 @@ export class Piece extends PIXI.Container {
       this.y = this.yStart
       this.recolourOutline(correctColor)
       this.done = true
-      this.app.am.playSound(this.correctSfx)
+      this.app.am.playSfx(this.correctSfx)
       this.onScaleStart(0.95, 0.95, 1, 1, 5) 
     } else {
       this.recolourOutline(idleColor)
       this.done = false
       if (!supressPutDownSFX) {
-        this.app.am.playSound(this.putDownSfx)
+        this.app.am.playSfx(this.putDownSfx)
       }
       this.onScaleStart(0.9, 0.9, 1, 1, 5) 
     }

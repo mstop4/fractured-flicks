@@ -13,7 +13,8 @@ export class ButtonBase extends PIXI.Container {
       fontSize: 28,
       fill: 0xFFFFFF,
       stroke: 0x000000,
-      strokeThickness: 4
+      strokeThickness: 4,
+      padding: 20
     })
 
     this.interactive = true

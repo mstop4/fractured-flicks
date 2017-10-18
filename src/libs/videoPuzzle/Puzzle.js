@@ -222,7 +222,7 @@ export class Puzzle extends App {
       }
     }
 
-    this.pauseButton = new Button(this.maxWidth-50, 25, "images/button-100.png", "Menu", this.togglePauseGame.bind(this, true))
+    this.pauseButton = new Button(this.maxWidth-50, 40, "images/button-100.png", "Menu", this.togglePauseGame.bind(this, true))
     this.pauseButton.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.pauseButton)
     this.registerInstance(this.pauseButton)
