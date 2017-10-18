@@ -164,6 +164,7 @@ export class Piece extends PIXI.Container {
     this.startAngle = this.rotation
     this.rotationT = 0
     this.app.am.playSfx(this.rotateSfx)
+    this.checkDone(true)
   }
 
   onScaleStart(startScaleX, startScaleY, goalScaleX, goalScaleY, deltaT) {

@@ -321,7 +321,7 @@ export class Puzzle extends App {
       if (!this.puzzleComplete) {
         if (done) {
           this.titleText.text = "Complete!"
-          this.puzzleComplete = trues
+          this.puzzleComplete = true
           this.guide.tint = 0xFFFFFF
           this.pieces.forEach(function(piece) {
             piece.visible = false

@@ -7,6 +7,7 @@ export const commonAssets = [
   'videos/shorePreview.mp4',
   'videos/squirrelPreview.mp4',
   'videos/blackboardPreview.mp4',
+  'videos/halloweenPreview.mp4',
   'sounds/correct.mp3',
   'sounds/pickUp.mp3',
   'sounds/putDown.mp3',

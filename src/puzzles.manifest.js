@@ -21,5 +21,13 @@ export const puzzles = [
     file: "videos/blackboard.mp4",
     preview: "videos/blackboardPreview.mp4",
     scale: 2
+  },
+
+  {
+    id: 3,
+    name: "Pumpkins",
+    file: "videos/halloween.mp4",
+    preview: "videos/halloweenPreview.mp4",
+    scale: 2
   }
 ]
