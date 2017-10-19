@@ -49,7 +49,7 @@ export class Puzzle extends App {
     this.processPaused = false
 
     this.startLocations = []
-    this.videoElements = {}
+    this.videoElements = {} // used for kludge for loading videos from external server
     this.bestTimes = {}
   }
 
@@ -212,11 +212,12 @@ export class Puzzle extends App {
     this.bestTimeText.text = "Best: " + Utils.msToTimeString(this.bestTimes[puzzles[this.currentLevel].name], 1)
 
     // if video isn't already in cache, load it
+    // kludge - bypass resource loader to load videos from external server
+    //          until CORS bug in loader is fixed
 
     //if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
       //this.loadResources(this.videoURI, this.puzzleSetup.bind(this), 0)
 
-    // kludge
     if (!this.videoElements.hasOwnProperty(this.videoURI)) {
       var ve = document.createElement('video')
       ve.crossOrigin = "anonymous"
@@ -224,9 +225,14 @@ export class Puzzle extends App {
       ve.src = this.videoURI
       this.videoElements[this.videoURI] = ve
 
-      console.dir(ve)
-
-      this.puzzleSetup()
+      this.loadResources({
+        url: {
+          metadata: {
+            loadElement: this.videoElements[this.videoURI]
+          }
+        },
+        name: this.videoURI
+      }, this.puzzleSetup.bind(this), 0)
     } else {
       this.puzzleSetup()
     }
@@ -239,12 +245,7 @@ export class Puzzle extends App {
 
     //let bw = new PIXI.filters.ColorMatrixFilter()
 
-    //this.videoTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
-
-    //kludge
-    this.videoTex = PIXI.Texture.fromVideo(this.videoURI)
-    this.videoTex.baseTexture.width = 426
-    this.videoTex.baseTexture.height = 240
+    this.videoTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
     this.videoTex.baseTexture.source.loop = true
     this.videoTex.baseTexture.source.play()
     this.guide = new PIXI.Sprite(this.videoTex)
@@ -268,7 +269,6 @@ export class Puzzle extends App {
         
         let rect = new PIXI.Rectangle((j*cellWidth).toFixed(2), (i*cellHeight).toFixed(2), cellWidth, cellHeight)
         let pieceTex = new PIXI.Texture(this.videoTex.baseTexture)
-        pieceTex.update()
         pieceTex.frame = rect
 
         let pieceX = this.xOffset + (j+0.5)*(cellWidth * this.videoScale)
