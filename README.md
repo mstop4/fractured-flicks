@@ -17,17 +17,18 @@ https://mstop4.github.io/video-puzzle/
 ## Features
 
 - 4 different video-based puzzles to complete
+    - Videos are stored and retrieved from AWS S3
 - Best completion times are saved in local storage
 
 ## Nice-to-Haves
 
 - Additional video puzzles
-- Storing and retrieving videos from external server (e.g. AWS S3)
 - Saving best times to an external server
 
 ## Stack
 
 * PixiJS
 * pixi-sound
+* AWS S3
 * Babel
 * Webpack
