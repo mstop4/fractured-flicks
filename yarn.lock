@@ -1286,11 +1286,7 @@ es6-set@~0.1.5:
     es6-symbol "3.1.1"
     event-emitter "~0.3.5"
 
-<<<<<<< HEAD
-es6-symbol@3.1.1, es6-symbol@^3.1, es6-symbol@^3.1.1, es6-symbol@~3.1.1:
-=======
 es6-symbol@3.1.1, es6-symbol@^3.1.1, es6-symbol@~3.1.1:
->>>>>>> 65755b4dc09fafde93322fa55b6b941197534221
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/es6-symbol/-/es6-symbol-3.1.1.tgz#bf00ef4fdab6ba1b46ecb7b629b4c7ed5715cc77"
   dependencies:
@@ -2714,9 +2710,9 @@ pixi-display@^1.1.1:
   dependencies:
     "@types/pixi.js" "^4.3.1"
 
-pixi-filters@^2.0.2:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/pixi-filters/-/pixi-filters-2.1.1.tgz#759f172ef7ba9ed0b559e30fb52fd332e9aa068f"
+pixi-filters@^2.1.1:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/pixi-filters/-/pixi-filters-2.2.0.tgz#89cdd75c96b8cf7acb8cc42df514227681cb54b1"
 
 pixi-gl-core@^1.0.3:
   version "1.1.0"

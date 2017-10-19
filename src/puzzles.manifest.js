@@ -3,7 +3,7 @@ export const puzzles = [
     id: 0,
     name: "Squirrel",
     file: "videos/squirrel.mp4",
-    preview: "vid_squirrelPreview",
+    preview: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/squirrel.mp4",
     scale: 2
   },
 
@@ -18,7 +18,7 @@ export const puzzles = [
   {
     id: 2,
     name: "Tic-Tac-Toe",
-    file: "videos/blackboard.mp4",
+    file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/blackboard.mp4",
     preview: "vid_blackboardPreview",
     scale: 2
   },
@@ -26,7 +26,7 @@ export const puzzles = [
   {
     id: 3,
     name: "Pumpkins",
-    file: "videos/halloween.mp4",
+    file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/halloween.mp4",
     preview: "vid_halloweenPreview",
     scale: 2
   }

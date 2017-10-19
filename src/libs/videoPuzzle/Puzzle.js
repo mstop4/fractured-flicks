@@ -56,7 +56,7 @@ export class Puzzle extends App {
   initGame() {
     console.log(process.env.NODE_ENV)
     this.initApp(this)
-  
+
     // Delay calling initGameSetup so player can see the 100% loading progress message
     this.loadResources(this.commonAssets, this.initGameSetup.bind(this), 500)
 
@@ -212,8 +212,10 @@ export class Puzzle extends App {
     this.bestTimeText.text = "Best: " + Utils.msToTimeString(this.bestTimes[puzzles[this.currentLevel].name], 1)
 
     // if video isn't already in cache, load it
-    // kludge - bypass resource loader to load videos from external server
-    //          until CORS bug in loader is fixed
+    // kludge - due to a CORS bug in the resource loader 
+    //          (https://github.com/englercj/resource-loader/issues/99), 
+    //          we need to bypass it in order to load videos 
+    //          from an external source
 
     //if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
       //this.loadResources(this.videoURI, this.puzzleSetup.bind(this), 0)
