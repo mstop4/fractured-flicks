@@ -21,7 +21,7 @@ export class App {
     this.instances = []
 
     this.loadOptions = {
-      crossOrigin: true
+      crossOrigin: 'anonymous'
     }
   }
 

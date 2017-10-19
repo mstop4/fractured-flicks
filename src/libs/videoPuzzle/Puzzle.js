@@ -213,6 +213,7 @@ export class Puzzle extends App {
     // if video isn't already in cache, load it
     if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
       this.loadResources(this.videoURI, this.puzzleSetup.bind(this), 0)
+
     } else {
       this.puzzleSetup()
     }
