@@ -20,8 +20,7 @@ window.onload = () => {
 
 const preRenderFont = (fontName) => {
   // create <p> tag with our font and render some text secretly. We don't need to see it after all...
-  
-  console.log(fontName)
+
 	let el = document.createElement('p');
 	el.style.fontFamily = fontName;
 	el.style.fontSize = "0px";

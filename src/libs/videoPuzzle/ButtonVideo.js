@@ -1,16 +1,12 @@
-export class ButtonVideo extends PIXI.Container {
-  constructor(x, y, width, height, video, text, clickFunc = null) {
-    super()
+import {ButtonBase} from './ButtonBase.js'
 
-    this.x = x
-    this.y = y
+export class ButtonVideo extends ButtonBase {
+  constructor(x, y, textureID = "spr_buttonVideo", video, text, clickFunc = null) {
+    super(x, y, text, clickFunc)
 
-    this.clickFunc = clickFunc
-
-    this.shape = new PIXI.Sprite(PIXI.utils.TextureCache["images/button-video.png"])
+    this.shape = new PIXI.Sprite(PIXI.utils.TextureCache[textureID])
     this.addChild(this.shape)
 
-    console.log(PIXI.loader.resources)
     let previewTex = PIXI.Texture.fromVideo(PIXI.loader.resources[video].data)
     previewTex.baseTexture.source.loop = true
     previewTex.baseTexture.source.pause()
@@ -20,42 +16,24 @@ export class ButtonVideo extends PIXI.Container {
     this.preview.y = 20
     this.addChild(this.preview)
 
-    this.labelStyle = new PIXI.TextStyle({
-      fontFamily: 'Kite One',
-      fontSize: 28,
-      fill: 0xFFFFFF,
-      stroke: 0x000000,
-      strokeThickness: 4
-    })
-
     this.label = new PIXI.Text(text, this.labelStyle)
     this.label.anchor.set(0.5, 0.5)
-    this.label.x = width / 2
-    this.label.y = height * 3 / 4
+    this.label.x = this.width / 2
+    this.label.y = this.height * 3 / 4
     this.addChild(this.label)
 
-    this.interactive = true
-    this.buttonMode = true
-    this.isDown = false
-    this.hitArea = new PIXI.Rectangle(0, 0, width, height)
+    this.pivot.set(this.width / 2, this.height / 2)
+    this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height)
 
-    this.on('pointerdown', () => {
-      this.isDown = true
-    })
-
-    this.on('pointerup', () => {
-      if (this.isDown) {
-        this.isDown = false
-        this.clickFunc()
-      }
-    })
-
-    this.on('pointerover', () => {
+    this.on('pointerover', (event) => {
       this.preview.texture.baseTexture.source.play()
+      this.onScaleStart(0.95, 0.95, 1, 1, 5)
     })
 
     this.on('pointerout', () => {
+      this.isDown = false
       this.preview.texture.baseTexture.source.pause()
+      this.onScaleStart(0.95, 0.95, 1, 1, 5) 
     })
   }
 }

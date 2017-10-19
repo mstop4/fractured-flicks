@@ -1,6 +1,6 @@
 {
   "name": "video-jigsaw-puzzle",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "description": "A web-based jigsaw puzzle game where players put pieces of a video back together.",
   "main": "index.js",
   "scripts": {

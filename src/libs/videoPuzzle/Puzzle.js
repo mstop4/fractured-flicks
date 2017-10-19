@@ -1,13 +1,16 @@
 import {App} from './app.js'
 
-import {puzzles} from '../../puzzles.config.js'
-//import {sounds} from '../../audio.config.js'
-import {commonAssets} from '../../common.config.js'
+import {puzzles} from '../../puzzles.manifest.js'
+import {commonAssets} from '../../common.manifest.js'
 
+import Utils from './Utils.js'
+import {TitleScreen} from './TitleScreen.js'
 import {PuzzleMenu} from './PuzzleMenu.js'
+import {OptionsMenu} from './OptionsMenu.js'
+import {AudioManager} from './AudioManager.js'
 import {Piece} from './Piece.js'
 import {Button} from './Button.js'
-import {TitleScreen} from './TitleScreen.js'
+import {Background} from './Background.js'
 
 export class Puzzle extends App {
   constructor() {
@@ -15,56 +18,80 @@ export class Puzzle extends App {
     this.currentLevel = 1
 
     this.pieces = []
-    this.menuScreen = undefined
-    this.guide = undefined
-    this.videoTex = undefined
-    this.frame = undefined
-    this.background = undefined
-    this.titleText = undefined
-    this.timerText = undefined
-    this.backButton = undefined
-    this.loadingMessage = undefined
+    this.background = null
+    this.menuScreen = null
+    this.optionsScreen = null
+    this.am = null
+    this.guide = null
+    this.videoTex = null
+    this.frame = null
+    this.titleText = null
+    this.timerText = null
+    this.bestTimeText = null
+    this.pauseButton = null
+    this.loadingMessage = null
+    this.hasStorage = false
 
-    this.timerStartTime = 0
+    this.timerThenTime = 0
     this.timerNowTime = 0
+    this.duration = 0
 
     this.commonAssets = commonAssets
     this.videoURI = puzzles[this.currentLevel].file
     this.videoScale = puzzles[this.currentLevel].scale
     this.numRows = 4
     this.numColumns = 5
-    //this.soundURIs = sounds
 
     this.xOffset = 0
     this.yOffset = 0
     this.loadingNewLevel = true
     this.puzzleComplete = false
+    this.processPaused = false
 
     this.startLocations = []
+    this.bestTimes = {}
   }
 
   initGame() {
     console.log(process.env.NODE_ENV)
     this.initApp(this)
   
-    let that = this
     // Delay calling initGameSetup so player can see the 100% loading progress message
     this.loadResources(this.commonAssets, this.initGameSetup.bind(this), 500)
+
+    // Check for local storage
+    if (typeof Storage !== "undefined") {
+      console.log("Storage detected")
+      this.hasStorage = true
+      
+      // load best times from local storage
+      puzzles.forEach( (puzzle) => {
+        this.bestTimes[puzzle.name] = window.localStorage.getItem("time" + puzzle.name)
+
+        if (!this.bestTimes[puzzle.name]) {
+          this.bestTimes[puzzle.name] = (59 * 60 + 59.9) * 1000
+        }
+      })
+    } else {
+      console.log("No Storage detected")
+
+      // Init local best times
+      puzzles.forEach( (puzzle) => {
+        this.bestTimes[puzzle.name] = (59 * 60 + 59.9) * 1000
+      })
+    }
   }
 
   initGameSetup() {
 
+    // Hide loading spinner
     let loadEl = document.getElementById('loading-outer');
     loadEl.style.visibility = 'hidden'
 
     // Add background
-    this.background = new PIXI.extras.TilingSprite(
-      PIXI.utils.TextureCache["images/background.png"],
-      this.maxWidth,
-      this.maxHeight
-    )
-
+    this.background = new Background('spr_background', this.maxWidth, this.maxHeight)
     this.pixiApp.stage.addChild(this.background)
+    this.registerInstance(this.background)
 
     let loadingStyle = new PIXI.TextStyle({
       fontFamily: 'Kite One',
@@ -84,13 +111,15 @@ export class Puzzle extends App {
     this.loadingMessage.visible = false
     this.pixiApp.stage.addChild(this.loadingMessage)
 
-    // title screen
+    // Title screen
     let titleScreen = new TitleScreen(this)
     this.pixiApp.stage.addChild(titleScreen)
 
+    // Audio Manager
+    this.am = new AudioManager()
+
     // Play Music
-    PIXI.loader.resources['sounds/music1.mp3'].sound.loop = true
-    PIXI.loader.resources['sounds/music1.mp3'].sound.play()
+    this.am.playSound('mus_TimeToDream')
 
     this.registerInstance(this)
   }
@@ -99,6 +128,10 @@ export class Puzzle extends App {
     // create menu screen
     this.menuScreen = new PuzzleMenu(this)
     this.pixiApp.stage.addChild(this.menuScreen)
+
+    this.optionsScreen = new OptionsMenu(this)
+    this.optionsScreen.deactivate()
+    this.pixiApp.stage.addChild(this.optionsScreen)
 
     // create puzzle screen
     this.initPuzzleSetup()
@@ -110,14 +143,13 @@ export class Puzzle extends App {
     this.yOffset = (this.maxHeight - 480) / 2
 
     // Add frame
-    this.frame = new PIXI.Sprite(PIXI.utils.TextureCache["images/frame.png"])
+    this.frame = new PIXI.Sprite(PIXI.utils.TextureCache["spr_frame"])
     this.frame.pivot = new PIXI.Point(16,16)
     this.frame.x = this.xOffset
     this.frame.y = this.yOffset
     this.pixiApp.stage.addChild(this.frame)
 
     // Add Title
-
     let titleStyle = new PIXI.TextStyle({
       fontFamily: 'Kite One',
       fontSize: 40,
@@ -131,6 +163,14 @@ export class Puzzle extends App {
       fontSize: 48,
       stroke: 0x404060,
       strokeThickness: 6,
+      fill: 'white'
+    })
+
+    let bestTimeStyle = new PIXI.TextStyle({
+      fontFamily: 'Kite One',
+      fontSize: 24,
+      stroke: 0x404060,
+      strokeThickness: 3,
       fill: 'white'
     })
 
@@ -148,6 +188,14 @@ export class Puzzle extends App {
     this.timerText.anchor.set(0.5, 0)
     this.timerText.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.timerText)
+
+    // Best Time
+    this.bestTimeText = new PIXI.Text("0:00", bestTimeStyle)
+    this.bestTimeText.x = this.maxWidth
+    this.bestTimeText.y = this.maxHeight
+    this.bestTimeText.anchor.set(1, 1)
+    this.bestTimeText.displayGroup = this.uiLayer
+    this.pixiApp.stage.addChild(this.bestTimeText)
   }
 
   loadLevel(level) {
@@ -160,6 +208,7 @@ export class Puzzle extends App {
     this.videoURI = puzzles[this.currentLevel].file
     this.titleText.text = "Loading"
     this.puzzleComplete = false
+    this.bestTimeText.text = "Best: " + Utils.msToTimeString(this.bestTimes[puzzles[this.currentLevel].name], 1)
 
     // if video isn't already in cache, load it
     if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
@@ -198,9 +247,7 @@ export class Puzzle extends App {
     this.guide.y = this.yOffset
     this.guide.scale.x = this.videoScale
     this.guide.scale.y = this.videoScale
-    //guide.filters = [bw]
     this.guide.tint = 0x606060
-    //bw.blackAndWhite()
 
     this.pixiApp.stage.addChild(this.guide)
 
@@ -213,8 +260,14 @@ export class Puzzle extends App {
     for (let i = 0; i < this.numRows; i++) {
       for (let j = 0; j < this.numColumns; j++) {
 
+<<<<<<< HEAD
         let rect = new PIXI.Rectangle(j*cellWidth, i*cellHeight, cellWidth, cellHeight)
         let pieceTex = new PIXI.Texture(this.videoTex.baseTexture, rect)
+=======
+        let rect = new PIXI.Rectangle((j*cellWidth).toFixed(2), (i*cellHeight).toFixed(2), cellWidth, cellHeight)
+        let pieceTex = new PIXI.Texture(this.videoTex.baseTexture)
+        pieceTex.frame = rect
+>>>>>>> 65755b4dc09fafde93322fa55b6b941197534221
 
         let pieceX = this.xOffset + (j+0.5)*(cellWidth * this.videoScale)
         let pieceY = this.yOffset + (i+0.5)*(cellHeight * this.videoScale)
@@ -231,15 +284,18 @@ export class Puzzle extends App {
       }
     }
 
-    this.backButton = new Button(this.maxWidth-100, 0, 100, 50, "Back", this.backToMenu.bind(this))
-    this.backButton.displayGroup = this.uiLayer
-    this.pixiApp.stage.addChild(this.backButton)
+    this.pauseButton = new Button(this.maxWidth-50, 40, "spr_button100", "Menu", this.togglePauseGame.bind(this, true))
+    this.pauseButton.displayGroup = this.uiLayer
+    this.pixiApp.stage.addChild(this.pauseButton)
+    this.registerInstance(this.pauseButton)
 
     this.loadingNewLevel = false
     this.timerNowTime = window.performance.now()
-    this.timerStartTime = this.timerNowTime
+    this.timerThenTime = this.timerNowTime
+    this.duration = 0
 
     this.loadingMessage.visible = false
+    this.processPaused = false
     this.toggleUIVisibility(true)
   }
 
@@ -267,30 +323,60 @@ export class Puzzle extends App {
     }
 
     // remove back button
-    if (this.backButton) {
-      this.unregisterInstance(this.backButton)
-      this.destroyInstance(this.backButton, false, false)
+    if (this.pauseButton) {
+      this.unregisterInstance(this.pauseButton)
+      this.destroyInstance(this.pauseButton, false, false)
     }
   }
 
   toggleUIVisibility(on) {
-    this.frame.visible = on
-    this.titleText.visible = on
-    this.timerText.visible = on
+
+    // check to see if the instance exists before toggling its visibility
+    const safeToggle = (inst, on) => {
+      if (inst) {
+        inst.visible = on
+      }
+    }
+
+    safeToggle(this.frame, on)
+    safeToggle(this.titleText, on)
+    safeToggle(this.timerText, on)
+    safeToggle(this.bestTimeText, on)
+    safeToggle(this.pauseButton, on)
+    safeToggle(this.guide, on)
+
+    this.pieces.forEach( (piece) => {
+      safeToggle(piece, on)
+    })
+  }
+
+  togglePauseGame(pause) {
+    this.processPaused = pause
+    this.toggleUIVisibility(!pause)
+
+    if (pause) {
+      if (this.guide) {
+        this.guide.texture.baseTexture.source.pause()
+      }
+      this.optionsScreen.activate()
+    } else {
+      if (this.guide) {
+        this.guide.texture.baseTexture.source.play()
+        this.timerThenTime = window.performance.now()
+      }
+    }
   }
 
   backToMenu() {
     this.removePuzzle()
-    this.toggleUIVisibility()
+    this.toggleUIVisibility(false)
     this.menuScreen.activate()
   }
 
   process() {
-    this.background.tilePosition.x -= 0.1
-    this.background.tilePosition.y -= 0.1
-
     let done = true
 
+    // Check to see if all pieces are in there correct places
     this.pieces.forEach( (piece) => {
       done = piece.done && done
     })
@@ -298,24 +384,29 @@ export class Puzzle extends App {
     if (!this.loadingNewLevel) {
       if (!this.puzzleComplete) {
         if (done) {
+
           this.titleText.text = "Complete!"
           this.puzzleComplete = true
-          //this.guide.filters = []
           this.guide.tint = 0xFFFFFF
           this.pieces.forEach(function(piece) {
             piece.visible = false
           })
+
+          // Record best time
+          if (this.duration < this.bestTimes[puzzles[this.currentLevel].name]) {
+            this.bestTimes[puzzles[this.currentLevel].name] = this.duration
+            this.bestTimeText.text = "Best: " + Utils.msToTimeString(this.duration, 1)
+
+            if (this.hasStorage) {
+              window.localStorage.setItem("time" + puzzles[this.currentLevel].name, this.duration)
+            }
+          }
+
         } else {
           this.timerNowTime = window.performance.now()
-          let duration = this.timerNowTime - this.timerStartTime
-          let min = Math.floor(duration/1000/60)
-          let sec = ((duration/1000) % 60).toFixed(1)
-
-          if (sec < 10) {
-            this.timerText.text = `${min}:0${sec}`
-          } else {
-            this.timerText.text = `${min}:${sec}`
-          }
+          this.duration += this.timerNowTime - this.timerThenTime
+          this.timerText.text = Utils.msToTimeString(this.duration, 1)
+          this.timerThenTime = this.timerNowTime
         }
       }
     }

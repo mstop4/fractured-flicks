@@ -3,6 +3,8 @@ let idleColor = 0xE20000
 let dragColor = 0xF9DC00
 let correctColor = 0x83D92B
 
+import Utils from './Utils.js'
+
 export class Piece extends PIXI.Container {
 
   constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, scale, texture, app) {
@@ -54,10 +56,10 @@ export class Piece extends PIXI.Container {
     this.on('pointermove', this.onDragMove)
 
     // Sounds
-    this.pickUpSfx = PIXI.loader.resources['sounds/pickUp.mp3'].sound
-    this.putDownSfx = PIXI.loader.resources['sounds/putDown.mp3'].sound
-    this.rotateSfx = PIXI.loader.resources['sounds/rotate.mp3'].sound
-    this.correctSfx = PIXI.loader.resources['sounds/correct.mp3'].sound
+    this.pickUpSfx = 'snd_pickUp'
+    this.putDownSfx = 'snd_putDown'
+    this.rotateSfx = 'snd_rotate'
+    this.correctSfx = 'snd_correct'
 
     this.outline = new PIXI.Graphics()
     this.outline.cacheAsBitmap = true
@@ -123,7 +125,7 @@ export class Piece extends PIXI.Container {
       this.dragging = true
       this.onScaleStart(0.95, 0.95, 1, 1, 5) 
       this.recolourOutline(dragColor)
-      this.pickUpSfx.play()
+      this.app.am.playSfx(this.pickUpSfx)
   
       // Bring this piece to the front
       let tempParent = this.parent
@@ -152,8 +154,10 @@ export class Piece extends PIXI.Container {
   onDragMove() {
     if (this.dragging) {
       let newPosition = this.data.getLocalPosition(this.parent)
-      this.x = newPosition.x
-      this.y = newPosition.y
+
+      // prevent piece from going out of sight and unselectable
+      this.x = Utils.clamp(newPosition.x, 0, this.app.maxWidth)
+      this.y = Utils.clamp(newPosition.y, 0, this.app.maxHeight)
     }
   }
 
@@ -161,7 +165,8 @@ export class Piece extends PIXI.Container {
     this.goalAngle = this.goalAngle + deltaAngle * Math.PI / 180
     this.startAngle = this.rotation
     this.rotationT = 0
-    this.rotateSfx.play()
+    this.app.am.playSfx(this.rotateSfx)
+    this.checkDone(true)
   }
 
   onScaleStart(startScaleX, startScaleY, goalScaleX, goalScaleY, deltaT) {
@@ -183,13 +188,13 @@ export class Piece extends PIXI.Container {
       this.y = this.yStart
       this.recolourOutline(correctColor)
       this.done = true
-      this.correctSfx.play()
+      this.app.am.playSfx(this.correctSfx)
       this.onScaleStart(0.95, 0.95, 1, 1, 5) 
     } else {
       this.recolourOutline(idleColor)
       this.done = false
       if (!supressPutDownSFX) {
-        this.putDownSfx.play()
+        this.app.am.playSfx(this.putDownSfx)
       }
       this.onScaleStart(0.9, 0.9, 1, 1, 5) 
     }

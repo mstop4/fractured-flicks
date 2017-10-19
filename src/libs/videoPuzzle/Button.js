@@ -1,44 +1,29 @@
-export class Button extends PIXI.Container {
+import {ButtonBase} from './ButtonBase.js'
+
+export class Button extends ButtonBase {
   
-  constructor(x, y, width, height, text, clickFunc = null) {
-    super()
+  constructor(x, y, textureID = "spr_button100", text, clickFunc = null) {
+    super(x, y, text, clickFunc)
 
-    this.x = x
-    this.y = y
-
-    this.clickFunc = clickFunc
-
-    this.shape = new PIXI.Sprite(PIXI.utils.TextureCache["images/button-100.png"])
+    this.shape = new PIXI.Sprite(PIXI.utils.TextureCache[textureID])
     this.addChild(this.shape)
-
-    this.labelStyle = new PIXI.TextStyle({
-      fontFamily: 'Kite One',
-      fontSize: 28,
-      fill: 0xFFFFFF,
-      stroke: 0x000000,
-      strokeThickness: 4
-    })
 
     this.label = new PIXI.Text(text, this.labelStyle)
     this.label.anchor.set(0.5, 0.5)
-    this.label.x = width / 2
-    this.label.y = height / 2
+    this.label.x = this.width / 2
+    this.label.y = this.height / 2
     this.addChild(this.label)
 
-    this.interactive = true
-    this.buttonMode = true
-    this.isDown = false
-    this.hitArea = new PIXI.Rectangle(0, 0, width, height)
+    this.pivot.set(this.width / 2, this.height / 2)
+    this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height)
 
-    this.on('pointerdown', () => {
-      this.isDown = true
+    this.on('pointerover', () => {
+      this.onScaleStart(0.95, 0.95, 1, 1, 5)
     })
 
-    this.on('pointerup', () => {
-      if (this.isDown) {
-        this.isDown = false
-        this.clickFunc()
-      }
+    this.on('pointerout', () => {
+      this.isDown = false
+      this.onScaleStart(0.95, 0.95, 1, 1, 5) 
     })
   }
 }
