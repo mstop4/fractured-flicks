@@ -10,7 +10,7 @@ export const puzzles = [
   {
     id: 1,
     name: "Shore",
-    file: "http://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/shore.mp4",
+    file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/shore.mp4",
     preview: "vid_shorePreview",
     scale: 2
   },
