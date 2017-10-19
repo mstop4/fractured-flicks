@@ -10,13 +10,8 @@ export const puzzles = [
   {
     id: 1,
     name: "Shore",
-<<<<<<< HEAD:src/puzzles.config.js
     file: "https://s3.us-east-2.amazonaws.com/videopuzzle/shore.mp4",
-    preview: "videos/shorePreview.mp4",
-=======
-    file: "videos/shore.mp4",
     preview: "vid_shorePreview",
->>>>>>> 65755b4dc09fafde93322fa55b6b941197534221:src/puzzles.manifest.js
     scale: 2
   },
 

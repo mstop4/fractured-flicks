@@ -259,15 +259,10 @@ export class Puzzle extends App {
 
     for (let i = 0; i < this.numRows; i++) {
       for (let j = 0; j < this.numColumns; j++) {
-
-<<<<<<< HEAD
-        let rect = new PIXI.Rectangle(j*cellWidth, i*cellHeight, cellWidth, cellHeight)
-        let pieceTex = new PIXI.Texture(this.videoTex.baseTexture, rect)
-=======
+        
         let rect = new PIXI.Rectangle((j*cellWidth).toFixed(2), (i*cellHeight).toFixed(2), cellWidth, cellHeight)
         let pieceTex = new PIXI.Texture(this.videoTex.baseTexture)
         pieceTex.frame = rect
->>>>>>> 65755b4dc09fafde93322fa55b6b941197534221
 
         let pieceX = this.xOffset + (j+0.5)*(cellWidth * this.videoScale)
         let pieceY = this.yOffset + (i+0.5)*(cellHeight * this.videoScale)

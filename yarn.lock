@@ -1250,11 +1250,7 @@ es-to-primitive@^1.1.1:
     is-date-object "^1.0.1"
     is-symbol "^1.0.1"
 
-<<<<<<< HEAD
-es5-ext@^0.10.14, es5-ext@^0.10.9, es5-ext@~0.10.14:
-=======
 es5-ext@^0.10.14, es5-ext@^0.10.35, es5-ext@^0.10.9, es5-ext@~0.10.14:
->>>>>>> 65755b4dc09fafde93322fa55b6b941197534221
   version "0.10.35"
   resolved "https://registry.yarnpkg.com/es5-ext/-/es5-ext-0.10.35.tgz#18ee858ce6a3c45c7d79e91c15fcca9ec568494f"
   dependencies:
@@ -1262,13 +1258,8 @@ es5-ext@^0.10.14, es5-ext@^0.10.35, es5-ext@^0.10.9, es5-ext@~0.10.14:
     es6-symbol "~3.1.1"
 
 es6-iterator@^2.0.1, es6-iterator@~2.0.1:
-<<<<<<< HEAD
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/es6-iterator/-/es6-iterator-2.0.1.tgz#8e319c9f0453bf575d374940a655920e59ca5512"
-=======
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/es6-iterator/-/es6-iterator-2.0.3.tgz#a7de889141a05a94b0854403b2d0a0fbfa98f3b7"
->>>>>>> 65755b4dc09fafde93322fa55b6b941197534221
   dependencies:
     d "1"
     es5-ext "^0.10.35"
@@ -2723,11 +2714,7 @@ pixi-display@^1.1.1:
   dependencies:
     "@types/pixi.js" "^4.3.1"
 
-<<<<<<< HEAD
-pixi-filters@^2.1.1:
-=======
 pixi-filters@^2.0.2:
->>>>>>> 65755b4dc09fafde93322fa55b6b941197534221
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/pixi-filters/-/pixi-filters-2.1.1.tgz#759f172ef7ba9ed0b559e30fb52fd332e9aa068f"
 
@@ -3692,13 +3679,8 @@ webpack-sources@^1.0.1:
     source-map "~0.5.3"
 
 webpack@^3.6.0:
-<<<<<<< HEAD
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.7.1.tgz#6046b5c415ff7df7a0dc54c5b6b86098e8b952da"
-=======
   version "3.8.1"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.8.1.tgz#b16968a81100abe61608b0153c9159ef8bb2bd83"
->>>>>>> 65755b4dc09fafde93322fa55b6b941197534221
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^2.0.0"
