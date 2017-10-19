@@ -3,7 +3,6 @@ import 'pixi-filters'
 import 'pixi-sound'
 import 'pixi-display'
 import Stats from 'stats.js'
-import {Piece} from './Piece.js'
 
 export class App {
 

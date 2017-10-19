@@ -3,6 +3,7 @@ import {App} from './app.js'
 import {puzzles} from '../../puzzles.manifest.js'
 import {commonAssets} from '../../common.manifest.js'
 
+import Utils from './Utils.js'
 import {TitleScreen} from './TitleScreen.js'
 import {PuzzleMenu} from './PuzzleMenu.js'
 import {OptionsMenu} from './OptionsMenu.js'
@@ -26,6 +27,7 @@ export class Puzzle extends App {
     this.frame = null
     this.titleText = null
     this.timerText = null
+    this.bestTimeText = null
     this.pauseButton = null
     this.loadingMessage = null
     this.hasStorage = false
@@ -58,11 +60,25 @@ export class Puzzle extends App {
     this.loadResources(this.commonAssets, this.initGameSetup.bind(this), 500)
 
     // Check for local storage
-    if (typeof(Storage) !== "undefined") {
+    if (typeof Storage !== "undefined") {
       console.log("Storage detected")
       this.hasStorage = true
+      
+      // load best times from local storage
+      puzzles.forEach( (puzzle) => {
+        this.bestTimes[puzzle.name] = window.localStorage.getItem("time" + puzzle.name)
+
+        if (!this.bestTimes[puzzle.name]) {
+          this.bestTimes[puzzle.name] = (59 * 60 + 59.9) * 1000
+        }
+      })
     } else {
       console.log("No Storage detected")
+
+      // Init local best times
+      puzzles.forEach( (puzzle) => {
+        this.bestTimes[puzzle.name] = (59 * 60 + 59.9) * 1000
+      })
     }
   }
 
@@ -105,9 +121,6 @@ export class Puzzle extends App {
     // Play Music
     this.am.playSound('mus_TimeToDream')
 
-    // Init local best times
-    //
-
     this.registerInstance(this)
   }
 
@@ -137,7 +150,6 @@ export class Puzzle extends App {
     this.pixiApp.stage.addChild(this.frame)
 
     // Add Title
-
     let titleStyle = new PIXI.TextStyle({
       fontFamily: 'Kite One',
       fontSize: 40,
@@ -151,6 +163,14 @@ export class Puzzle extends App {
       fontSize: 48,
       stroke: 0x404060,
       strokeThickness: 6,
+      fill: 'white'
+    })
+
+    let bestTimeStyle = new PIXI.TextStyle({
+      fontFamily: 'Kite One',
+      fontSize: 24,
+      stroke: 0x404060,
+      strokeThickness: 3,
       fill: 'white'
     })
 
@@ -168,6 +188,14 @@ export class Puzzle extends App {
     this.timerText.anchor.set(0.5, 0)
     this.timerText.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.timerText)
+
+    // Best Time
+    this.bestTimeText = new PIXI.Text("0:00", bestTimeStyle)
+    this.bestTimeText.x = this.maxWidth
+    this.bestTimeText.y = this.maxHeight
+    this.bestTimeText.anchor.set(1, 1)
+    this.bestTimeText.displayGroup = this.uiLayer
+    this.pixiApp.stage.addChild(this.bestTimeText)
   }
 
   loadLevel(level) {
@@ -180,6 +208,7 @@ export class Puzzle extends App {
     this.videoURI = puzzles[this.currentLevel].file
     this.titleText.text = "Loading"
     this.puzzleComplete = false
+    this.bestTimeText.text = "Best: " + Utils.msToTimeString(this.bestTimes[puzzles[this.currentLevel].name], 1)
 
     // if video isn't already in cache, load it
     if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
@@ -293,6 +322,7 @@ export class Puzzle extends App {
     safeToggle(this.frame, on)
     safeToggle(this.titleText, on)
     safeToggle(this.timerText, on)
+    safeToggle(this.bestTimeText, on)
     safeToggle(this.pauseButton, on)
     safeToggle(this.guide, on)
 
@@ -344,23 +374,19 @@ export class Puzzle extends App {
           })
 
           // Record best time
-          if (this.hasStorage) {
-            //if 
+          if (this.duration < this.bestTimes[puzzles[this.currentLevel].name]) {
+            this.bestTimes[puzzles[this.currentLevel].name] = this.duration
+            this.bestTimeText.text = "Best: " + Utils.msToTimeString(this.duration, 1)
+
+            if (this.hasStorage) {
+              window.localStorage.setItem("time" + puzzles[this.currentLevel].name, this.duration)
+            }
           }
 
         } else {
-
           this.timerNowTime = window.performance.now()
           this.duration += this.timerNowTime - this.timerThenTime
-          let min = Math.floor(this.duration/1000/60)
-          let sec = ((this.duration/1000) % 60).toFixed(1)
-
-          if (sec < 10) {
-            this.timerText.text = `${min}:0${sec}`
-          } else {
-            this.timerText.text = `${min}:${sec}`
-          }
-
+          this.timerText.text = Utils.msToTimeString(this.duration, 1)
           this.timerThenTime = this.timerNowTime
         }
       }

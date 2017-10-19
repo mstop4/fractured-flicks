@@ -3,6 +3,8 @@ let idleColor = 0xE20000
 let dragColor = 0xF9DC00
 let correctColor = 0x83D92B
 
+import Utils from './Utils.js'
+
 export class Piece extends PIXI.Container {
 
   constructor(x, y, pieceWidth, pieceHeight, cellWidth, cellHeight, scale, texture, app) {
@@ -154,8 +156,8 @@ export class Piece extends PIXI.Container {
       let newPosition = this.data.getLocalPosition(this.parent)
 
       // prevent piece from going out of sight and unselectable
-      this.x = Math.max( Math.min(newPosition.x, this.app.maxWidth), 0)
-      this.y = Math.max( Math.min(newPosition.y, this.app.maxHeight), 0)
+      this.x = Utils.clamp(newPosition.x, 0, this.app.maxWidth)
+      this.y = Utils.clamp(newPosition.y, 0, this.app.maxHeight)
     }
   }
 
