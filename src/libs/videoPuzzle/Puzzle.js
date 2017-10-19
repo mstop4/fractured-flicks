@@ -17,17 +17,18 @@ export class Puzzle extends App {
     this.currentLevel = 1
 
     this.pieces = []
-    this.background = undefined
-    this.menuScreen = undefined
-    this.optionsScreen = undefined
-    this.am = undefined
-    this.guide = undefined
-    this.videoTex = undefined
-    this.frame = undefined
-    this.titleText = undefined
-    this.timerText = undefined
-    this.pauseButton = undefined
-    this.loadingMessage = undefined
+    this.background = null
+    this.menuScreen = null
+    this.optionsScreen = null
+    this.am = null
+    this.guide = null
+    this.videoTex = null
+    this.frame = null
+    this.titleText = null
+    this.timerText = null
+    this.pauseButton = null
+    this.loadingMessage = null
+    this.hasStorage = false
 
     this.timerThenTime = 0
     this.timerNowTime = 0
@@ -46,23 +47,33 @@ export class Puzzle extends App {
     this.processPaused = false
 
     this.startLocations = []
+    this.bestTimes = {}
   }
 
   initGame() {
     console.log(process.env.NODE_ENV)
     this.initApp(this)
   
-    let that = this
     // Delay calling initGameSetup so player can see the 100% loading progress message
     this.loadResources(this.commonAssets, this.initGameSetup.bind(this), 500)
+
+    // Check for local storage
+    if (typeof(Storage) !== "undefined") {
+      console.log("Storage detected")
+      this.hasStorage = true
+    } else {
+      console.log("No Storage detected")
+    }
   }
 
   initGameSetup() {
+
+    // Hide loading spinner
     let loadEl = document.getElementById('loading-outer');
     loadEl.style.visibility = 'hidden'
 
     // Add background
-    this.background = new Background('images/background.png', this.maxWidth, this.maxHeight)
+    this.background = new Background('spr_background', this.maxWidth, this.maxHeight)
     this.pixiApp.stage.addChild(this.background)
     this.registerInstance(this.background)
 
@@ -92,7 +103,10 @@ export class Puzzle extends App {
     this.am = new AudioManager()
 
     // Play Music
-    this.am.playSound('sounds/DST-TimeToDream.mp3')
+    this.am.playSound('mus_TimeToDream')
+
+    // Init local best times
+    //
 
     this.registerInstance(this)
   }
@@ -116,7 +130,7 @@ export class Puzzle extends App {
     this.yOffset = (this.maxHeight - 480) / 2
 
     // Add frame
-    this.frame = new PIXI.Sprite(PIXI.utils.TextureCache["images/frame.png"])
+    this.frame = new PIXI.Sprite(PIXI.utils.TextureCache["spr_frame"])
     this.frame.pivot = new PIXI.Point(16,16)
     this.frame.x = this.xOffset
     this.frame.y = this.yOffset
@@ -222,7 +236,7 @@ export class Puzzle extends App {
       }
     }
 
-    this.pauseButton = new Button(this.maxWidth-50, 40, "images/button-100.png", "Menu", this.togglePauseGame.bind(this, true))
+    this.pauseButton = new Button(this.maxWidth-50, 40, "spr_button100", "Menu", this.togglePauseGame.bind(this, true))
     this.pauseButton.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.pauseButton)
     this.registerInstance(this.pauseButton)
@@ -313,6 +327,7 @@ export class Puzzle extends App {
   process() {
     let done = true
 
+    // Check to see if all pieces are in there correct places
     this.pieces.forEach( (piece) => {
       done = piece.done && done
     })
@@ -320,13 +335,21 @@ export class Puzzle extends App {
     if (!this.loadingNewLevel) {
       if (!this.puzzleComplete) {
         if (done) {
+
           this.titleText.text = "Complete!"
           this.puzzleComplete = true
           this.guide.tint = 0xFFFFFF
           this.pieces.forEach(function(piece) {
             piece.visible = false
           })
+
+          // Record best time
+          if (this.hasStorage) {
+            //if 
+          }
+
         } else {
+
           this.timerNowTime = window.performance.now()
           this.duration += this.timerNowTime - this.timerThenTime
           let min = Math.floor(this.duration/1000/60)

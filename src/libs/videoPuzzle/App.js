@@ -20,8 +20,6 @@ export class App {
     this.hasFocus = true
 
     this.instances = []
-
-    this.loadOptions = {}
   }
 
   initApp() {
@@ -70,7 +68,7 @@ export class App {
     console.log("Loading resources")
 
     PIXI.loader
-    .add(resArray, this.loadOptions)
+    .add(resArray)
     .on("progress", this.loadProgressHandler)
     .load( () => { setTimeout(next, nextDelay) } )
   }

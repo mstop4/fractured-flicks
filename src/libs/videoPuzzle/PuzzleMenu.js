@@ -32,7 +32,7 @@ export class PuzzleMenu extends PIXI.Container {
     for (let i = 0; i < puzzles.length; i++) {
       this.createButton(this.app.maxWidth / 2 - ((this.buttonWidth + this.buttonMarginX) * (this.buttonsPerRow - 1) / 2) + i * (this.buttonWidth + this.buttonMarginX), 
                         this.app.maxHeight / 2, 
-                        "images/button-video.png",
+                        "spr_buttonVideo",
                         puzzles[i].preview,
                         puzzles[i].name, puzzles[i].id)
     }

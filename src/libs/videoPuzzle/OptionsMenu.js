@@ -6,10 +6,10 @@ export class OptionsMenu extends PIXI.Container {
 
     this.app = app
 
-    this.resumeButton = this.createButton(this.app.maxWidth / 2 - 100, 525, "images/button-150.png", "Resume", this.deactivate.bind(this))
-    this.backButton = this.createButton(this.app.maxWidth / 2 + 100, 525, "images/button-150.png", "Quit", this.onBackButton.bind(this))
-    this.musicToggle = this.createButton(this.app.maxWidth / 2, 350, "images/button-150.png", "Music", this.onMusicToggle.bind(this))
-    this.sfxToggle = this.createButton(this.app.maxWidth / 2, 425, "images/button-150.png", "SFX", this.onSfxToggle.bind(this))
+    this.resumeButton = this.createButton(this.app.maxWidth / 2 - 100, 525, "spr_button150", "Resume", this.deactivate.bind(this))
+    this.backButton = this.createButton(this.app.maxWidth / 2 + 100, 525, "spr_button150", "Quit", this.onBackButton.bind(this))
+    this.musicToggle = this.createButton(this.app.maxWidth / 2, 350, "spr_button150", "Music", this.onMusicToggle.bind(this))
+    this.sfxToggle = this.createButton(this.app.maxWidth / 2, 425, "spr_button150", "SFX", this.onSfxToggle.bind(this))
 
     this.updateAudioButtonLabels()
 
@@ -51,7 +51,7 @@ export class OptionsMenu extends PIXI.Container {
   }
 
   onMusicToggle() {
-    let curSound = 'sounds/DST-TimeToDream.mp3'
+    let curSound = 'mus_TimeToDream'
     this.app.am.musicOn = !this.app.am.musicOn
 
     if (this.app.am.musicOn) {

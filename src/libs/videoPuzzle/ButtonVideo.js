@@ -1,7 +1,7 @@
 import {ButtonBase} from './ButtonBase.js'
 
 export class ButtonVideo extends ButtonBase {
-  constructor(x, y, textureID = "images/button-video.png", video, text, clickFunc = null) {
+  constructor(x, y, textureID = "spr_buttonVideo", video, text, clickFunc = null) {
     super(x, y, text, clickFunc)
 
     this.shape = new PIXI.Sprite(PIXI.utils.TextureCache[textureID])

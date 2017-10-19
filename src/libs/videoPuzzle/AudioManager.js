@@ -2,8 +2,8 @@ export class AudioManager {
   constructor() {
     this.musicOn = true
     this.sfxOn = true
-    PIXI.loader.resources['sounds/DST-TimeToDream.mp3'].sound.loop = true
-    PIXI.sound.volume('sounds/DST-TimeToDream.mp3', 0.5)
+    PIXI.loader.resources['mus_TimeToDream'].sound.loop = true
+    PIXI.sound.volume('mus_TimeToDream', 0.5)
   }
 
   playSfx(soundRef) {
