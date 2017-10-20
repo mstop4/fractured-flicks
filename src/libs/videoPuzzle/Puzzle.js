@@ -118,7 +118,7 @@ export class Puzzle extends App {
 
     // Audio Manager
     this.am = new AudioManager()
-    this.am.playSound('mus_TimeToDream')
+    //this.am.playSound('mus_TimeToDream')
 
     this.registerInstance(this)
   }
