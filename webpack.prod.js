@@ -5,6 +5,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = merge(common, {
+
   plugins: [
     new UglifyJSPlugin(),
     new webpack.DefinePlugin({
@@ -12,7 +13,7 @@ module.exports = merge(common, {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new ExtractTextPlugin('app.css')
+    new ExtractTextPlugin('./app.css')
   ],
 
   module: {
