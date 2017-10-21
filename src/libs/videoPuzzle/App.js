@@ -1,5 +1,5 @@
 import 'pixi.js'
-import 'pixi-filters'
+//import 'pixi-filters'
 import 'pixi-sound'
 import 'pixi-display'
 import Stats from 'stats.js'

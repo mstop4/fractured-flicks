@@ -10,5 +10,14 @@ module.exports = merge( common, {
         'NODE_ENV': JSON.stringify('development')
       }
     })
-  ]
+  ],
+
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  }
 })
