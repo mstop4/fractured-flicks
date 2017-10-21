@@ -39,8 +39,8 @@ export class Puzzle extends App {
     this.commonAssets = commonAssets
     this.videoURI = puzzles[this.currentLevel].file
     this.videoScale = puzzles[this.currentLevel].scale
-    this.numRows = 5
-    this.numColumns = 7
+    this.numRows = 4
+    this.numColumns = 5
 
     this.xOffset = 0
     this.yOffset = 0
