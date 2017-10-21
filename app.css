@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    background-color: #080f1d;
+}
+
+#loading-outer {
+    font-family: Verdana, Geneva, sans-serif;
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    color: #ffffff;
+}
+
+#loading-inner {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 0.25em;
+}
+
+#spinner {
+    border: 0.5em solid #C1C8E4;
+    border-radius: 50%;
+    border-top: 0.5em solid #5680e9;
+    width: 3em;
+    height: 3em;
+    margin: 2em auto 0;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#videoPuzzle{
+    z-index: -1;
+    padding: 0;
+    border: 0px outset #77C9D4;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.github-corner {
+    z-index: 9999;
+}
+
+.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+} 
+
+@keyframes octocat-wave {
+    0%,100% { 
+        transform: rotate(0);
+    } 
+    
+    20%,60% {
+        transform: rotate(-25deg);
+    }
+    
+    40%,80% {
+        transform: rotate(10deg);
+    }
+}
+
+@media (max-width:500px) {
+    .github-corner:hover .octo-arm { 
+        animation: none;
+    }
+    
+    .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+}
