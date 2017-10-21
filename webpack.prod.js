@@ -12,7 +12,7 @@ module.exports = merge(common, {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new ExtractTextPlugin('dist/app.css')
+    new ExtractTextPlugin('app.css')
   ],
 
   module: {
