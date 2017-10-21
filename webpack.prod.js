@@ -4,10 +4,6 @@ const common = require('./webpack.common.js')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
-const css = new ExtractTextPlugin({
-  filename: 'app.css'
-})
-
 module.exports = merge(common, {
   plugins: [
     new UglifyJSPlugin(),
@@ -16,15 +12,16 @@ module.exports = merge(common, {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    css
+    new ExtractTextPlugin('dist/app.css')
   ],
 
   module: {
     rules: [
       {
         test: /\.css$/,
-        use: css.extract({
-          fallback: 'style-loader'
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader'
         })
       }
     ]
