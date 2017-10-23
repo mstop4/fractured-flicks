@@ -1,4 +1,4 @@
-const APP_VERSION = "0.6.4"
+const APP_VERSION = "0.6.5"
 
 export class TitleScreen extends PIXI.Container{
   constructor(app) {
