@@ -1,0 +1,2 @@
+dist/* linguist-vendored=false
+dist/bundle.js linguist-vendored=true
