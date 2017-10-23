@@ -9,10 +9,12 @@ export class PuzzleMenu extends PIXI.Container {
     this.buttons = []
     this.buttonCount = 0
     this.processPaused = false
-    this.buttonsPerRow = 4
+    this.buttonsPerRow = 2
+    this.numRows = Math.floor(puzzles.length / this.buttonsPerRow)
     this.buttonWidth = 200
     this.buttonHeight = 200
     this.buttonMarginX = 40
+    this.buttonMarginY = 40
 
     this.titleStyle = new PIXI.TextStyle({
       fontFamily: 'Kite One',
@@ -30,8 +32,8 @@ export class PuzzleMenu extends PIXI.Container {
     this.addChild(this.titleLabel)
 
     for (let i = 0; i < puzzles.length; i++) {
-      this.createButton(this.app.maxWidth / 2 - ((this.buttonWidth + this.buttonMarginX) * (this.buttonsPerRow - 1) / 2) + i * (this.buttonWidth + this.buttonMarginX), 
-                        this.app.maxHeight / 2, 
+      this.createButton(this.app.maxWidth / 2 - ((this.buttonWidth + this.buttonMarginX) * (this.buttonsPerRow - 1) / 2) + (i % this.buttonsPerRow) * (this.buttonWidth + this.buttonMarginX), 
+                        this.app.maxHeight / 2 + 50 - ((this.buttonHeight + this.buttonMarginY) * (this.numRows - 1) / 2) + Math.floor(i / this.buttonsPerRow) * (this.buttonHeight + this.buttonMarginY), 
                         "spr_buttonVideo",
                         puzzles[i].preview,
                         puzzles[i].name, puzzles[i].id)

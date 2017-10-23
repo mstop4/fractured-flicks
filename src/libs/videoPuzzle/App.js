@@ -1,5 +1,5 @@
 import 'pixi.js'
-import 'pixi-filters'
+//import 'pixi-filters'
 import 'pixi-sound'
 import 'pixi-display'
 import Stats from 'stats.js'
@@ -19,6 +19,10 @@ export class App {
     this.hasFocus = true
 
     this.instances = []
+
+    this.loadOptions = {
+      crossOrigin: 'anonymous'
+    }
   }
 
   initApp() {
@@ -67,7 +71,7 @@ export class App {
     console.log("Loading resources")
 
     PIXI.loader
-    .add(resArray)
+    .add(resArray, this.loadOptions)
     .on("progress", this.loadProgressHandler)
     .load( () => { setTimeout(next, nextDelay) } )
   }

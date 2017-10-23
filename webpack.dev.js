@@ -4,11 +4,21 @@ const common = require('./webpack.common.js')
 
 module.exports = merge( common, {
   devtool: 'inline-source-map',
+
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('development')
       }
     })
-  ]
+  ],
+
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  }
 })

@@ -49,13 +49,14 @@ export class Puzzle extends App {
     this.processPaused = false
 
     this.startLocations = []
+    this.videoElements = {} // used for kludge for loading videos from external server
     this.bestTimes = {}
   }
 
   initGame() {
     console.log(process.env.NODE_ENV)
     this.initApp(this)
-  
+
     // Delay calling initGameSetup so player can see the 100% loading progress message
     this.loadResources(this.commonAssets, this.initGameSetup.bind(this), 500)
 
@@ -117,9 +118,7 @@ export class Puzzle extends App {
 
     // Audio Manager
     this.am = new AudioManager()
-
-    // Play Music
-    this.am.playSound('mus_TimeToDream')
+    //this.am.playSound('mus_TimeToDream')
 
     this.registerInstance(this)
   }
@@ -211,8 +210,29 @@ export class Puzzle extends App {
     this.bestTimeText.text = "Best: " + Utils.msToTimeString(this.bestTimes[puzzles[this.currentLevel].name], 1)
 
     // if video isn't already in cache, load it
-    if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
-      this.loadResources(this.videoURI, this.puzzleSetup.bind(this), 0)
+    // kludge - due to a CORS bug in the resource loader 
+    //          (https://github.com/englercj/resource-loader/issues/99), 
+    //          we need to bypass it in order to load videos 
+    //          from an external source
+
+    //if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
+      //this.loadResources(this.videoURI, this.puzzleSetup.bind(this), 0)
+
+    if (!this.videoElements.hasOwnProperty(this.videoURI)) {
+      var ve = document.createElement('video')
+      ve.crossOrigin = "anonymous"
+      ve.autoplay = true
+      ve.src = this.videoURI
+      this.videoElements[this.videoURI] = ve
+
+      this.loadResources({
+        url: {
+          metadata: {
+            loadElement: this.videoElements[this.videoURI]
+          }
+        },
+        name: this.videoURI
+      }, this.puzzleSetup.bind(this), 0)
     } else {
       this.puzzleSetup()
     }
@@ -224,6 +244,7 @@ export class Puzzle extends App {
     this.titleText.text = puzzles[this.currentLevel].name
 
     //let bw = new PIXI.filters.ColorMatrixFilter()
+
     this.videoTex = PIXI.Texture.fromVideo(PIXI.loader.resources[this.videoURI].data)
     this.videoTex.baseTexture.source.loop = true
     this.videoTex.baseTexture.source.play()
@@ -245,7 +266,7 @@ export class Puzzle extends App {
 
     for (let i = 0; i < this.numRows; i++) {
       for (let j = 0; j < this.numColumns; j++) {
-
+        
         let rect = new PIXI.Rectangle((j*cellWidth).toFixed(2), (i*cellHeight).toFixed(2), cellWidth, cellHeight)
         let pieceTex = new PIXI.Texture(this.videoTex.baseTexture)
         pieceTex.frame = rect

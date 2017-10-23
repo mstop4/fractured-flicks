@@ -1,3 +1,4 @@
+import css from './stylesheets/app.css'
 import {Puzzle} from './libs/videoPuzzle/Puzzle.js'
 import WebFont from 'webfontloader'
 

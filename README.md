@@ -11,18 +11,24 @@ https://mstop4.github.io/video-puzzle/
 
 ### Controls
 
-* *Left Mouse Click / Tap* - Rotate Piece  
-* *Left Mouse Click+Hold+Drag / Tap+Hold+Drag* - Move Piece 
+* *Tap* - Rotate Piece  
+* *Tap+Hold+Drag* - Move Piece 
 
-For a list of updates, please check the [Changelog](changelog.md)
+## Features
+
+- 4 different video-based puzzles to complete
+    - Videos are stored and retrieved from AWS S3
+- Best completion times are saved in local storage
+
+## Nice-to-Haves
+
+- Additional video puzzles
+- Saving best times to an external server
 
 ## Stack
 
 * PixiJS
-    * pixi-filters
-    * pixi-sound
-* Web Font Loader
-* Stats.js
+* pixi-sound
+* AWS S3
 * Babel
 * Webpack
-
