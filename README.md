@@ -1,4 +1,4 @@
-# Video Jigsaw Puzzle
+# Fractured Flicks
 A web-based jigsaw puzzle game where players put pieces of a video back together.
 
 [![dependencies Status](https://david-dm.org/mstop4/video-puzzle/status.svg)](https://david-dm.org/mstop4/video-puzzle)
