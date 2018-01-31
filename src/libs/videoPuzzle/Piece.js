@@ -144,7 +144,7 @@ export class Piece extends PIXI.Container {
     } else {
       if (this.clicked) {
         window.clearTimeout(this.dragAlarm)
-        this.onRotateStart(90)
+        this.onRotateStart(180)
       }
     }
 

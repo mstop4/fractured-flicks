@@ -1,25 +1,36 @@
 const path = require('path')
+const HtmlWebPackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-    entry: './src/index.js',
-    output: {
-      filename: './dist/bundle.js',
-    },
+  entry: './src/index.js',
 
-    node: {
-      fs: "empty"
-    },
+  output: {
+    filename: './dist/bundle.js',
+  },
 
-    module: {
-      rules: [
-        {
-          test: /\.js$/,
-          loader: 'babel-loader',
-          include: path.resolve(__dirname, "src"),
-          query: {
-            presets: ['es2015']
-          }
-        }
-      ]
-    }
+  node: {
+    fs: "empty"
+  },
+
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: 'babel-loader',
+        include: path.resolve(__dirname, "src"),
+      },
+
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ]
+      }
+    ]
+  },
+
+  plugins: [
+    new HtmlWebPackPlugin({
+      template: './src/index.html',
+      filename: './index.html'
+    })
+  ]
 }
