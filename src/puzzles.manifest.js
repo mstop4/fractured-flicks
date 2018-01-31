@@ -21,5 +21,29 @@ export const puzzles = [
     file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/blackboard.mp4",
     preview: "vid_blackboardPreview",
     scale: 2
+  },
+
+  {
+    id: 3,
+    name: "Fruits",
+    file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/fruits.mp4",
+    preview: "vid_fruitsPreview",
+    scale: 2
+  },
+
+  {
+    id: 4,
+    name: "Waterfall",
+    file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/waterfall.mp4",
+    preview: "vid_waterfallPreview",
+    scale: 2
+  },
+
+  {
+    id: 5,
+    name: "Winter",
+    file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/winter.mp4",
+    preview: "vid_winterPreview",
+    scale: 2
   }
 ]

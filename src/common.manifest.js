@@ -42,6 +42,21 @@ export const commonAssets = [
     url: 'videos/blackboardPreview.mp4',
   },
 
+  {
+    name: 'vid_fruitsPreview',
+    url: 'videos/fruitsPreview.mp4',
+  },
+
+  {
+    name: 'vid_waterfallPreview',
+    url: 'videos/waterfallPreview.mp4',
+  },
+
+  {
+    name: 'vid_winterPreview',
+    url: 'videos/winterPreview.mp4',
+  },
+
   // Sounds
   {
     name: 'snd_correct',
