@@ -9,7 +9,7 @@ export class PuzzleMenu extends PIXI.Container {
     this.buttons = []
     this.buttonCount = 0
     this.processPaused = false
-    this.buttonsPerRow = 2
+    this.buttonsPerRow = 3
     this.numRows = Math.floor(puzzles.length / this.buttonsPerRow)
     this.buttonWidth = 200
     this.buttonHeight = 200

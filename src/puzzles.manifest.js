@@ -21,21 +21,5 @@ export const puzzles = [
     file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/blackboard.mp4",
     preview: "vid_blackboardPreview",
     scale: 2
-  },
-
-  {
-    id: 3,
-    name: "Pumpkins",
-    file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/halloween.mp4",
-    preview: "vid_halloweenPreview",
-    scale: 2
-  },
-
-  // {
-  //   id: 4,
-  //   name: "Big Buck Bunny",
-  //   file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/bigbuckbunny_audio.mp4",
-  //   preview: "vid_bigbuckbunnyPreview",
-  //   scale: 2
-  // }
+  }
 ]

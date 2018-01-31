@@ -28,7 +28,7 @@ export class Piece extends PIXI.Container {
     this.outlineWidth = cellWidth * scale
     this.outlineHeight = cellHeight * scale
 
-    this.goalAngle = Math.floor(Math.random() * 4) * 90 * Math.PI / 180
+    this.goalAngle = Math.floor(Math.random() * 2) * 180 * Math.PI / 180
     this.startAngle = 0
     this.rotationT = 0
     this.rotationTDelta = 5
