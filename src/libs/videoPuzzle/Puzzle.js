@@ -2,6 +2,7 @@ import {App} from './app.js'
 
 import {puzzles} from '../../puzzles.manifest.js'
 import {commonAssets} from '../../common.manifest.js'
+import {difficultySettings} from '../../difficulty.settings.js'
 
 import Utils from './Utils.js'
 import {TitleScreen} from './TitleScreen.js'
@@ -39,8 +40,6 @@ export class Puzzle extends App {
     this.commonAssets = commonAssets
     this.videoURI = puzzles[this.currentLevel].file
     this.videoScale = puzzles[this.currentLevel].scale
-    this.numRows = 4
-    this.numColumns = 5
 
     this.xOffset = 0
     this.yOffset = 0
@@ -273,14 +272,18 @@ export class Puzzle extends App {
 
     this.pixiApp.stage.addChild(this.guide)
 
-    let cellWidth = this.videoTex.width / this.numColumns
-    let cellHeight = this.videoTex.height / this.numRows
+    let difficulty = puzzles[this.currentLevel].difficulty
+    let numRows = difficultySettings[difficulty].rows
+    let numColumns = difficultySettings[difficulty].columns
 
-    let pieceWidth = cellWidth / this.numColumns * this.videoScale
-    let pieceHeight = cellHeight / this.numRows * this.videoScale
+    let cellWidth = this.videoTex.width / numColumns
+    let cellHeight = this.videoTex.height / numRows
 
-    for (let i = 0; i < this.numRows; i++) {
-      for (let j = 0; j < this.numColumns; j++) {
+    let pieceWidth = cellWidth / numColumns * this.videoScale
+    let pieceHeight = cellHeight / numRows * this.videoScale
+
+    for (let i = 0; i < numRows; i++) {
+      for (let j = 0; j < numColumns; j++) {
         
         let rect = new PIXI.Rectangle((j*cellWidth).toFixed(2), (i*cellHeight).toFixed(2), cellWidth, cellHeight)
         let pieceTex = new PIXI.Texture(this.videoTex.baseTexture)
