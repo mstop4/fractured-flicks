@@ -4,8 +4,8 @@
   "description": "A web-based jigsaw puzzle game where players put pieces of a video back together.",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --open --config webpack.dev.js",
-    "prod": "./node_modules/.bin/webpack --config webpack.prod.js"
+    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "build": "./node_modules/.bin/webpack --config webpack.prod.js"
   },
   "keywords": [
     "video",

@@ -5,6 +5,11 @@ export const commonAssets = [
     name: 'spr_frame',
     url: 'images/frame.png'
   },
+
+  {
+    name: 'spr_title',
+    url: 'images/title.png'
+  },
   
   {
     name: 'spr_background',

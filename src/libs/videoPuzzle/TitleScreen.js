@@ -6,15 +6,6 @@ export class TitleScreen extends PIXI.Container{
 
     this.app = app
 
-    this.bannerStyle = new PIXI.TextStyle({
-      fontFamily: 'Kite One',
-      fontSize: 72,
-      fill: 0xFFFFFF,
-      stroke: '#404060',
-      strokeThickness: 10,
-      padding: 20
-    })
-
     this.tapStartStyle = new PIXI.TextStyle({
       fontFamily: 'Kite One',
       fontSize: 64,
@@ -33,10 +24,15 @@ export class TitleScreen extends PIXI.Container{
       padding: 20
     })
 
-    this.titleBanner = this.addText("Video Jigsaw Puzzle", this.bannerStyle, 1280 / 2, 100, 0.5, 0.5)
-    this.startText = this.addText("Tap to Start", this.tapStartStyle, 1280 / 2, 720 / 2, 0.5, 0.5)
-    this.infoText = this.addText("github.com/mstop4", this.infoStyle, 0, 704, 0, 1)
-    this.versionText = this.addText(`v.${APP_VERSION}`, this.infoStyle, 1280, 704, 1, 1)
+    this.titleBanner = new PIXI.Sprite(PIXI.utils.TextureCache["spr_title"])
+    this.titleBanner.anchor.set(0.5,0.5)
+    this.titleBanner.x = this.app.maxWidth / 2
+    this.titleBanner.y = 180
+    this.addChild(this.titleBanner)
+
+    this.startText = this.addText("Tap to Start", this.tapStartStyle, this.app.maxWidth / 2, this.app.maxHeight / 2 + 110, 0.5, 0.5)
+    //this.infoText = this.addText("github.com/mstop4", this.infoStyle, 0, 704, 0, 1)
+    this.versionText = this.addText(`v.${APP_VERSION}`, this.infoStyle, this.app.maxWidth, 704, 1, 1)
 
     this.interactive = true
     this.interactiveChildren = true
