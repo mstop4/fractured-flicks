@@ -14,4 +14,4 @@ https://mstop4.github.io/video-puzzle/
 * *Tap* - Rotate Piece  
 * *Tap+Hold+Drag* - Move Piece 
 
-Built with Pixi.js, pixi-sound, and AWS S3.
+Built with **Pixi.js**, **pixi-sound**, and **AWS S3**.
