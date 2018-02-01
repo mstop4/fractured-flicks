@@ -3,6 +3,7 @@
 ## v.0.7
 
 - Changed title screen
+- Change game name to "Fractured Flicks"
 - Pieces now rotate at 180-degree intervals instead of 90 to streamline gameplay
 
 ## v.0.6
