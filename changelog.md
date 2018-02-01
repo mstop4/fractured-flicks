@@ -1,6 +1,13 @@
 # Changelog
 
-## v.1.0-beta
+## v.1.0.0-beta2
+
+- Added per-puzzle difficulty setting that determines the number of pieces a video is divided into
+- Added difficulty labels on buttons in puzzle selection menu
+- Added button click sounds
+- Reduced volume of background music
+
+## v.1.0.0-beta
 
 - Changed title screen
 - Changed game name to "Fractured Flicks"
