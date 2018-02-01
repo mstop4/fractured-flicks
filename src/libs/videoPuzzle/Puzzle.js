@@ -54,7 +54,9 @@ export class Puzzle extends App {
   }
 
   initGame() {
-    console.log(process.env.NODE_ENV)
+    if (process.env.NODE_ENV == 'development') {
+      console.log('This is a dev build')
+    }
     this.initApp(this)
 
     // Delay calling initGameSetup so player can see the 100% loading progress message
@@ -62,7 +64,10 @@ export class Puzzle extends App {
 
     // Check for local storage
     if (typeof Storage !== "undefined") {
-      console.log("Storage detected")
+      if (process.env.NODE_ENV == 'development') {
+        console.log("Storage detected")
+      }
+      
       this.hasStorage = true
       
       // load best times from local storage
@@ -74,7 +79,9 @@ export class Puzzle extends App {
         }
       })
     } else {
-      console.log("No Storage detected")
+      if (process.env.NODE_ENV == 'development') {
+        console.log("No Storage detected")
+      }
 
       // Init local best times
       puzzles.forEach( (puzzle) => {
@@ -118,7 +125,7 @@ export class Puzzle extends App {
 
     // Audio Manager
     this.am = new AudioManager()
-    this.am.playSound('mus_TimeToDream')
+    this.am.playSound('mus_infinityOcean')
 
     this.registerInstance(this)
   }
@@ -198,7 +205,9 @@ export class Puzzle extends App {
   }
 
   loadLevel(level) {
-    console.log("Changing Levels")
+    if (process.env.NODE_ENV == 'development') {
+      console.log("Changing Levels")
+    }
 
     this.loadingMessage.visible = true
 
@@ -239,7 +248,9 @@ export class Puzzle extends App {
   } 
 
   puzzleSetup() {
-    console.log("Setting up puzzle...")
+    if (process.env.NODE_ENV == 'development') {
+      console.log("Setting up puzzle...")
+    }
 
     this.titleText.text = puzzles[this.currentLevel].name
 
@@ -347,9 +358,11 @@ export class Puzzle extends App {
     safeToggle(this.pauseButton, on)
     safeToggle(this.guide, on)
 
-    this.pieces.forEach( (piece) => {
-      safeToggle(piece, on)
-    })
+    if (!this.puzzleComplete) {
+      this.pieces.forEach( (piece) => {
+        safeToggle(piece, on)
+      })
+    }
   }
 
   togglePauseGame(pause) {

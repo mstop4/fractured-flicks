@@ -35,8 +35,8 @@ h1 {
   width: 3em;
   height: 3em;
   margin: 2em auto 0;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
+  -webkit-animation: spin 2s linear infinity;
+  animation: spin 2s linear infinity;
   }
 
   @-webkit-keyframes spin {

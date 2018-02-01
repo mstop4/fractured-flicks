@@ -68,7 +68,9 @@ export class App {
 
   // Load resources to loader
   loadResources(resArray, next, nextDelay) {
-    console.log("Loading resources")
+    if (process.env.NODE_ENV == 'development') {
+      console.log("Loading resources")
+    }
 
     PIXI.loader
     .add(resArray, this.loadOptions)
@@ -79,7 +81,9 @@ export class App {
   loadProgressHandler(loader, resource) {
     let loadMessage = document.getElementById('loadMessage')
     loadMessage.innerHTML = `${resource.url} ... ${loader.progress.toFixed(2)}%`
-    console.log(`Loading "${resource.url}" ... ${loader.progress.toFixed(2)}%`)
+    if (process.env.NODE_ENV == 'development') {
+      console.log(`Loading "${resource.url}" ... ${loader.progress.toFixed(2)}%`)
+    }
   }
 
   scaleStageToWindow() {

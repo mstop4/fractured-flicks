@@ -84,7 +84,7 @@ export const commonAssets = [
   },
 
   {
-    name: 'mus_TimeToDream',
-    url: 'sounds/DST-TimeToDream.mp3'
+    name: 'mus_infinityOcean',
+    url: 'sounds/infinityocean.mp3'
   }
 ]

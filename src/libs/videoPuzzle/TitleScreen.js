@@ -1,4 +1,4 @@
-const APP_VERSION = "0.7.0"
+const APP_VERSION = "1.0.0-beta"
 
 export class TitleScreen extends PIXI.Container{
   constructor(app) {
@@ -17,7 +17,7 @@ export class TitleScreen extends PIXI.Container{
 
     this.infoStyle = new PIXI.TextStyle({
       fontFamily: 'Kite One',
-      fontSize: 30,
+      fontSize: 24,
       fill: 0xFFFFFF,
       stroke: '#404060',
       strokeThickness: 5,
@@ -31,7 +31,7 @@ export class TitleScreen extends PIXI.Container{
     this.addChild(this.titleBanner)
 
     this.startText = this.addText("Tap to Start", this.tapStartStyle, this.app.maxWidth / 2, this.app.maxHeight / 2 + 110, 0.5, 0.5)
-    //this.infoText = this.addText("github.com/mstop4", this.infoStyle, 0, 704, 0, 1)
+    this.infoText = this.addText("github.com/mstop4/fractured-flicks", this.infoStyle, 0, 704, 0, 1)
     this.versionText = this.addText(`v.${APP_VERSION}`, this.infoStyle, this.app.maxWidth, 704, 1, 1)
 
     this.interactive = true

@@ -51,7 +51,7 @@ export class OptionsMenu extends PIXI.Container {
   }
 
   onMusicToggle() {
-    let curSound = 'mus_TimeToDream'
+    let curSound = 'mus_infinityOcean'
     this.app.am.musicOn = !this.app.am.musicOn
 
     if (this.app.am.musicOn) {
