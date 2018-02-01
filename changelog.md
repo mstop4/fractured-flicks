@@ -9,6 +9,7 @@
 
 - Added pause menu
 - Game saves best completion times to local storage
+- Moved main videos to AWS S3 servers
 
 ## v.0.5
 
