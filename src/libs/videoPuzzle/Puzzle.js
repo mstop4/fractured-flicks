@@ -219,13 +219,15 @@ export class Puzzle extends App {
     this.bestTimeText.text = "Best: " + Utils.msToTimeString(this.bestTimes[puzzles[this.currentLevel].name], 1)
 
     // if video isn't already in cache, load it
+
     // kludge - due to a CORS bug in the resource loader 
     //          (https://github.com/englercj/resource-loader/issues/99), 
     //          we need to bypass it in order to load videos 
     //          from an external source
 
-    //if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
-      //this.loadResources(this.videoURI, this.puzzleSetup.bind(this), 0)
+    // if (!PIXI.loader.resources.hasOwnProperty(this.videoURI)) {
+    //   this.loadResources(this.videoURI, this.puzzleSetup.bind(this), 0)
+    // }
 
     if (!this.videoElements.hasOwnProperty(this.videoURI)) {
       var ve = document.createElement('video')
@@ -234,6 +236,8 @@ export class Puzzle extends App {
       ve.src = this.videoURI
       this.videoElements[this.videoURI] = ve
 
+      // load video, but delay puzzle setup for 100 ms to prevent
+      // the game from trying to use the video before it has loaded
       this.loadResources({
         url: {
           metadata: {
@@ -241,7 +245,7 @@ export class Puzzle extends App {
           }
         },
         name: this.videoURI
-      }, this.puzzleSetup.bind(this), 0)
+      }, this.puzzleSetup.bind(this), 100)
     } else {
       this.puzzleSetup()
     }
