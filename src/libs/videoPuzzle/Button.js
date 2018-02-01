@@ -2,8 +2,8 @@ import {ButtonBase} from './ButtonBase.js'
 
 export class Button extends ButtonBase {
   
-  constructor(x, y, textureID = "spr_button100", text, clickFunc = null) {
-    super(x, y, text, clickFunc)
+  constructor(x, y, textureID = "spr_button100", text, audioMananger, clickFunc = null) {
+    super(x, y, text, audioMananger, clickFunc)
 
     this.shape = new PIXI.Sprite(PIXI.utils.TextureCache[textureID])
     this.addChild(this.shape)

@@ -32,7 +32,9 @@ export class App {
       type = "canvas"
     }
 
-    PIXI.utils.sayHello(type)
+    if (process.env.NODE_ENV === 'development') {
+      PIXI.utils.sayHello(type)
+    }
 
     this.canvas = document.getElementById('videoPuzzle')
     this.pixiApp = new PIXI.Application({
@@ -49,7 +51,7 @@ export class App {
     this.scaleStageToWindow()
 
     // Fps counter
-    if (process.env.NODE_ENV != 'production') {
+    if (process.env.NODE_ENV === 'development') {
       this.fpsCount = new Stats()
       this.fpsCount.showPanel(0)
       document.body.appendChild(this.fpsCount.dom)
@@ -68,7 +70,7 @@ export class App {
 
   // Load resources to loader
   loadResources(resArray, next, nextDelay) {
-    if (process.env.NODE_ENV == 'development') {
+    if (process.env.NODE_ENV === 'development') {
       console.log("Loading resources")
     }
 
@@ -81,7 +83,7 @@ export class App {
   loadProgressHandler(loader, resource) {
     let loadMessage = document.getElementById('loadMessage')
     loadMessage.innerHTML = `${resource.url} ... ${loader.progress.toFixed(2)}%`
-    if (process.env.NODE_ENV == 'development') {
+    if (process.env.NODE_ENV === 'development') {
       console.log(`Loading "${resource.url}" ... ${loader.progress.toFixed(2)}%`)
     }
   }
@@ -130,7 +132,7 @@ export class App {
   }
 
   gameLoop() {
-    if (process.env.NODE_ENV != 'production') {
+    if (process.env.NODE_ENV === 'development') {
       this.fpsCount.begin()
     }
     
@@ -152,7 +154,7 @@ export class App {
       }
     }
 
-    if (process.env.NODE_ENV != 'production') {
+    if (process.env.NODE_ENV === 'development') {
       this.fpsCount.end()
     }
   }

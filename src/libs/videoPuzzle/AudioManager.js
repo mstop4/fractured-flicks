@@ -3,7 +3,7 @@ export class AudioManager {
     this.musicOn = true
     this.sfxOn = true
     PIXI.loader.resources['mus_infinityOcean'].sound.loop = true
-    PIXI.sound.volume('mus_infinityOcean', 0.3)
+    PIXI.loader.resources['mus_infinityOcean'].sound.volume = 0.15
   }
 
   playSfx(soundRef) {

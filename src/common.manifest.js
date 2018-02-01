@@ -84,6 +84,11 @@ export const commonAssets = [
   },
 
   {
+    name: 'snd_buttonPress',
+    url: 'sounds/buttonPress.mp3'
+  },
+
+  {
     name: 'mus_infinityOcean',
     url: 'sounds/infinityocean.mp3'
   }

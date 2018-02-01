@@ -1,12 +1,14 @@
 export class ButtonBase extends PIXI.Container {
   
-  constructor(x, y, text, clickFunc = null) {
+  constructor(x, y, text, audioMananger, clickFunc = null) {
     super()
 
     this.x = x
     this.y = y
     this.clickFunc = clickFunc
     this.text = text
+    this.audioMananger = audioMananger
+    console.dir(audioMananger)
 
     this.labelStyle = new PIXI.TextStyle({
       fontFamily: 'Kite One',
@@ -35,6 +37,7 @@ export class ButtonBase extends PIXI.Container {
       if (this.isDown) {
         this.isDown = false
         this.onScaleStart(0.9, 0.9, 1, 1, 5) 
+        this.audioMananger.playSfx('snd_buttonPress')
         this.clickFunc()
       }
     })

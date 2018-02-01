@@ -53,7 +53,7 @@ export class Puzzle extends App {
   }
 
   initGame() {
-    if (process.env.NODE_ENV == 'development') {
+    if (process.env.NODE_ENV === 'development') {
       console.log('This is a dev build')
     }
     this.initApp(this)
@@ -63,7 +63,7 @@ export class Puzzle extends App {
 
     // Check for local storage
     if (typeof Storage !== "undefined") {
-      if (process.env.NODE_ENV == 'development') {
+      if (process.env.NODE_ENV === 'development') {
         console.log("Storage detected")
       }
       
@@ -78,7 +78,7 @@ export class Puzzle extends App {
         }
       })
     } else {
-      if (process.env.NODE_ENV == 'development') {
+      if (process.env.NODE_ENV === 'development') {
         console.log("No Storage detected")
       }
 
@@ -204,7 +204,7 @@ export class Puzzle extends App {
   }
 
   loadLevel(level) {
-    if (process.env.NODE_ENV == 'development') {
+    if (process.env.NODE_ENV === 'development') {
       console.log("Changing Levels")
     }
 
@@ -251,7 +251,7 @@ export class Puzzle extends App {
   } 
 
   puzzleSetup() {
-    if (process.env.NODE_ENV == 'development') {
+    if (process.env.NODE_ENV === 'development') {
       console.log("Setting up puzzle...")
     }
 
@@ -304,7 +304,7 @@ export class Puzzle extends App {
       }
     }
 
-    this.pauseButton = new Button(this.maxWidth-50, 40, "spr_button100", "Menu", this.togglePauseGame.bind(this, true))
+    this.pauseButton = new Button(this.maxWidth-50, 40, "spr_button100", "Menu", this.am, this.togglePauseGame.bind(this, true))
     this.pauseButton.displayGroup = this.uiLayer
     this.pixiApp.stage.addChild(this.pauseButton)
     this.registerInstance(this.pauseButton)

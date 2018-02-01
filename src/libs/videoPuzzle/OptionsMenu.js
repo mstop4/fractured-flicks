@@ -30,7 +30,7 @@ export class OptionsMenu extends PIXI.Container {
   }
 
   createButton(x, y, textureID, label, clickFunc) {
-    let newButton = new Button(x, y, textureID, label, clickFunc)
+    let newButton = new Button(x, y, textureID, label, this.app.am, clickFunc)
     this.app.registerInstance(newButton)
     this.addChild(newButton)
     return newButton

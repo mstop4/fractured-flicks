@@ -1,8 +1,8 @@
 import {ButtonBase} from './ButtonBase.js'
 
 export class ButtonVideo extends ButtonBase {
-  constructor(x, y, textureID = "spr_buttonVideo", video, text, difficulty, clickFunc = null) {
-    super(x, y, text, clickFunc)
+  constructor(x, y, textureID = "spr_buttonVideo", video, text, difficulty, audioMananger, clickFunc = null) {
+    super(x, y, text, audioMananger, clickFunc)
 
     this.difficultyStyle = new PIXI.TextStyle({
       fontFamily: 'Kite One',

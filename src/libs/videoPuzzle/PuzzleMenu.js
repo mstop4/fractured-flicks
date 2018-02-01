@@ -41,7 +41,7 @@ export class PuzzleMenu extends PIXI.Container {
 
   createButton(x, y, textureID, puzzleObj) {
     let { preview, name, id, difficulty } = puzzleObj
-    this.buttons[this.buttonCount] = new ButtonVideo(x, y, textureID, preview, name, difficulty, this.gotoLevel.bind(this, id, this.buttonCount))
+    this.buttons[this.buttonCount] = new ButtonVideo(x, y, textureID, preview, name, difficulty, this.app.am, this.gotoLevel.bind(this, id, this.buttonCount))
     this.app.registerInstance(this.buttons[this.buttonCount])
     this.addChild(this.buttons[this.buttonCount])
     this.buttonCount++
