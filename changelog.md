@@ -5,6 +5,7 @@
 - Changed title screen
 - Change game name to "Fractured Flicks"
 - Pieces now rotate at 180-degree intervals instead of 90 to streamline gameplay
+- Changed production deployment process to use push-dir
 
 ## v.0.6
 
