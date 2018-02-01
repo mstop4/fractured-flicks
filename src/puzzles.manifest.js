@@ -27,7 +27,7 @@ export const puzzles = [
   },
 
   {
-    id: 1,
+    id: 3,
     name: "Shore",
     file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/shore.mp4",
     preview: "vid_shorePreview",
