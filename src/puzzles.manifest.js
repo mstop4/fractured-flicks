@@ -5,7 +5,7 @@ export const puzzles = [
     file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/blackboard.mp4",
     preview: "vid_blackboardPreview",
     scale: 2,
-    difficulty: 'easy'
+    difficulty: 'Easy'
   },
 
   {
@@ -14,7 +14,7 @@ export const puzzles = [
     file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/fruits.mp4",
     preview: "vid_fruitsPreview",
     scale: 2,
-    difficulty: 'easy'
+    difficulty: 'Easy'
   },
 
   {
@@ -23,7 +23,7 @@ export const puzzles = [
     file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/squirrel.mp4",
     preview: "vid_squirrelPreview",
     scale: 2,
-    difficulty: 'normal'
+    difficulty: 'Normal'
   },
 
   {
@@ -32,7 +32,7 @@ export const puzzles = [
     file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/shore.mp4",
     preview: "vid_shorePreview",
     scale: 2,
-    difficulty: 'normal'
+    difficulty: 'Normal'
   },
 
   {
@@ -41,7 +41,7 @@ export const puzzles = [
     file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/waterfall.mp4",
     preview: "vid_waterfallPreview",
     scale: 2,
-    difficulty: 'normal'
+    difficulty: 'Normal'
   },
 
   {
@@ -50,6 +50,6 @@ export const puzzles = [
     file: "https://s3.us-east-2.amazonaws.com/videopuzzle/Puzzles/winter.mp4",
     preview: "vid_winterPreview",
     scale: 2,
-    difficulty: 'normal'
+    difficulty: 'Normal'
   }
 ]

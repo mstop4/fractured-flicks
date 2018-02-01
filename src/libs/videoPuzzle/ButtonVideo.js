@@ -1,8 +1,17 @@
 import {ButtonBase} from './ButtonBase.js'
 
 export class ButtonVideo extends ButtonBase {
-  constructor(x, y, textureID = "spr_buttonVideo", video, text, clickFunc = null) {
+  constructor(x, y, textureID = "spr_buttonVideo", video, text, difficulty, clickFunc = null) {
     super(x, y, text, clickFunc)
+
+    this.difficultyStyle = new PIXI.TextStyle({
+      fontFamily: 'Kite One',
+      fontSize: 18,
+      fill: 0xFFFFFF,
+      stroke: 0x202030,
+      strokeThickness: 3,
+      padding: 10
+    })
 
     this.shape = new PIXI.Sprite(PIXI.utils.TextureCache[textureID])
     this.addChild(this.shape)
@@ -16,11 +25,17 @@ export class ButtonVideo extends ButtonBase {
     this.preview.y = 20
     this.addChild(this.preview)
 
-    this.label = new PIXI.Text(text, this.labelStyle)
-    this.label.anchor.set(0.5, 0.5)
-    this.label.x = this.width / 2
-    this.label.y = this.height * 3 / 4
-    this.addChild(this.label)
+    this.nameLabel = new PIXI.Text(text, this.labelStyle)
+    this.nameLabel.anchor.set(0.5, 0.5)
+    this.nameLabel.x = this.width / 2
+    this.nameLabel.y = this.height * 3 / 4 - 12
+    this.addChild(this.nameLabel)
+
+    this.difficultyLabel = new PIXI.Text(difficulty, this.difficultyStyle)
+    this.difficultyLabel.anchor.set(0.5, 0.5)
+    this.difficultyLabel.x = this.width / 2
+    this.difficultyLabel.y = this.height * 7 / 8
+    this.addChild(this.difficultyLabel)
 
     this.pivot.set(this.width / 2, this.height / 2)
     this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height)

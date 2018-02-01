@@ -35,13 +35,13 @@ export class PuzzleMenu extends PIXI.Container {
       this.createButton(this.app.maxWidth / 2 - ((this.buttonWidth + this.buttonMarginX) * (this.buttonsPerRow - 1) / 2) + (i % this.buttonsPerRow) * (this.buttonWidth + this.buttonMarginX), 
                         this.app.maxHeight / 2 + 50 - ((this.buttonHeight + this.buttonMarginY) * (this.numRows - 1) / 2) + Math.floor(i / this.buttonsPerRow) * (this.buttonHeight + this.buttonMarginY), 
                         "spr_buttonVideo",
-                        puzzles[i].preview,
-                        puzzles[i].name, puzzles[i].id)
+                        puzzles[i])
     }
   }
 
-  createButton(x, y, textureID, preview, label, level) {
-    this.buttons[this.buttonCount] = new ButtonVideo(x, y, textureID, preview, label, this.gotoLevel.bind(this, level, this.buttonCount))
+  createButton(x, y, textureID, puzzleObj) {
+    let { preview, name, id, difficulty } = puzzleObj
+    this.buttons[this.buttonCount] = new ButtonVideo(x, y, textureID, preview, name, difficulty, this.gotoLevel.bind(this, id, this.buttonCount))
     this.app.registerInstance(this.buttons[this.buttonCount])
     this.addChild(this.buttons[this.buttonCount])
     this.buttonCount++

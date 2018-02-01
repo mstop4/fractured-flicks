@@ -1,10 +1,10 @@
 export const difficultySettings = {
-  'easy': {
+  'Easy': {
     rows: 4,
     columns: 5
   },
 
-  'normal': {
+  'Normal': {
     rows: 5,
     columns: 6
   }
