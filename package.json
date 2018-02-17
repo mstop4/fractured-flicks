@@ -1,6 +1,6 @@
 {
-  "name": "video-jigsaw-puzzle",
-  "version": "0.7.0",
+  "name": "fractured-flicks",
+  "version": "1.0.0",
   "description": "A web-based jigsaw puzzle game where players put pieces of a video back together.",
   "main": "index.js",
   "scripts": {
