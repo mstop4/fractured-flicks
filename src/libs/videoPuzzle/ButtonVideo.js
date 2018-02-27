@@ -40,7 +40,7 @@ export class ButtonVideo extends ButtonBase {
     this.pivot.set(this.width / 2, this.height / 2)
     this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height)
 
-    this.on('pointerover', (event) => {
+    this.on('pointerover', () => {
       this.preview.texture.baseTexture.source.play()
       this.onScaleStart(0.95, 0.95, 1, 1, 5)
     })
