@@ -1,5 +1,10 @@
 # Changelog
 
+## v.1.0.0-rc1
+
+- Fixed security issue with webpack-dev-server
+- Removed unnecessary packages
+
 ## v.1.0.0-beta2
 
 - Added per-puzzle difficulty setting that determines the number of pieces a video is divided into
